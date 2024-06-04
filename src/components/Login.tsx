@@ -27,7 +27,7 @@ const Login = ({
       <Flex justify="center" paddingTop="50px">
         <VStack spacing={4} width="500px">
           <Input
-            placeholder="Create a username"
+            placeholder="Enter your email"
             size="lg"
             value={username}
             onChange={onUsernameChange}

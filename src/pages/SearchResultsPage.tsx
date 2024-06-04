@@ -14,10 +14,12 @@ import {
 import { useLocation } from "react-router-dom";
 import Product from "../components/Product";
 import WithSubnavigation from "../components/NavBarTemplate";
+import Fuse from "fuse.js";
 
 const SearchResultsPage = () => {
   const location = useLocation();
   const { results } = location.state || { results: [] };
+
   return (
     <>
       <Box as="main" p={4}>
