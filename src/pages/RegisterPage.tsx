@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Box, Text } from "@chakra-ui/react";
 import { Link, redirect } from "react-router-dom";
 import { useCookies } from "react-cookie";
-
+import axios from "axios";
 import AlertCustom from "../components/AlertCustom";
 import Login from "../components/Login";
 
@@ -13,29 +13,32 @@ const RegisterPage = () => {
   const [registerSuccess, setRegisterSuccess] = useState(false);
   const [cookies, setCookie] = useCookies(["token"]);
   const handleRegistration = async () => {
-    setAlertVisible(true);
-    if (username && password) {
-      setRegisterSuccess(true);
-    } else {
-      setRegisterSuccess(false);
-    }
-    setUsername("");
-    setPassword("");
-    // try {
-    //   const response = await axios.post("http://localhost:3000/login", {
-    //     username,
-    //     password,
-    //   });
-
-    //   if (response.status === 200) {
-    //     setAlertVisible(true);
-    //   } else {
-    //     // Handle unsuccessful login (e.g., display error message)
-    //   }
-    // } catch (error) {
-    //   console.error("Error:", error);
-    //   // Handle error (e.g., display error message)
+    // setAlertVisible(true);
+    // if (username && password) {
+    //   setRegisterSuccess(true);
+    // } else {
+    //   setRegisterSuccess(false);
     // }
+    // setUsername("");
+    // setPassword("");
+    try {
+      const response = await axios.post("/api/register/", {
+        username: username,
+        password: password,
+      });
+      console.log(response);
+      setRegisterSuccess(true);
+      setAlertVisible(true);
+      // setUsername("");
+      // setPassword("");
+    } catch (error) {
+      // Handle error (e.g., display error message)
+      console.error("Error:", error);
+      setRegisterSuccess(false);
+      setAlertVisible(true);
+      // setUsername("");
+      // setPassword("");
+    }
   };
 
   return (

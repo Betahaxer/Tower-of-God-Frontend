@@ -32,15 +32,9 @@ export default function WithSubnavigation() {
   const { isOpen, onToggle } = useDisclosure();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // show search bar in nav bar only in these paths
   const showSearchBar = ["/search"].includes(location.pathname);
-  const onSearch = async () => {
-    try {
-      const response = await axios.get("/api/products/earbuds/");
-      navigate("/search", { state: { results: response.data.results } });
-    } catch (error) {
-      console.error("Error fetching search results:", error);
-    }
-  };
   return (
     <Box>
       <Flex

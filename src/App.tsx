@@ -12,7 +12,8 @@ import WithSubnavigation from "./components/NavBarTemplate";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-//axios.defaults.baseURL = "http://127.0.0.1:8000";
+axios.defaults.baseURL = "http://127.0.0.1:8000";
+//axios.defaults.withCredentials = true;
 
 interface Post {
   title: string;

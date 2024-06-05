@@ -99,7 +99,7 @@ const SearchBar = () => {
       }
 
       // setting the corresponding DRF url
-      let url = `http://127.0.0.1:8000/api/products/${category}/`;
+      let url = `/api/products/${category}/`;
       console.log(url);
 
       // querying the database based on category and simple filtering with user query

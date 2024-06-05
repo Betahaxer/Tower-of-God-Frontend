@@ -11,7 +11,6 @@ function HomePage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  //change
   return (
     <>
       <Stack

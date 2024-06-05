@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useCookies } from "react-cookie";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Box, Text } from "@chakra-ui/react";
 
@@ -12,32 +11,37 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [alertVisible, setAlertVisible] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
-  const [cookies, setCookie] = useCookies(["token"]);
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
-    setAlertVisible(true);
-    if (username && password) {
-      setLoginSuccess(true);
-    } else {
-      setLoginSuccess(false);
-    }
-    setUsername("");
-    setPassword("");
-    // try {
-    //   const response = await axios.post("http://localhost:5000/api/login", {
-    //     username,
-    //     password,
-    //   });
-
-    //   if (response.status === 200) {
-    //     setAlertVisible(true);
-    //   } else {
-    //     // Handle unsuccessful login (e.g., display error message)
-    //   }
-    // } catch (error) {
-    //   console.error("Error:", error);
-    //   // Handle error (e.g., display error message)
+    // setAlertVisible(true);
+    // if (username && password) {
+    //   setLoginSuccess(true);
+    // } else {
+    //   setLoginSuccess(false);
     // }
+    // setUsername("");
+    // setPassword("");
+    try {
+      const response = await axios.post("/api/login/", {
+        username: username,
+        password: password,
+      });
+      //axios.defaults.headers.common["X-CSRFToken"] = response.data.csrfToken;
+      console.log(response.data);
+      setLoginSuccess(true);
+      setAlertVisible(true);
+      // setUsername("");
+      // setPassword("");
+      // navigate("/");
+    } catch (error) {
+      // Handle error (e.g., display error message)
+      console.error("Error:", error);
+      setLoginSuccess(false);
+      setAlertVisible(true);
+      // setUsername("");
+      // setPassword("");
+    }
   };
 
   return (
