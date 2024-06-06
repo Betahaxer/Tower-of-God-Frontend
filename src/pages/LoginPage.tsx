@@ -6,6 +6,8 @@ import { Box, Text } from "@chakra-ui/react";
 import AlertCustom from "../components/AlertCustom";
 import Login from "../components/Login";
 
+import Cookies from "js-cookie";
+
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -22,13 +24,32 @@ const LoginPage = () => {
     // }
     // setUsername("");
     // setPassword("");
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
+
     try {
-      const response = await axios.post("/api/login/", {
-        username: username,
-        password: password,
-      });
+      const response = await axios.post("/api/login/", 
+        {
+          username: username,
+          password: password,
+        },
+
+        {
+          headers: {
+            ...(accessToken && {'Authorization': `Bearer ${accessToken}`}),
+            ...(refreshToken && {'Refresh-Token': refreshToken})
+          }
+        }
+      );
+
       //axios.defaults.headers.common["X-CSRFToken"] = response.data.csrfToken;
       console.log(response.data);
+
+      const { refresh, access } = response.data;
+
+      localStorage.setItem('refreshToken', refresh)
+      localStorage.setItem('accessToken', access)
+
       setLoginSuccess(true);
       setAlertVisible(true);
       // setUsername("");
