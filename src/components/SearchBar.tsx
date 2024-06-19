@@ -92,19 +92,19 @@ const SearchBar = () => {
   const onSearch = async (query: string) => {
     try {
       // finding the category for the query and returning the most relevant one
-      const searchCategory = fuse.search(query);
+      // const searchCategory = fuse.search(query);
 
-      if (searchCategory.length > 0) {
-        category = searchCategory[0].item.name;
-      }
+      // if (searchCategory.length > 0) {
+      //   category = searchCategory[0].item.name;
+      // }
 
       // setting the corresponding DRF url
-      let url = `/api/products/${category}/`;
+      let url = `/api/products/`;
       console.log(url);
 
       // querying the database based on category and simple filtering with user query
       const response = await axios.get(url, {
-        params: { search: query },
+        params: { q: query },
       });
       console.log(response.data.results);
 
