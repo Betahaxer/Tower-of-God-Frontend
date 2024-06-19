@@ -23,11 +23,15 @@ const LoginPage = () => {
     // setUsername("");
     // setPassword("");
     try {
-      const response = await axios.post("/api/login/", {
-        username: username,
-        password: password,
-      });
-      //axios.defaults.headers.common["X-CSRFToken"] = response.data.csrfToken;
+      const response = await axios.post(
+        "/api/login/",
+        {
+          username: username,
+          password: password,
+        },
+        { withCredentials: true }
+      );
+      axios.defaults.headers.common["X-CSRFToken"] = response.data.csrfToken;
       console.log(response.data);
       setLoginSuccess(true);
       setAlertVisible(true);
