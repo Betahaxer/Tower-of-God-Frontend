@@ -1,5 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-import Navbar from "./components/NavBar";
 import {
   HomePage,
   LoginPage,
@@ -8,9 +7,10 @@ import {
   SearchResultsPage,
 } from "./pages";
 import { useLocation } from "react-router-dom";
-import WithSubnavigation from "./components/NavBarTemplate";
+import NavBarTemplate from "./components/NavBarTemplate";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { AuthProvider } from "./contexts/AuthContext";
 
 axios.defaults.baseURL = "http://127.0.0.1:8000";
 axios.defaults.withCredentials = true;
@@ -21,11 +21,9 @@ interface Post {
 }
 
 function App() {
-  // const location = useLocation();
-  // const showNavBar = location.pathname !== "/";
   return (
-    <>
-      <WithSubnavigation />
+    <AuthProvider>
+      <NavBarTemplate />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -33,7 +31,7 @@ function App() {
         <Route path="/search" element={<SearchResultsPage />} />
         <Route path="/*" element={<NotFoundPage />} />
       </Routes>
-    </>
+    </AuthProvider>
   );
 }
 export default App;

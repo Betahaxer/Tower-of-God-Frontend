@@ -13,9 +13,10 @@ import { useLocation } from "react-router-dom";
 interface Props {
   onClick: () => void;
   isSuccessful: boolean;
+  alertText: string;
 }
 
-const AlertCustom = ({ onClick, isSuccessful }: Props) => {
+const AlertCustom = ({ onClick, isSuccessful, alertText }: Props) => {
   const location = useLocation();
   let alertHeader = "";
   let alertBody = "";
@@ -25,10 +26,11 @@ const AlertCustom = ({ onClick, isSuccessful }: Props) => {
     switch (location.pathname) {
       case "/login":
         alertHeader = "Login Successful!";
+        alertBody = alertText;
         break;
       case "/register":
         alertHeader = "Registration Successful!";
-        alertBody = "Your account has been created.";
+        alertBody = alertText;
         break;
       default:
         break;
@@ -38,10 +40,11 @@ const AlertCustom = ({ onClick, isSuccessful }: Props) => {
     switch (location.pathname) {
       case "/login":
         alertHeader = "Login Unsuccessful!";
+        alertBody = alertText;
         break;
       case "/register":
         alertHeader = "Registration Unsuccessful!";
-        alertBody = "Please try again.";
+        alertBody = alertText;
         break;
       default:
         break;

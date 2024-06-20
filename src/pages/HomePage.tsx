@@ -1,11 +1,7 @@
-import { Button } from "@chakra-ui/react";
-import Navbar from "../components/NavBar";
-import { redirect } from "react-router-dom";
 import { Box, Heading, Text, Stack } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import { useState } from "react";
-import axios from "axios";
 
 function HomePage() {
   const navigate = useNavigate();

@@ -1,32 +1,21 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { Box, Text } from "@chakra-ui/react";
-
 import AlertCustom from "../components/AlertCustom";
 import Login from "../components/Login";
-
-import Cookies from "js-cookie";
+import { getTokens, setTokens } from "../utils/storage";
+import { useAuth } from "../contexts/AuthContext";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [alertVisible, setAlertVisible] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
-  const navigate = useNavigate();
-
+  const [alertText, setAlertText] = useState("");
+  const { login } = useAuth();
   const handleLogin = async () => {
-    // setAlertVisible(true);
-    // if (username && password) {
-    //   setLoginSuccess(true);
-    // } else {
-    //   setLoginSuccess(false);
-    // }
-    // setUsername("");
-    // setPassword("");
-    const accessToken = localStorage.getItem("accessToken");
-    const refreshToken = localStorage.getItem("refreshToken");
-
+    const { accessToken, refreshToken } = getTokens();
     try {
       const response = await axios.post(
         "/api/login/",
@@ -42,23 +31,18 @@ const LoginPage = () => {
           },
         }
       );
-
-      //axios.defaults.headers.common["X-CSRFToken"] = response.data.csrfToken;
       console.log(response.data);
-
-      const { refresh, access } = response.data;
-
-      localStorage.setItem("refreshToken", refresh);
-      localStorage.setItem("accessToken", access);
-
+      setAlertText("Testing!");
+      const { access, refresh } = response.data;
+      login(access, refresh);
       setLoginSuccess(true);
       setAlertVisible(true);
       // setUsername("");
       // setPassword("");
       // navigate("/");
     } catch (error) {
-      // Handle error (e.g., display error message)
       console.error("Error:", error);
+      setAlertText("Testing!");
       setLoginSuccess(false);
       setAlertVisible(true);
       // setUsername("");
@@ -80,6 +64,7 @@ const LoginPage = () => {
           <AlertCustom
             isSuccessful={loginSuccess}
             onClick={() => setAlertVisible(false)}
+            alertText={alertText}
           />
         )}
         <Box mb={4}>

@@ -27,14 +27,40 @@ import {
 import SearchBar from "./SearchBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { clearTokens, getTokens } from "../utils/storage";
+import { useAuth } from "../contexts/AuthContext";
 
-export default function WithSubnavigation() {
+export default function NavBarTemplate() {
   const { isOpen, onToggle } = useDisclosure();
   const navigate = useNavigate();
   const location = useLocation();
-
   // show search bar in nav bar only in these paths
   const showSearchBar = ["/search"].includes(location.pathname);
+  const { isLoggedIn, login, logout } = useAuth();
+
+  const handleLogout = async () => {
+    const { accessToken, refreshToken } = getTokens();
+    console.log(accessToken, refreshToken);
+
+    try {
+      const response = await axios.post(
+        "/api/logout/",
+        {}, // Empty body for the POST request
+        {
+          headers: {
+            ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+            ...(refreshToken && { "Refresh-Token": refreshToken }),
+          },
+        }
+      );
+      clearTokens();
+      logout();
+      console.log("Response:", response);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <Box>
       <Flex
@@ -75,31 +101,55 @@ export default function WithSubnavigation() {
           direction={"row"}
           spacing={6}
         >
-          <Button
-            as={"a"}
-            fontSize={"sm"}
-            fontWeight={400}
-            variant={"link"}
-            href={"#"}
-            onClick={() => navigate("/login")}
-          >
-            Sign In
-          </Button>
-          <Button
-            as={"a"}
-            display={{ base: "none", md: "inline-flex" }}
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bg={"pink.400"}
-            href={"#"}
-            _hover={{
-              bg: "pink.300",
-            }}
-            onClick={() => navigate("/register")}
-          >
-            Sign Up
-          </Button>
+          {!isLoggedIn && (
+            <>
+              <Button
+                as={"a"}
+                fontSize={"sm"}
+                fontWeight={400}
+                variant={"link"}
+                href={"#"}
+                onClick={() => navigate("/login")}
+              >
+                Sign In
+              </Button>
+              <Button
+                as={"a"}
+                display={{ base: "none", md: "inline-flex" }}
+                fontSize={"sm"}
+                fontWeight={600}
+                color={"white"}
+                bg={"pink.400"}
+                href={"#"}
+                _hover={{
+                  bg: "pink.300",
+                }}
+                onClick={() => navigate("/register")}
+              >
+                Sign Up
+              </Button>
+            </>
+          )}
+          {isLoggedIn && (
+            <Button
+              as={"a"}
+              display={{ base: "none", md: "inline-flex" }}
+              fontSize={"sm"}
+              fontWeight={600}
+              color={"white"}
+              bg={"pink.400"}
+              href={"#"}
+              _hover={{
+                bg: "pink.300",
+              }}
+              onClick={() => {
+                handleLogout();
+                navigate("/login");
+              }}
+            >
+              Logout
+            </Button>
+          )}
         </Stack>
       </Flex>
 
