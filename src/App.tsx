@@ -11,6 +11,7 @@ import NavBarTemplate from "./components/NavBarTemplate";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { AuthProvider } from "./contexts/AuthContext";
+import ProductDetailsPage from "./pages/ProductDetailsPage";
 
 axios.defaults.baseURL = "http://127.0.0.1:8000";
 axios.defaults.withCredentials = true;
@@ -30,6 +31,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/search" element={<SearchResultsPage />} />
         <Route path="/*" element={<NotFoundPage />} />
+        <Route path="/products/*" element={<ProductDetailsPage />} />
       </Routes>
     </AuthProvider>
   );
