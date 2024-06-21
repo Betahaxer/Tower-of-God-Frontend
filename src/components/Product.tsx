@@ -20,7 +20,7 @@ interface Product {
 const Product = ({ data }: Product) => {
   console.log(data);
   return (
-    <Card alignItems={"flex-start"} height="600px" overflow="hidden">
+    <Card alignItems={"flex-start"} height="450px" overflow="hidden">
       <CardHeader pb={3}>
         <Heading size="md">{data.name}</Heading>
       </CardHeader>
