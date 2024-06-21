@@ -30,7 +30,7 @@ import axios from "axios";
 import { clearTokens, getTokens } from "../utils/storage";
 import { useAuth } from "../contexts/AuthContext";
 
-export default function NavBarTemplate() {
+export default function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
   const navigate = useNavigate();
   const location = useLocation();

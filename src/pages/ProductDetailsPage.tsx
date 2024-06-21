@@ -20,14 +20,26 @@ import {
   ListIcon,
   Divider,
 } from "@chakra-ui/react";
-import { Key, ReactElement } from "react";
+import { Key, ReactElement, useEffect } from "react";
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import SpecsMouse from "../components/SpecsMouse";
 
 export default function ProductDetailsPage() {
   const location = useLocation();
-  const product = location.state.product;
+  const navigate = useNavigate();
+  const product = location.state?.product;
+
+  //redirects the user if no state available, ie url is keyed in manually
+  useEffect(() => {
+    if (!product) {
+      navigate("/");
+    }
+  }, [product, navigate]);
+
+  if (!product) {
+    return null; // Prevent rendering if product is not available
+  }
   console.log(product);
 
   interface Product {

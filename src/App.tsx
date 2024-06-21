@@ -6,12 +6,11 @@ import {
   RegisterPage,
   SearchResultsPage,
 } from "./pages";
-import { useLocation } from "react-router-dom";
-import NavBarTemplate from "./components/NavBarTemplate";
+import NavBar from "./components/NavBar";
 import axios from "axios";
-import { useState, useEffect } from "react";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
+import ComparePage from "./pages/ComparePage";
 
 axios.defaults.baseURL = "http://127.0.0.1:8000";
 axios.defaults.withCredentials = true;
@@ -24,7 +23,7 @@ interface Post {
 function App() {
   return (
     <AuthProvider>
-      <NavBarTemplate />
+      <NavBar />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -32,6 +31,7 @@ function App() {
         <Route path="/search" element={<SearchResultsPage />} />
         <Route path="/*" element={<NotFoundPage />} />
         <Route path="/products/*" element={<ProductDetailsPage />} />
+        <Route path="/compare" element={<ComparePage />} />
       </Routes>
     </AuthProvider>
   );
