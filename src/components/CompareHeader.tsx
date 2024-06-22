@@ -97,7 +97,12 @@ export default function CompareHeader() {
           spacing={{ base: 4, md: 6 }}
           zIndex={1}
         >
-          <Stack w="100%" position="relative" direction="column">
+          <Stack
+            w="100%"
+            position="relative"
+            direction="column"
+            spacing={{ base: 4, md: 6 }}
+          >
             <Input
               position="relative"
               name="value1"
@@ -106,28 +111,46 @@ export default function CompareHeader() {
               placeholder="Search"
               size="lg"
             />
-            <Box
-              position="absolute"
-              opacity={0.5}
-              zIndex={1}
-              top="55px"
-              bg="gray.100"
-              w="100%"
-              px="10"
-              py="5"
-              textAlign="left"
-              borderRadius="20"
-            >
-              <List position="relative" zIndex={1} p="0" spacing="1">
-                {data.value1.map((data: Dictionary, index: number) => {
-                  return <ListItem key={index}>{data.name}</ListItem>;
-                })}
-              </List>
-            </Box>
+            {values.value1 && (
+              <Box
+                position="absolute"
+                opacity={1}
+                zIndex={1}
+                top="55px"
+                bg="white"
+                w="100%"
+                px="2"
+                py="2"
+                boxShadow="xl"
+                borderRadius={10}
+              >
+                <Box position="relative" zIndex={1}>
+                  {data.value1
+                    .slice(0, 5)
+                    .map((data: Dictionary, index: number) => {
+                      return (
+                        <Box
+                          key={index}
+                          h="100px"
+                          borderRadius={10}
+                          _hover={{
+                            background: "yellow.200",
+                          }}
+                          textAlign={"left"}
+                          px="5"
+                          py="2"
+                        >
+                          {data.name}
+                        </Box>
+                      );
+                    })}
+                </Box>
+              </Box>
+            )}
             <Card
               position="absolute"
               zIndex={0}
-              top="55px"
+              top="70px"
               bg="gray.200"
               p="4"
               textAlign="center"
@@ -143,7 +166,12 @@ export default function CompareHeader() {
               </Text>
             </Card>
           </Stack>
-          <Stack w="100%" position="relative" direction="column">
+          <Stack
+            w="100%"
+            position="relative"
+            direction="column"
+            spacing={{ base: 4, md: 6 }}
+          >
             <Input
               position="relative"
               name="value2"
@@ -152,28 +180,44 @@ export default function CompareHeader() {
               placeholder="Search"
               size="lg"
             />
-            <Box
-              position="absolute"
-              opacity={0.5}
-              zIndex={1}
-              top="55px"
-              bg="gray.100"
-              w="100%"
-              px="10"
-              py="5"
-              textAlign="left"
-              borderRadius="20"
-            >
-              <List p="0" spacing="1">
-                {data.value2.map((data: Dictionary, index: number) => {
-                  return <ListItem key={index}>{data.name}</ListItem>;
-                })}
-              </List>
-            </Box>
+            {values.value2 && (
+              <Box
+                position="absolute"
+                opacity={1}
+                zIndex={1}
+                top="55px"
+                bg="white"
+                w="100%"
+                px="2"
+                py="2"
+                boxShadow="xl"
+                borderRadius={10}
+              >
+                {data.value2
+                  .slice(0, 5)
+                  .map((data: Dictionary, index: number) => {
+                    return (
+                      <Box
+                        key={index}
+                        h="100px"
+                        borderRadius={10}
+                        _hover={{
+                          background: "yellow.200",
+                        }}
+                        textAlign={"left"}
+                        px="5"
+                        py="2"
+                      >
+                        {data.name}
+                      </Box>
+                    );
+                  })}
+              </Box>
+            )}
             <Card
               position="absolute"
               zIndex={0}
-              top="55px"
+              top="70px"
               bg="gray.200"
               p="4"
               textAlign="center"
