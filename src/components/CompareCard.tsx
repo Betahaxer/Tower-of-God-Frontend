@@ -1,36 +1,162 @@
-import { Box, Text, VStack, Stack } from "@chakra-ui/react";
-import React from "react";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Text,
+  VStack,
+  Stack,
+  Container,
+  StackDivider,
+  useColorModeValue,
+  Flex,
+  Image,
+  Heading,
+  SimpleGrid,
+  List,
+  ListItem,
+  Divider,
+  Button,
+  Link,
+  ListIcon,
+  Card,
+} from "@chakra-ui/react";
+import React, { ReactElement } from "react";
+import { FaPlusCircle, FaMinusCircle } from "react-icons/fa";
+import SpecsMouse from "./SpecsMouse";
 
 interface Dictionary {
   [key: string]: any;
 }
 
-export default function CompareCard({ data }: Dictionary) {
-  console.log("compare card");
-  console.log(data);
+export default function CompareCard({ product }: Dictionary) {
+  console.log(product);
+  interface Product {
+    [key: string]: any;
+  }
+  // categoryMap type is a dictionary which has string as the key and a function which
+  // passes a prop to the component when called
+  interface categoryMap {
+    [category: string]: (props: Product) => ReactElement;
+  }
+  // mapping of the product category to the corresponding component
+  // since each category will have different specifications
+  const categoryMap: categoryMap = {
+    mouse: (props) => <SpecsMouse {...props} />,
+  };
+  const placeholder = () => (
+    <List>
+      <ListItem>Details not available, sorry!</ListItem>
+    </List>
+  );
+  const specComponent = categoryMap[product.category] || placeholder;
+
   return (
     <>
-      <Box position="relative" w="100%">
-        <VStack spacing={8} position="relative">
-          <Stack position="relative" zIndex="0" w="100%" h="300px" bg="red.200">
-            <Text>Parent Element (zIndex: 0)</Text>
-            <Box
-              position="relative"
-              zIndex="2"
-              w="100%"
-              h="200px"
-              bg="blue.200"
-              top="0"
-              left="0"
-            >
-              <Text>Child Element (zIndex: 2)</Text>
+      <Card>
+        <Stack
+          spacing={{ base: 8, md: 10 }}
+          py={{ base: 9, md: 12 }}
+          px={{ base: 20, md: 10 }}
+          direction={"column"}
+          divider={
+            <StackDivider
+              borderColor={useColorModeValue("gray.200", "gray.600")}
+            />
+          }
+        >
+          <>
+            <Flex>
+              <Image
+                rounded={"md"}
+                alt={"product image"}
+                src={
+                  "https://orbitalstorageaccount.blob.core.windows.net/django-image-container/media/products/shure%20aonic%2050%20gen%202"
+                }
+                fit={"cover"}
+                align={"center"}
+                w={"100%"}
+                h={{ base: "100%", sm: "400px", lg: "500px" }}
+              />
+            </Flex>
+            <Box as={"header"}>
+              <Text
+                color={useColorModeValue("gray.900", "gray.400")}
+                fontWeight={300}
+                fontSize={"1xl"}
+                mb={0}
+                textTransform={"capitalize"}
+              >
+                {product.category}
+              </Text>
+              <Heading
+                lineHeight={1.1}
+                fontWeight={600}
+                fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}
+              >
+                {product.name}
+              </Heading>
+              <Text
+                color={useColorModeValue("gray.900", "gray.400")}
+                fontWeight={300}
+                fontSize={"2xl"}
+                mb={0}
+              >
+                {product.price ? "$" + product.price : "$-"}
+              </Text>
+            </Box>
+          </>
+          <Stack spacing={{ base: 4, md: 6 }}>
+            <VStack spacing={{ base: 4, sm: 6 }}>
+              <Text
+                fontSize={"lg"}
+                style={{ whiteSpace: "pre-line", wordWrap: "break-word" }}
+              >
+                {product.description
+                  ? product.description.slice(0, 1000) + "..."
+                  : "No description found"}
+              </Text>
+            </VStack>
+
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
+              <List spacing={2}>
+                {product.pros.slice(0, 5).map((pros: string, index: number) => {
+                  return (
+                    <ListItem key={index} fontSize={15}>
+                      <ListIcon as={FaPlusCircle} color="green.500" />
+                      <b>{pros}</b>
+                    </ListItem>
+                  );
+                })}
+              </List>
+              <List spacing={2}>
+                {product.cons.slice(0, 5).map((cons: string, index: number) => {
+                  return (
+                    <ListItem key={index} fontSize={15}>
+                      <ListIcon as={FaMinusCircle} color="red.500" />
+                      <b>{cons}</b>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </SimpleGrid>
+
+            <Divider borderColor={useColorModeValue("gray.200", "gray.600")} />
+
+            <Box>
+              <Text
+                fontSize={{ base: "16px", lg: "18px" }}
+                color={useColorModeValue("yellow.500", "yellow.300")}
+                fontWeight={"500"}
+                textTransform={"uppercase"}
+                mb={"4"}
+              >
+                Product Details
+              </Text>
+
+              {specComponent(product)}
             </Box>
           </Stack>
-        </VStack>
-        <Box position="relative" zIndex="1" w="100%" h="200px" bg="green.200">
-          <Text>Sibling Element (zIndex: 1)</Text>
-        </Box>
-      </Box>
+        </Stack>
+      </Card>
     </>
   );
 }

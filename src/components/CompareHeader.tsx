@@ -103,14 +103,16 @@ export default function CompareHeader() {
             direction="column"
             spacing={{ base: 4, md: 6 }}
           >
-            <Input
-              position="relative"
-              name="value1"
-              value={values.value1}
-              onChange={(event) => handleChange(event, values.value1)}
-              placeholder="Search"
-              size="lg"
-            />
+            {selectedCategory && (
+              <Input
+                position="relative"
+                name="value1"
+                value={values.value1}
+                onChange={(event) => handleChange(event, values.value1)}
+                placeholder="Search"
+                size="lg"
+              />
+            )}
             {values.value1 && (
               <Box
                 position="absolute"
@@ -172,14 +174,16 @@ export default function CompareHeader() {
             direction="column"
             spacing={{ base: 4, md: 6 }}
           >
-            <Input
-              position="relative"
-              name="value2"
-              value={values.value2}
-              onChange={(event) => handleChange(event, values.value2)}
-              placeholder="Search"
-              size="lg"
-            />
+            {selectedCategory && (
+              <Input
+                position="relative"
+                name="value2"
+                value={values.value2}
+                onChange={(event) => handleChange(event, values.value2)}
+                placeholder="Search"
+                size="lg"
+              />
+            )}
             {values.value2 && (
               <Box
                 position="absolute"
