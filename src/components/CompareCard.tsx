@@ -1,108 +1,36 @@
-import {
-  Input,
-  Text,
-  Select,
-  Stack,
-  VStack,
-  Box,
-  List,
-  ListItem,
-} from "@chakra-ui/react";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { Box, Text, VStack, Stack } from "@chakra-ui/react";
+import React from "react";
 
 interface Dictionary {
   [key: string]: any;
 }
-const CompareCard = () => {
-  const [values, setValues] = useState({ value1: "", value2: "" });
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [data, setData] = useState({ value1: [], value2: [] });
-  const handleChange = async (
-    event: { target: { name: string; value: string } },
-    query: string
-  ) => {
-    const { name, value } = event.target;
-    setValues({
-      ...values,
-      [name]: value,
-    });
-    const response = await axios.get("/api/compare/", {
-      params: { q: query, category: selectedCategory },
-    });
-    setData({ ...data, [name]: response.data.results });
-    // console.log(response.data.results);
-    console.log(data);
-  };
-  const category = [
-    "earbuds",
-    "keyboard",
-    "laptop",
-    "mouse",
-    "phone",
-    "monitor",
-    "speaker",
-    "television",
-  ];
-  useEffect(() => {
-    console.log(selectedCategory);
-  }, [selectedCategory]);
+
+export default function CompareCard({ data }: Dictionary) {
+  console.log("compare card");
+  console.log(data);
   return (
     <>
-      <Stack spacing={{ base: 4, md: 6 }} marginX={100} marginY={10}>
-        <Select
-          placeholder="Select Category"
-          value={selectedCategory}
-          onChange={(event) => {
-            setSelectedCategory(event.target.value);
-          }}
-          w="100%"
-          size="lg"
-        >
-          {category.map((category: string, index: number) => {
-            return (
-              <option value={category} key={index}>
-                {category.charAt(0).toUpperCase() + category.slice(1)}
-              </option>
-            );
-          })}
-        </Select>
-        <Stack
-          direction={{ base: "column", md: "row" }}
-          spacing={{ base: 4, md: 6 }}
-        >
-          <VStack w="100%">
-            <Input
-              name="value1"
-              value={values.value1}
-              onChange={(event) => handleChange(event, values.value1)}
-              placeholder="Search"
-              size="lg"
-            />
-            <List>
-              {data.value1.map((data: Dictionary, index: number) => {
-                return <ListItem>{data.name}</ListItem>;
-              })}
-            </List>
-          </VStack>
-          <VStack w="100%">
-            <Input
-              name="value2"
-              value={values.value2}
-              onChange={(event) => handleChange(event, values.value2)}
-              placeholder="Search"
-              size="lg"
-            />
-            <List>
-              {data.value2.map((data: Dictionary, index: number) => {
-                return <ListItem>{data.name}</ListItem>;
-              })}
-            </List>
-          </VStack>
-        </Stack>
-      </Stack>
+      <Box position="relative" w="100%">
+        <VStack spacing={8} position="relative">
+          <Stack position="relative" zIndex="0" w="100%" h="300px" bg="red.200">
+            <Text>Parent Element (zIndex: 0)</Text>
+            <Box
+              position="relative"
+              zIndex="2"
+              w="100%"
+              h="200px"
+              bg="blue.200"
+              top="0"
+              left="0"
+            >
+              <Text>Child Element (zIndex: 2)</Text>
+            </Box>
+          </Stack>
+        </VStack>
+        <Box position="relative" zIndex="1" w="100%" h="200px" bg="green.200">
+          <Text>Sibling Element (zIndex: 1)</Text>
+        </Box>
+      </Box>
     </>
   );
-};
-
-export default CompareCard;
+}

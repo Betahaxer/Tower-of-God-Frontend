@@ -22,8 +22,9 @@ import {
 } from "@chakra-ui/react";
 import { Key, ReactElement, useEffect } from "react";
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import SpecsMouse from "../components/SpecsMouse";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 
 export default function ProductDetailsPage() {
   const location = useLocation();
@@ -64,33 +65,31 @@ export default function ProductDetailsPage() {
 
   return (
     <Container maxW={"7xl"}>
-      <SimpleGrid
-        columns={{ base: 1, lg: 2 }}
+      <Stack
         spacing={{ base: 8, md: 10 }}
         py={{ base: 18, md: 24 }}
-      >
-        <Flex>
-          <Image
-            rounded={"md"}
-            alt={"product image"}
-            src={
-              "https://orbitalstorageaccount.blob.core.windows.net/django-image-container/media/products/shure%20aonic%2050%20gen%202"
-            }
-            fit={"cover"}
-            align={"center"}
-            w={"100%"}
-            h={{ base: "100%", sm: "400px", lg: "500px" }}
+        px={{ base: 200, md: 100 }}
+        direction={"column"}
+        divider={
+          <StackDivider
+            borderColor={useColorModeValue("gray.200", "gray.600")}
           />
-        </Flex>
-        <Stack
-          spacing={{ base: 4, md: 6 }}
-          direction={"column"}
-          divider={
-            <StackDivider
-              borderColor={useColorModeValue("gray.200", "gray.600")}
+        }
+      >
+        <>
+          <Flex>
+            <Image
+              rounded={"md"}
+              alt={"product image"}
+              src={
+                "https://orbitalstorageaccount.blob.core.windows.net/django-image-container/media/products/shure%20aonic%2050%20gen%202"
+              }
+              fit={"cover"}
+              align={"center"}
+              w={"100%"}
+              h={{ base: "100%", sm: "400px", lg: "500px" }}
             />
-          }
-        >
+          </Flex>
           <Box as={"header"}>
             <Text
               color={useColorModeValue("gray.900", "gray.400")}
@@ -117,9 +116,10 @@ export default function ProductDetailsPage() {
               {product.price ? "$" + product.price : "$-"}
             </Text>
           </Box>
-          <Stack spacing={{ base: 4, md: 6 }}>
-            <VStack spacing={{ base: 4, sm: 6 }}>
-              {/* <Text
+        </>
+        <Stack spacing={{ base: 4, md: 6 }}>
+          <VStack spacing={{ base: 4, sm: 6 }}>
+            {/* <Text
                 color={useColorModeValue("gray.500", "gray.400")}
                 fontSize={"2xl"}
                 fontWeight={"300"}
@@ -127,57 +127,72 @@ export default function ProductDetailsPage() {
                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
                 diam nonumy eirmod tempor invidunt ut labore
               </Text> */}
-              <Text
-                fontSize={"lg"}
-                style={{ whiteSpace: "pre-line", wordWrap: "break-word" }}
-              >
-                {product.description
-                  ? product.description.slice(0, 1000) + "..."
-                  : "No description found"}
-              </Text>
-            </VStack>
+            <Text
+              fontSize={"lg"}
+              style={{ whiteSpace: "pre-line", wordWrap: "break-word" }}
+            >
+              {product.description
+                ? product.description.slice(0, 1000) + "..."
+                : "No description found"}
+            </Text>
+          </VStack>
 
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
-              <List spacing={2}>
-                {product.pros.slice(0, 5).map((pros: string, index: number) => {
-                  return (
-                    <ListItem key={index} fontSize={15}>
-                      <ListIcon as={FaPlusCircle} color="green.500" />
-                      <b>{pros}</b>
-                    </ListItem>
-                  );
-                })}
-              </List>
-              <List spacing={2}>
-                {product.cons.slice(0, 5).map((cons: string, index: number) => {
-                  return (
-                    <ListItem key={index} fontSize={15}>
-                      <ListIcon as={FaMinusCircle} color="red.500" />
-                      <b>{cons}</b>
-                    </ListItem>
-                  );
-                })}
-              </List>
-            </SimpleGrid>
+          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
+            <List spacing={2}>
+              {product.pros.slice(0, 5).map((pros: string, index: number) => {
+                return (
+                  <ListItem key={index} fontSize={15}>
+                    <ListIcon as={FaPlusCircle} color="green.500" />
+                    <b>{pros}</b>
+                  </ListItem>
+                );
+              })}
+            </List>
+            <List spacing={2}>
+              {product.cons.slice(0, 5).map((cons: string, index: number) => {
+                return (
+                  <ListItem key={index} fontSize={15}>
+                    <ListIcon as={FaMinusCircle} color="red.500" />
+                    <b>{cons}</b>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </SimpleGrid>
 
-            <Divider borderColor={useColorModeValue("gray.200", "gray.600")} />
+          <Divider borderColor={useColorModeValue("gray.200", "gray.600")} />
 
-            <Box>
-              <Text
-                fontSize={{ base: "16px", lg: "18px" }}
-                color={useColorModeValue("yellow.500", "yellow.300")}
-                fontWeight={"500"}
-                textTransform={"uppercase"}
-                mb={"4"}
-              >
-                Product Details
-              </Text>
+          <Box>
+            <Text
+              fontSize={{ base: "16px", lg: "18px" }}
+              color={useColorModeValue("yellow.500", "yellow.300")}
+              fontWeight={"500"}
+              textTransform={"uppercase"}
+              mb={"4"}
+            >
+              Product Details
+            </Text>
 
-              {specComponent(product)}
-            </Box>
-          </Stack>
+            {specComponent(product)}
+          </Box>
+          <Link
+            to={{
+              pathname: `/compare`,
+            }}
+            state={{ product }}
+          >
+            <Button
+              rightIcon={<ArrowForwardIcon />}
+              colorScheme="teal"
+              variant="outline"
+              w="50%"
+              maxW="180"
+            >
+              Compare with...
+            </Button>
+          </Link>
         </Stack>
-      </SimpleGrid>
+      </Stack>
     </Container>
   );
 }

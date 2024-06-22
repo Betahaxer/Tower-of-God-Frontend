@@ -12,15 +12,27 @@ interface Props {
 const SearchBar = () => {
   const navigate = useNavigate();
   const [searchResults, setSearchResults] = useState("");
+
+  // function to listen for ENTER key and search if pressed
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log(event.key);
+    if (event.key === "Enter") {
+      onSearch(searchResults);
+    }
+  };
+  // handles the search logic
   const onSearch = async (query: string) => {
     try {
       let url = `/api/products/`;
+      if (!query) {
+        query = "mouse";
+      }
       console.log(url);
-
       // querying the database based on category and simple filtering with user query
       const response = await axios.get(url, {
         params: { q: query },
       });
+
       console.log(response.data.results);
 
       // passing the data to the search results page
@@ -38,6 +50,7 @@ const SearchBar = () => {
         _placeholder={{ color: "gray.500" }}
         value={searchResults}
         onChange={(e) => setSearchResults(e.target.value)}
+        onKeyDown={(event) => handleKeyDown(event)}
       />
       <InputRightElement>
         <Button
