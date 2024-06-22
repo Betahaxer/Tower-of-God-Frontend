@@ -72,6 +72,7 @@ export default function CompareHeader() {
       >
         <Select
           position="relative"
+          zIndex={1}
           placeholder="Select Category"
           value={selectedCategory}
           onChange={(event) => {
@@ -92,11 +93,11 @@ export default function CompareHeader() {
 
         <Stack
           position="relative"
-          direction={"row"}
+          direction="row"
           spacing={{ base: 4, md: 6 }}
           zIndex={1}
         >
-          <Stack w="100%" position="relative">
+          <Stack w="100%" position="relative" direction="column">
             <Input
               position="relative"
               name="value1"
@@ -106,7 +107,10 @@ export default function CompareHeader() {
               size="lg"
             />
             <Box
-              position="relative"
+              position="absolute"
+              opacity={0.5}
+              zIndex={1}
+              top="55px"
               bg="gray.100"
               w="100%"
               px="10"
@@ -114,14 +118,32 @@ export default function CompareHeader() {
               textAlign="left"
               borderRadius="20"
             >
-              <List position="relative" p="0" spacing="1">
+              <List position="relative" zIndex={1} p="0" spacing="1">
                 {data.value1.map((data: Dictionary, index: number) => {
                   return <ListItem key={index}>{data.name}</ListItem>;
                 })}
               </List>
             </Box>
+            <Card
+              position="absolute"
+              zIndex={0}
+              top="55px"
+              bg="gray.200"
+              p="4"
+              textAlign="center"
+              w="100%"
+              borderRadius="20"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              h="500"
+            >
+              <Text px="10" fontSize="50" color="gray.500">
+                Product 1
+              </Text>
+            </Card>
           </Stack>
-          <Stack w="100%" position="relative">
+          <Stack w="100%" position="relative" direction="column">
             <Input
               position="relative"
               name="value2"
@@ -130,63 +152,43 @@ export default function CompareHeader() {
               placeholder="Search"
               size="lg"
             />
-            <Card
-              position="relative"
+            <Box
+              position="absolute"
+              opacity={0.5}
+              zIndex={1}
+              top="55px"
               bg="gray.100"
               w="100%"
               px="10"
               py="5"
               textAlign="left"
               borderRadius="20"
-              zIndex={"1"}
             >
               <List p="0" spacing="1">
                 {data.value2.map((data: Dictionary, index: number) => {
                   return <ListItem key={index}>{data.name}</ListItem>;
                 })}
               </List>
+            </Box>
+            <Card
+              position="absolute"
+              zIndex={0}
+              top="55px"
+              bg="gray.200"
+              p="4"
+              textAlign="center"
+              w="100%"
+              borderRadius="20"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              h="500"
+            >
+              <Text px="10" fontSize="50" color="gray.500">
+                Product 2
+              </Text>
             </Card>
           </Stack>
-        </Stack>
-
-        <Stack
-          position="relative"
-          direction="row"
-          w="100%"
-          spacing={{ base: 4, md: 6 }}
-          zIndex={0}
-        >
-          <Card
-            position="relative"
-            bg="gray.200"
-            p="4"
-            textAlign="center"
-            w="50%"
-            borderRadius="20"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            h="500"
-          >
-            <Text px="10" fontSize="50" color="gray.500">
-              Product 1
-            </Text>
-          </Card>
-          <Card
-            position="relative"
-            bg="gray.200"
-            p="4"
-            textAlign="center"
-            w="50%"
-            borderRadius="20"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Text px="10" fontSize="50" color="gray.500">
-              Product 2
-            </Text>
-          </Card>
         </Stack>
       </Stack>
     </>
