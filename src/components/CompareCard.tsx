@@ -92,6 +92,7 @@ export default function CompareCard({ product }: Dictionary) {
                 fontWeight={600}
                 fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}
                 noOfLines={2}
+                height={"2.2em"}
               >
                 {product.name}
               </Heading>
@@ -105,57 +106,46 @@ export default function CompareCard({ product }: Dictionary) {
               </Text>
             </Box>
           </>
-          <Stack spacing={{ base: 4, md: 6 }}>
-            <VStack spacing={{ base: 4, sm: 6 }}>
-              <Text
-                fontSize={"lg"}
-                style={{ whiteSpace: "pre-line", wordWrap: "break-word" }}
-              >
-                {product.description
-                  ? product.description.slice(0, 1000) + "..."
-                  : "No description found"}
-              </Text>
-            </VStack>
+          <SimpleGrid
+            columns={{ base: 1, md: 2 }}
+            spacing={5}
+            overflow="auto"
+            height="300"
+          >
+            <List spacing={2}>
+              {product.pros.slice(0, 5).map((pros: string, index: number) => {
+                return (
+                  <ListItem key={index} fontSize={15}>
+                    <ListIcon as={FaPlusCircle} color="green.500" />
+                    <b>{pros}</b>
+                  </ListItem>
+                );
+              })}
+            </List>
+            <List spacing={2}>
+              {product.cons.slice(0, 5).map((cons: string, index: number) => {
+                return (
+                  <ListItem key={index} fontSize={15}>
+                    <ListIcon as={FaMinusCircle} color="red.500" />
+                    <b>{cons}</b>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </SimpleGrid>
+          <Box overflow="auto" height="300">
+            <Text
+              fontSize={{ base: "16px", lg: "18px" }}
+              color={useColorModeValue("yellow.500", "yellow.300")}
+              fontWeight={"500"}
+              textTransform={"uppercase"}
+              mb={"4"}
+            >
+              Product Details
+            </Text>
 
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
-              <List spacing={2}>
-                {product.pros.slice(0, 5).map((pros: string, index: number) => {
-                  return (
-                    <ListItem key={index} fontSize={15}>
-                      <ListIcon as={FaPlusCircle} color="green.500" />
-                      <b>{pros}</b>
-                    </ListItem>
-                  );
-                })}
-              </List>
-              <List spacing={2}>
-                {product.cons.slice(0, 5).map((cons: string, index: number) => {
-                  return (
-                    <ListItem key={index} fontSize={15}>
-                      <ListIcon as={FaMinusCircle} color="red.500" />
-                      <b>{cons}</b>
-                    </ListItem>
-                  );
-                })}
-              </List>
-            </SimpleGrid>
-
-            <Divider borderColor={useColorModeValue("gray.200", "gray.600")} />
-
-            <Box>
-              <Text
-                fontSize={{ base: "16px", lg: "18px" }}
-                color={useColorModeValue("yellow.500", "yellow.300")}
-                fontWeight={"500"}
-                textTransform={"uppercase"}
-                mb={"4"}
-              >
-                Product Details
-              </Text>
-
-              {specComponent(product)}
-            </Box>
-          </Stack>
+            {specComponent(product)}
+          </Box>
         </Stack>
       </Card>
     </>

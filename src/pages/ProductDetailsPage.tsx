@@ -29,12 +29,21 @@ import { ArrowForwardIcon } from "@chakra-ui/icons";
 export default function ProductDetailsPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const product = location.state?.product;
+  const { state } = location;
+  let product = null;
+  if (state?.selectedProduct2) {
+    product = state.selectedProduct2;
+  } else if (state?.product) {
+    product = state.product;
+  }
+  //console.log("test");
+  //console.log(product);
 
   //redirects the user if no state available, ie url is keyed in manually
   useEffect(() => {
     if (!product) {
-      navigate("/");
+      console.log("no product");
+      //navigate("/");
     }
   }, [product, navigate]);
 

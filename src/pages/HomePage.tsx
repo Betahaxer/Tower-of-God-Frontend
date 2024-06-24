@@ -14,6 +14,7 @@ function HomePage() {
         textAlign={"center"}
         spacing={{ base: 8, md: 14 }}
         py={{ base: 10, md: 20 }}
+        maxH={100}
       >
         <Heading
           fontWeight={1000}
