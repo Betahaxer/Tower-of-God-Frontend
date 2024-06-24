@@ -186,7 +186,18 @@ export default function ComparePage() {
               </Card>
             )}
             {Object.keys(selectedProduct).length !== 0 && (
-              <Box position="absolute" top="70px" zIndex={1} pb={100}>
+              <Box
+                position="absolute"
+                top="70px"
+                zIndex={1}
+                pb={100}
+                onClick={() => {
+                  console.log(selectedProduct);
+                  navigate(`/products/${selectedProduct.name}`, {
+                    state: { selectedProduct },
+                  });
+                }}
+              >
                 <CompareCard product={selectedProduct}></CompareCard>
               </Box>
             )}

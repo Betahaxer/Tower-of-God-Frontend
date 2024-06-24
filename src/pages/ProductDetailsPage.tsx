@@ -33,6 +33,8 @@ export default function ProductDetailsPage() {
   let product = null;
   if (state?.selectedProduct2) {
     product = state.selectedProduct2;
+  } else if (state?.selectedProduct) {
+    product = state.selectedProduct;
   } else if (state?.product) {
     product = state.product;
   }
