@@ -10,10 +10,12 @@ import {
   slideFadeConfig,
   Card,
   Popover,
+  Link,
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import CompareCard from "./CompareCard";
 
 interface Dictionary {
   [key: string]: any;
@@ -24,6 +26,12 @@ export default function CompareHeader() {
   const [values, setValues] = useState({ value1: "", value2: "" });
   const [selectedCategory, setSelectedCategory] = useState("");
   const [data, setData] = useState({ value1: [], value2: [] });
+
+  const [selectedProduct, setSelectedProduct] = useState({});
+  const [selectedProduct2, setSelectedProduct2] = useState({});
+  const [showSearchBox, setShowSearchBox] = useState(false);
+  const [showSearchBox2, setShowSearchBox2] = useState(false);
+
   const isInitialRender = useRef(true); //returns an object current which contains the value
   const handleChange = async (
     event: { target: { name: string; value: string } },
@@ -38,8 +46,6 @@ export default function CompareHeader() {
       params: { q: query, category: selectedCategory },
     });
     setData({ ...data, [name]: response.data.results });
-    // console.log(response.data.results);
-    //console.log(data);
   };
   const category = [
     "earbuds",
@@ -55,12 +61,14 @@ export default function CompareHeader() {
     if (isInitialRender.current && product) {
       setSelectedCategory(product.category);
       isInitialRender.current = false;
-      console.log(selectedCategory);
     }
-    if (!selectedCategory) {
+    if (product) {
+      setSelectedProduct(product);
     }
     console.log(selectedCategory);
-  }, [selectedCategory]);
+    console.log(selectedProduct);
+    console.log(selectedProduct2);
+  }, [selectedCategory, selectedProduct, selectedProduct2]);
 
   return (
     <>
@@ -108,16 +116,19 @@ export default function CompareHeader() {
                 position="relative"
                 name="value1"
                 value={values.value1}
-                onChange={(event) => handleChange(event, values.value1)}
+                onChange={(event) => {
+                  handleChange(event, values.value1);
+                  setShowSearchBox(true);
+                }}
                 placeholder="Search"
                 size="lg"
               />
             )}
-            {values.value1 && (
+            {showSearchBox && (
               <Box
                 position="absolute"
                 opacity={1}
-                zIndex={1}
+                zIndex={2}
                 top="55px"
                 bg="white"
                 w="100%"
@@ -126,7 +137,7 @@ export default function CompareHeader() {
                 boxShadow="xl"
                 borderRadius={10}
               >
-                <Box position="relative" zIndex={1}>
+                <Box position="relative">
                   {data.value1
                     .slice(0, 5)
                     .map((data: Dictionary, index: number) => {
@@ -141,6 +152,10 @@ export default function CompareHeader() {
                           textAlign={"left"}
                           px="5"
                           py="2"
+                          onClick={() => {
+                            setSelectedProduct(data);
+                            setShowSearchBox(false);
+                          }}
                         >
                           {data.name}
                         </Box>
@@ -149,24 +164,31 @@ export default function CompareHeader() {
                 </Box>
               </Box>
             )}
-            <Card
-              position="absolute"
-              zIndex={0}
-              top="70px"
-              bg="gray.200"
-              p="4"
-              textAlign="center"
-              w="100%"
-              borderRadius="20"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              h="500"
-            >
-              <Text px="10" fontSize="50" color="gray.500">
-                Product 1
-              </Text>
-            </Card>
+            {Object.keys(selectedProduct).length === 0 && (
+              <Card
+                position="absolute"
+                zIndex={0}
+                top="70px"
+                bg="gray.200"
+                p="4"
+                textAlign="center"
+                w="100%"
+                borderRadius="20"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                h="500"
+              >
+                <Text px="10" fontSize="50" color="gray.500">
+                  Product 1
+                </Text>
+              </Card>
+            )}
+            {Object.keys(selectedProduct).length !== 0 && (
+              <Box position="absolute" top="70px" zIndex={1}>
+                <CompareCard product={selectedProduct}></CompareCard>
+              </Box>
+            )}
           </Stack>
           <Stack
             w="100%"
@@ -179,16 +201,19 @@ export default function CompareHeader() {
                 position="relative"
                 name="value2"
                 value={values.value2}
-                onChange={(event) => handleChange(event, values.value2)}
+                onChange={(event) => {
+                  handleChange(event, values.value2);
+                  setShowSearchBox2(true);
+                }}
                 placeholder="Search"
                 size="lg"
               />
             )}
-            {values.value2 && (
+            {showSearchBox2 && (
               <Box
                 position="absolute"
                 opacity={1}
-                zIndex={1}
+                zIndex={2}
                 top="55px"
                 bg="white"
                 w="100%"
@@ -197,45 +222,58 @@ export default function CompareHeader() {
                 boxShadow="xl"
                 borderRadius={10}
               >
-                {data.value2
-                  .slice(0, 5)
-                  .map((data: Dictionary, index: number) => {
-                    return (
-                      <Box
-                        key={index}
-                        h="100px"
-                        borderRadius={10}
-                        _hover={{
-                          background: "yellow.200",
-                        }}
-                        textAlign={"left"}
-                        px="5"
-                        py="2"
-                      >
-                        {data.name}
-                      </Box>
-                    );
-                  })}
+                <Box position="relative">
+                  {data.value2
+                    .slice(0, 5)
+                    .map((data: Dictionary, index: number) => {
+                      return (
+                        <Box
+                          key={index}
+                          h="100px"
+                          borderRadius={10}
+                          _hover={{
+                            background: "yellow.200",
+                          }}
+                          textAlign={"left"}
+                          px="5"
+                          py="2"
+                          onClick={() => {
+                            setSelectedProduct2(data);
+                            setShowSearchBox2(false);
+                          }}
+                        >
+                          {data.name}
+                        </Box>
+                      );
+                    })}
+                </Box>
               </Box>
             )}
-            <Card
-              position="absolute"
-              zIndex={0}
-              top="70px"
-              bg="gray.200"
-              p="4"
-              textAlign="center"
-              w="100%"
-              borderRadius="20"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              h="500"
-            >
-              <Text px="10" fontSize="50" color="gray.500">
-                Product 2
-              </Text>
-            </Card>
+            {Object.keys(selectedProduct2).length === 0 && (
+              <Card
+                position="absolute"
+                zIndex={0}
+                top="70px"
+                bg="gray.200"
+                p="4"
+                textAlign="center"
+                w="100%"
+                borderRadius="20"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                h="500"
+              >
+                <Text px="10" fontSize="50" color="gray.500">
+                  Product 2
+                </Text>
+              </Card>
+            )}
+            {Object.keys(selectedProduct2).length !== 0 && (
+              <Box position="absolute" top="70px" zIndex={1}>
+                <CompareCard product={selectedProduct2}></CompareCard>
+              </Box>
+            )}
           </Stack>
         </Stack>
       </Stack>

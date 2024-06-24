@@ -21,16 +21,7 @@ const ComparePage = () => {
   console.log(product);
   return (
     <>
-      {/* <CompareHeader></CompareHeader> */}
-      <Stack
-        direction="row"
-        spacing={{ base: 4, md: 6 }}
-        py={{ base: 9, md: 12 }}
-        px={{ base: 20, md: 10 }}
-      >
-        <CompareCard product={product}></CompareCard>
-        <CompareCard product={product}></CompareCard>
-      </Stack>
+      <CompareHeader></CompareHeader>
     </>
   );
 };
