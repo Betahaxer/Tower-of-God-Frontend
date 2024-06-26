@@ -110,6 +110,9 @@ export default function NavBar() {
                 variant={"link"}
                 href={"#"}
                 onClick={() => navigate("/login")}
+                _hover={{
+                  textDecoration: "none",
+                }}
               >
                 Sign In
               </Button>
@@ -119,10 +122,10 @@ export default function NavBar() {
                 fontSize={"sm"}
                 fontWeight={600}
                 color={"white"}
-                bg={"pink.400"}
+                bg={"green.400"}
                 href={"#"}
                 _hover={{
-                  bg: "pink.300",
+                  bg: "green.300",
                 }}
                 onClick={() => navigate("/register")}
               >
@@ -137,10 +140,10 @@ export default function NavBar() {
               fontSize={"sm"}
               fontWeight={600}
               color={"white"}
-              bg={"pink.400"}
+              bg={"green.400"}
               href={"#"}
               _hover={{
-                bg: "pink.300",
+                bg: "green.300",
               }}
               onClick={() => {
                 handleLogout();
@@ -207,6 +210,27 @@ const DesktopNav = () => {
 };
 
 const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
+  const navigate = useNavigate();
+  const onSearch = async (query: string) => {
+    try {
+      let url = `/api/products/`;
+      if (!query) {
+        query = "mouse";
+      }
+      console.log(url);
+      // querying the database based on category and simple filtering with user query
+      const response = await axios.get(url, {
+        params: { q: query },
+      });
+
+      //console.log(response.data.results);
+
+      // passing the data to the search results page
+      navigate("/search", { state: { results: response.data.results, query } });
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
+  };
   return (
     <Box
       as="a"
@@ -215,14 +239,18 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
       display={"block"}
       p={2}
       rounded={"md"}
-      _hover={{ bg: useColorModeValue("pink.50", "gray.900") }}
+      _hover={{ bg: useColorModeValue("green.50", "gray.900") }}
+      onClick={() => {
+        onSearch(label);
+      }}
     >
       <Stack direction={"row"} align={"center"}>
         <Box>
           <Text
             transition={"all .3s ease"}
-            _groupHover={{ color: "pink.400" }}
+            _groupHover={{ color: "green.400" }}
             fontWeight={500}
+            textTransform="capitalize"
           >
             {label}
           </Text>
@@ -237,7 +265,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
           align={"center"}
           flex={1}
         >
-          <Icon color={"pink.400"} w={5} h={5} as={ChevronRightIcon} />
+          <Icon color={"green.400"} w={5} h={5} as={ChevronRightIcon} />
         </Flex>
       </Stack>
     </Box>
@@ -256,29 +284,36 @@ const NAV_ITEMS: Array<NavItem> = [
     label: "Product Categories",
     children: [
       {
-        label: "TVs",
+        label: "earphone",
+        subLabel: "Explore more...",
+      },
+      {
+        label: "keyboard",
         subLabel: "Explore more",
-        href: "/",
       },
       {
-        label: "Laptops",
+        label: "laptop",
         subLabel: "Explore more",
-        href: "/",
-      },
-    ],
-  },
-  {
-    label: "Learn More",
-    children: [
-      {
-        label: "Product 1",
-        subLabel: "Description",
-        href: "/",
       },
       {
-        label: "Product 2",
-        subLabel: "Description",
-        href: "/",
+        label: "mouse",
+        subLabel: "Explore more",
+      },
+      {
+        label: "phone",
+        subLabel: "Explore more",
+      },
+      {
+        label: "monitor",
+        subLabel: "Explore more",
+      },
+      {
+        label: "speaker",
+        subLabel: "Explore more",
+      },
+      {
+        label: "television",
+        subLabel: "Explore more",
       },
     ],
   },

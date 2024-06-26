@@ -191,7 +191,7 @@ export default function ProductDetailsPage() {
           >
             <Button
               rightIcon={<ArrowForwardIcon />}
-              colorScheme="teal"
+              colorScheme="green"
               variant="outline"
               w="50%"
               maxW="180"
