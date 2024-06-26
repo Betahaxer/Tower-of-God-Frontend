@@ -33,10 +33,10 @@ const SearchBar = () => {
         params: { q: query },
       });
 
-      console.log(response.data.results);
+      //console.log(response.data.results);
 
       // passing the data to the search results page
-      navigate("/search", { state: { results: response.data.results } });
+      navigate("/search", { state: { results: response.data.results, query } });
     } catch (error) {
       console.error("Error fetching search results:", error);
     }

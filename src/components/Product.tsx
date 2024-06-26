@@ -18,7 +18,7 @@ interface Product {
 }
 
 const Product = ({ data }: Product) => {
-  console.log(data);
+  //console.log(data);
   return (
     <Card alignItems={"flex-start"} height="450px" overflow="hidden">
       <CardHeader pb={3}>
