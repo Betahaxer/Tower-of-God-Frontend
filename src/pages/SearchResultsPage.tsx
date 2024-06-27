@@ -1,4 +1,4 @@
-import { Key, useEffect, useState } from "react";
+import { Key, useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -20,10 +20,15 @@ import axios from "axios";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 const SearchResultsPage = () => {
+  interface FilterList {
+    [key: string]: string[][]; // Each key maps to a list of lists of strings
+  }
   const location = useLocation();
   const navigate = useNavigate();
-  const { query } = location.state || { query: "" };
-  const [results, setResults] = useState([]);
+  // list of dictionary of products
+  const [results, setResults] = useState<[]>([]);
+  const [filterList, setFilterList] = useState<FilterList>({});
+  const isFirstRender = useRef(true);
   interface Product {
     [key: string]: any;
   }
@@ -77,7 +82,7 @@ const SearchResultsPage = () => {
   ];
 
   const [filters, setFilters] = useState({
-    q: query,
+    q: location.state?.query || "",
     category: "",
     ordering: "",
     brand: "",
@@ -97,16 +102,30 @@ const SearchResultsPage = () => {
     const queryParams = new URLSearchParams(filters).toString();
     try {
       const response = await axios.get(`/api/products?${queryParams}`);
-      setResults(response.data.results);
+      setResults(response.data.results.products);
+      setFilterList(response.data.results.filters);
+      console.log(response.data);
+      console.log(filterList);
     } catch (error) {
       console.error("Error fetching filtered products", error);
     }
   };
+
   useEffect(() => {
-    console.log("meow");
-    console.log(query);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    } else {
+      console.log(location.state);
+      updateFilter("q", location.state?.query || "");
+    }
+  }, [location.state]);
+
+  useEffect(() => {
     handleSearch();
+    console.log(results);
+    console.log(filters);
   }, [filters]);
+
   return (
     <>
       <Stack
@@ -118,13 +137,6 @@ const SearchResultsPage = () => {
       >
         <Box>
           <Stack spacing={4} direction="row">
-            <Input
-              value={filters.q}
-              onChange={(e) => updateFilter("q", e.target.value)}
-              placeholder="Search query"
-              maxW="15%"
-            />
-
             <Menu closeOnSelect={false}>
               <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
                 Filter By
@@ -136,7 +148,7 @@ const SearchResultsPage = () => {
                 // hide the scroll bar
                 css={{
                   "&::-webkit-scrollbar": { display: "none" },
-                  "-ms-overflow-style": "none", // IE and Edge
+                  msOverflowStyle: "none", // IE and Edge
                   "scrollbar-width": "none", // Firefox
                 }}
               >
@@ -152,19 +164,42 @@ const SearchResultsPage = () => {
                     </MenuItemOption>
                   ))}
                 </MenuOptionGroup>
-                <MenuDivider></MenuDivider>
-                <MenuOptionGroup title="Brand" type="radio">
-                  {brandList.map((brand) => (
-                    <MenuItemOption
-                      key={brand}
-                      onClick={() => updateFilter("brand", brand)}
-                      textTransform={"capitalize"}
-                      value={brand}
-                    >
-                      {brand}
-                    </MenuItemOption>
-                  ))}
-                </MenuOptionGroup>
+
+                {Object.keys(filterList).map((key: string) => {
+                  const filteredOptions = filterList[key].filter(
+                    (optionArray: string[]) => {
+                      //console.log("optionArray:", optionArray);
+                      return optionArray[0] !== null;
+                    }
+                  );
+                  if (filteredOptions.length === 0) {
+                    return null; // Skip rendering if no options
+                  }
+                  //console.log("filteredOptions: ", filteredOptions);
+                  return (
+                    <>
+                      <MenuDivider></MenuDivider>
+                      <MenuOptionGroup
+                        key={key}
+                        title={key.charAt(0).toUpperCase() + key.slice(1)} //capitalize
+                        type="radio"
+                      >
+                        {filteredOptions
+                          .slice(0, 5)
+                          .map((optionArray: string[]) => (
+                            <MenuItemOption
+                              key={optionArray[0]}
+                              onClick={() => updateFilter(key, optionArray[0])}
+                              textTransform="capitalize"
+                              value={optionArray[0]}
+                            >
+                              {optionArray[0]}
+                            </MenuItemOption>
+                          ))}
+                      </MenuOptionGroup>
+                    </>
+                  );
+                })}
               </MenuList>
             </Menu>
 
@@ -191,8 +226,6 @@ const SearchResultsPage = () => {
                 </MenuItem>
               </MenuList>
             </Menu>
-
-            <Button onClick={handleSearch}>Search</Button>
           </Stack>
         </Box>
         <SimpleGrid
@@ -201,19 +234,21 @@ const SearchResultsPage = () => {
           justifyItems="flex-end"
         >
           {/* only works on arrays, so have to check if array is provided */}
-          {results.map((product: Product, index: number) => {
-            return (
-              <Link
-                key={index}
-                to={{
-                  pathname: `/products/${product.name}`,
-                }}
-                state={{ product }}
-              >
-                <Product data={product} />
-              </Link>
-            );
-          })}
+          {Array.isArray(results) &&
+            results.length !== 0 &&
+            results.map((product: Product, index: number) => {
+              return (
+                <Link
+                  key={index}
+                  to={{
+                    pathname: `/products/${product.name}`,
+                  }}
+                  state={{ product }}
+                >
+                  <Product data={product} />
+                </Link>
+              );
+            })}
         </SimpleGrid>
       </Stack>
     </>

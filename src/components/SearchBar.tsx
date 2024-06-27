@@ -43,7 +43,7 @@ const SearchBar = () => {
   };
 
   return (
-    <InputGroup maxW="50%">
+    <InputGroup maxW="45%">
       <Input
         placeholder="Search..."
         bg="white"
@@ -51,14 +51,17 @@ const SearchBar = () => {
         value={searchResults}
         onChange={(e) => setSearchResults(e.target.value)}
         onKeyDown={(event) => handleKeyDown(event)}
+        borderRadius={100}
       />
       <InputRightElement>
         <Button
-          bg="teal.500"
-          _hover={{ bg: "teal.600" }}
+          bg="white.500"
+          _hover={{}}
           onClick={() => onSearch(searchResults)}
+          borderRadius={"full"}
+          size="lg"
         >
-          <SearchIcon color="white" />
+          <SearchIcon color="black" />
         </Button>
       </InputRightElement>
     </InputGroup>

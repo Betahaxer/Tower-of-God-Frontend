@@ -66,7 +66,7 @@ export default function NavBar() {
       <Flex
         bg={useColorModeValue("white", "gray.800")}
         color={useColorModeValue("gray.600", "white")}
-        minH={"60px"}
+        minH={"70px"}
         py={{ base: 2 }}
         px={{ base: 4 }}
         borderBottom={1}
@@ -78,18 +78,22 @@ export default function NavBar() {
           flex={{ base: 1 }}
           justify={{ base: "center", md: "start" }}
           align="center"
+          gap="10"
+          px="5"
         >
           <Text
             textAlign={useBreakpointValue({ base: "center", md: "left" })}
             fontFamily={"heading"}
-            color={useColorModeValue("gray.800", "white")}
+            color={useColorModeValue("green.400", "white")}
             onClick={() => navigate("/")}
             my="auto"
+            fontWeight={800}
+            fontSize="xl"
           >
             Choice
           </Text>
 
-          <Flex display={{ base: "none", md: "flex" }} ml={10}>
+          <Flex display={{ base: "none", md: "flex" }} ml={0}>
             <DesktopNav />
           </Flex>
           {showSearchBar && <SearchBar></SearchBar>}
@@ -194,8 +198,16 @@ const DesktopNav = () => {
                 p={4}
                 rounded={"xl"}
                 minW={"sm"}
+                maxH="80vh"
               >
-                <Stack>
+                <Stack
+                  overflow="scroll"
+                  css={{
+                    "&::-webkit-scrollbar": { display: "none" },
+                    msOverflowStyle: "none", // IE and Edge
+                    "scrollbar-width": "none", // Firefox
+                  }}
+                >
                   {navItem.children.map((child) => (
                     <DesktopSubNav key={child.label} {...child} />
                   ))}
@@ -214,19 +226,13 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
   const onSearch = async (query: string) => {
     try {
       let url = `/api/products/`;
-      if (!query) {
-        query = "mouse";
-      }
-      console.log(url);
       // querying the database based on category and simple filtering with user query
       const response = await axios.get(url, {
         params: { q: query },
       });
 
-      //console.log(response.data.results);
-
       // passing the data to the search results page
-      navigate("/search", { state: { results: response.data.results, query } });
+      navigate("/search", { state: { query } });
     } catch (error) {
       console.error("Error fetching search results:", error);
     }
