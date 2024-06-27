@@ -36,7 +36,7 @@ const SearchBar = () => {
       //console.log(response.data.results);
 
       // passing the data to the search results page
-      navigate("/search", { state: { results: response.data.results, query } });
+      navigate("/search", { state: { query } });
     } catch (error) {
       console.error("Error fetching search results:", error);
     }

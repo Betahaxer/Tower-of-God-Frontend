@@ -39,14 +39,8 @@ const FilterBox: React.FC<FilterBoxProps> = ({
           {heading}
         </Text>
         {options.map((category: string, index: number) => (
-          <Box _hover={{ background: "green.50" }} borderRadius={5}>
-            <Radio
-              key={index}
-              value={category}
-              px={3}
-              display="flex"
-              textAlign="center"
-            >
+          <Box key={index} _hover={{ background: "green.50" }} borderRadius={5}>
+            <Radio value={category} px={3} display="flex" textAlign="center">
               <Text m={0} textTransform={"capitalize"}>
                 {category}
               </Text>
