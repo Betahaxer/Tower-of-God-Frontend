@@ -28,7 +28,7 @@ const RegisterPage = () => {
       // Handle error (e.g., display error message)
       console.error("Error:", error);
       setRegisterSuccess(false);
-      setAlertText("Testing!");
+      //setAlertText(error.response.data.error);
       setAlertVisible(true);
       // setUsername("");
       // setPassword("");

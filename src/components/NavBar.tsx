@@ -103,33 +103,32 @@ export default function NavBar() {
           flex={{ base: 1, md: 0 }}
           justify={"flex-end"}
           direction={"row"}
-          spacing={6}
+          spacing={3}
         >
           {!isLoggedIn && (
             <>
               <Button
-                as={"a"}
                 fontSize={"sm"}
-                fontWeight={400}
-                variant={"link"}
-                href={"#"}
+                fontWeight={500}
+                bg="white"
+                color="gray.600"
                 onClick={() => navigate("/login")}
                 _hover={{
                   textDecoration: "none",
+                  color: "gray.800",
                 }}
               >
                 Sign In
               </Button>
               <Button
-                as={"a"}
                 display={{ base: "none", md: "inline-flex" }}
                 fontSize={"sm"}
-                fontWeight={600}
+                fontWeight={500}
                 color={"white"}
                 bg={"green.400"}
-                href={"#"}
                 _hover={{
-                  bg: "green.300",
+                  textDecoration: "none",
+                  bg: "green.500",
                 }}
                 onClick={() => navigate("/register")}
               >
@@ -139,19 +138,18 @@ export default function NavBar() {
           )}
           {isLoggedIn && (
             <Button
-              as={"a"}
               display={{ base: "none", md: "inline-flex" }}
               fontSize={"sm"}
-              fontWeight={600}
+              fontWeight={500}
               color={"white"}
               bg={"green.400"}
-              href={"#"}
               _hover={{
-                bg: "green.300",
+                textDecoration: "none",
+                bg: "green.500",
               }}
               onClick={() => {
                 handleLogout();
-                navigate("/login");
+                navigate("/");
               }}
             >
               Logout

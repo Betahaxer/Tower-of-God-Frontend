@@ -152,7 +152,7 @@ const SearchResultsPage = () => {
                   "scrollbar-width": "none", // Firefox
                 }}
               >
-                <MenuOptionGroup title="Category" type="radio">
+                <MenuOptionGroup title="Category" type="radio" key="Category">
                   {categoryList.map((category) => (
                     <MenuItemOption
                       key={category}

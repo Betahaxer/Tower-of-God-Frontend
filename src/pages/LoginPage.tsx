@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Box, Text } from "@chakra-ui/react";
 import AlertCustom from "../components/AlertCustom";
@@ -8,6 +8,7 @@ import { getTokens, setTokens } from "../utils/storage";
 import { useAuth } from "../contexts/AuthContext";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [alertVisible, setAlertVisible] = useState(false);
@@ -37,16 +38,16 @@ const LoginPage = () => {
       login(access, refresh);
       setLoginSuccess(true);
       setAlertVisible(true);
-      // setUsername("");
-      // setPassword("");
-      // navigate("/");
+      setUsername("");
+      setPassword("");
+      navigate("/");
     } catch (error) {
       console.error("Error:", error);
-      setAlertText("Testing!");
+      //setAlertText(error.response.data.error);
       setLoginSuccess(false);
       setAlertVisible(true);
-      // setUsername("");
-      // setPassword("");
+      setUsername("");
+      setPassword("");
     }
   };
 
