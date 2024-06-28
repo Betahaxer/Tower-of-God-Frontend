@@ -28,8 +28,8 @@ export default function ComparePage() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [data, setData] = useState({ value1: [], value2: [] });
 
-  const [selectedProduct, setSelectedProduct] = useState({});
-  const [selectedProduct2, setSelectedProduct2] = useState({});
+  const [selectedProduct, setSelectedProduct] = useState<Dictionary>({});
+  const [selectedProduct2, setSelectedProduct2] = useState<Dictionary>({});
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [showSearchBox2, setShowSearchBox2] = useState(false);
 
@@ -193,7 +193,7 @@ export default function ComparePage() {
                 pb={100}
                 onClick={() => {
                   console.log(selectedProduct);
-                  navigate(`/products/${selectedProduct.name}`, {
+                  navigate(`/products/${selectedProduct.name || ""}`, {
                     state: { selectedProduct },
                   });
                 }}
@@ -288,7 +288,7 @@ export default function ComparePage() {
                 zIndex={1}
                 onClick={() => {
                   console.log(selectedProduct2);
-                  navigate(`/products/${selectedProduct2.name}`, {
+                  navigate(`/products/${selectedProduct2.name || ""}`, {
                     state: { selectedProduct2 },
                   });
                 }}

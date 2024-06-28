@@ -26,11 +26,15 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import SpecsMouse from "../components/SpecsMouse";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 
+interface Dictionary {
+  [key: string]: any;
+}
+
 export default function ProductDetailsPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { state } = location;
-  let product = null;
+  let product: Dictionary = {};
   if (state?.selectedProduct2) {
     product = state.selectedProduct2;
   } else if (state?.selectedProduct) {
