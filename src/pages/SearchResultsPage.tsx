@@ -33,7 +33,7 @@ const SearchResultsPage = () => {
     [key: string]: any;
   }
   const categoryList = [
-    "earphone",
+    "earbuds",
     "keyboard",
     "laptop",
     "mouse",
