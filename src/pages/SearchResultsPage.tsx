@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Product from "../components/Product";
-import FilterBox from "../components/FIlterBox";
 import axios from "axios";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
