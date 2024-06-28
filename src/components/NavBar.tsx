@@ -34,8 +34,8 @@ export default function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
   const navigate = useNavigate();
   const location = useLocation();
-  // show search bar in nav bar only in these paths
-  const showSearchBar = ["/search"].includes(location.pathname);
+  // dont show search bar in nav bar in homepage
+  const showSearchBar = location.pathname === "/" ? false : true;
   const { isLoggedIn, login, logout } = useAuth();
 
   const handleLogout = async () => {
@@ -66,7 +66,7 @@ export default function NavBar() {
       <Flex
         bg={useColorModeValue("white", "gray.800")}
         color={useColorModeValue("gray.600", "white")}
-        minH={"60px"}
+        minH={"70px"}
         py={{ base: 2 }}
         px={{ base: 4 }}
         borderBottom={1}
@@ -78,18 +78,22 @@ export default function NavBar() {
           flex={{ base: 1 }}
           justify={{ base: "center", md: "start" }}
           align="center"
+          gap="10"
+          px="5"
         >
           <Text
             textAlign={useBreakpointValue({ base: "center", md: "left" })}
             fontFamily={"heading"}
-            color={useColorModeValue("gray.800", "white")}
+            color={useColorModeValue("green.400", "white")}
             onClick={() => navigate("/")}
             my="auto"
+            fontWeight={800}
+            fontSize="xl"
           >
             Choice
           </Text>
 
-          <Flex display={{ base: "none", md: "flex" }} ml={10}>
+          <Flex display={{ base: "none", md: "flex" }} ml={0}>
             <DesktopNav />
           </Flex>
           {showSearchBar && <SearchBar></SearchBar>}
@@ -110,6 +114,9 @@ export default function NavBar() {
                 variant={"link"}
                 href={"#"}
                 onClick={() => navigate("/login")}
+                _hover={{
+                  textDecoration: "none",
+                }}
               >
                 Sign In
               </Button>
@@ -119,10 +126,10 @@ export default function NavBar() {
                 fontSize={"sm"}
                 fontWeight={600}
                 color={"white"}
-                bg={"pink.400"}
+                bg={"green.400"}
                 href={"#"}
                 _hover={{
-                  bg: "pink.300",
+                  bg: "green.300",
                 }}
                 onClick={() => navigate("/register")}
               >
@@ -137,10 +144,10 @@ export default function NavBar() {
               fontSize={"sm"}
               fontWeight={600}
               color={"white"}
-              bg={"pink.400"}
+              bg={"green.400"}
               href={"#"}
               _hover={{
-                bg: "pink.300",
+                bg: "green.300",
               }}
               onClick={() => {
                 handleLogout();
@@ -152,10 +159,6 @@ export default function NavBar() {
           )}
         </Stack>
       </Flex>
-
-      <Collapse in={isOpen} animateOpacity>
-        <MobileNav />
-      </Collapse>
     </Box>
   );
 }
@@ -195,8 +198,16 @@ const DesktopNav = () => {
                 p={4}
                 rounded={"xl"}
                 minW={"sm"}
+                maxH="80vh"
               >
-                <Stack>
+                <Stack
+                  overflow="scroll"
+                  css={{
+                    "&::-webkit-scrollbar": { display: "none" },
+                    msOverflowStyle: "none", // IE and Edge
+                    "scrollbar-width": "none", // Firefox
+                  }}
+                >
                   {navItem.children.map((child) => (
                     <DesktopSubNav key={child.label} {...child} />
                   ))}
@@ -211,6 +222,21 @@ const DesktopNav = () => {
 };
 
 const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
+  const navigate = useNavigate();
+  const onSearch = async (query: string) => {
+    try {
+      let url = `/api/products/`;
+      // querying the database based on category and simple filtering with user query
+      const response = await axios.get(url, {
+        params: { q: query },
+      });
+
+      // passing the data to the search results page
+      navigate("/search", { state: { query } });
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
+  };
   return (
     <Box
       as="a"
@@ -219,14 +245,18 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
       display={"block"}
       p={2}
       rounded={"md"}
-      _hover={{ bg: useColorModeValue("pink.50", "gray.900") }}
+      _hover={{ bg: useColorModeValue("green.50", "gray.900") }}
+      onClick={() => {
+        onSearch(label);
+      }}
     >
       <Stack direction={"row"} align={"center"}>
         <Box>
           <Text
             transition={"all .3s ease"}
-            _groupHover={{ color: "pink.400" }}
+            _groupHover={{ color: "green.400" }}
             fontWeight={500}
+            textTransform="capitalize"
           >
             {label}
           </Text>
@@ -241,77 +271,10 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
           align={"center"}
           flex={1}
         >
-          <Icon color={"pink.400"} w={5} h={5} as={ChevronRightIcon} />
+          <Icon color={"green.400"} w={5} h={5} as={ChevronRightIcon} />
         </Flex>
       </Stack>
     </Box>
-  );
-};
-
-const MobileNav = () => {
-  return (
-    <Stack
-      bg={useColorModeValue("white", "gray.800")}
-      p={4}
-      display={{ md: "none" }}
-    >
-      {NAV_ITEMS.map((navItem) => (
-        <MobileNavItem key={navItem.label} {...navItem} />
-      ))}
-    </Stack>
-  );
-};
-
-const MobileNavItem = ({ label, children, href }: NavItem) => {
-  const { isOpen, onToggle } = useDisclosure();
-
-  return (
-    <Stack spacing={4} onClick={children && onToggle}>
-      <Box
-        py={2}
-        as="a"
-        href={href ?? "#"}
-        justifyContent="space-between"
-        alignItems="center"
-        _hover={{
-          textDecoration: "none",
-        }}
-      >
-        <Text
-          fontWeight={600}
-          color={useColorModeValue("gray.600", "gray.200")}
-        >
-          {label}
-        </Text>
-        {children && (
-          <Icon
-            as={ChevronDownIcon}
-            transition={"all .25s ease-in-out"}
-            transform={isOpen ? "rotate(180deg)" : ""}
-            w={6}
-            h={6}
-          />
-        )}
-      </Box>
-
-      <Collapse in={isOpen} animateOpacity style={{ marginTop: "0!important" }}>
-        <Stack
-          mt={2}
-          pl={4}
-          borderLeft={1}
-          borderStyle={"solid"}
-          borderColor={useColorModeValue("gray.200", "gray.700")}
-          align={"start"}
-        >
-          {children &&
-            children.map((child) => (
-              <Box as="a" key={child.label} py={2} href={child.href}>
-                {child.label}
-              </Box>
-            ))}
-        </Stack>
-      </Collapse>
-    </Stack>
   );
 };
 
@@ -327,29 +290,36 @@ const NAV_ITEMS: Array<NavItem> = [
     label: "Product Categories",
     children: [
       {
-        label: "TVs",
+        label: "earphone",
+        subLabel: "Explore more...",
+      },
+      {
+        label: "keyboard",
         subLabel: "Explore more",
-        href: "/",
       },
       {
-        label: "Laptops",
+        label: "laptop",
         subLabel: "Explore more",
-        href: "/",
-      },
-    ],
-  },
-  {
-    label: "Learn More",
-    children: [
-      {
-        label: "Product 1",
-        subLabel: "Description",
-        href: "/",
       },
       {
-        label: "Product 2",
-        subLabel: "Description",
-        href: "/",
+        label: "mouse",
+        subLabel: "Explore more",
+      },
+      {
+        label: "phone",
+        subLabel: "Explore more",
+      },
+      {
+        label: "monitor",
+        subLabel: "Explore more",
+      },
+      {
+        label: "speaker",
+        subLabel: "Explore more",
+      },
+      {
+        label: "television",
+        subLabel: "Explore more",
       },
     ],
   },
