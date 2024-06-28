@@ -21,7 +21,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 
 const SearchResultsPage = () => {
   interface FilterList {
-    [key: string]: string[][]; // Each key maps to a list of lists of strings
+    [key: string]: (string | boolean | null)[]; // Each key maps to a list of lists of strings
   }
   const location = useLocation();
   const navigate = useNavigate();
@@ -166,18 +166,18 @@ const SearchResultsPage = () => {
                 {Object.keys(filterList).map((key: string) => {
                   // removes null values and converts true/false into strings for display
                   const filteredOptions = filterList[key]
-                    .filter((optionArray: (string | boolean | null)[]) => {
-                      const data = optionArray[0];
-                      return data !== null;
-                    })
-                    .map((optionArray: (string | boolean)[]) => {
-                      const data = optionArray[0];
-                      if (data === true) {
-                        optionArray[0] = "true";
-                      } else if (data === false) {
-                        optionArray[0] = "false";
+                    .filter(
+                      (
+                        option: string | boolean | null
+                      ): option is string | boolean => option !== null
+                    )
+                    .map((option: string | boolean) => {
+                      if (option === true) {
+                        option = "true";
+                      } else if (option === false) {
+                        option = "false";
                       }
-                      return optionArray as string[];
+                      return option as string;
                     });
 
                   if (filteredOptions.length === 0) {
@@ -191,18 +191,16 @@ const SearchResultsPage = () => {
                         title={key.charAt(0).toUpperCase() + key.slice(1)} //capitalize
                         type="radio"
                       >
-                        {filteredOptions
-                          .slice(0, 5)
-                          .map((optionArray: string[]) => (
-                            <MenuItemOption
-                              key={optionArray[0]}
-                              onClick={() => updateFilter(key, optionArray[0])}
-                              textTransform="capitalize"
-                              value={optionArray[0]}
-                            >
-                              {optionArray[0]}
-                            </MenuItemOption>
-                          ))}
+                        {filteredOptions.slice(0, 5).map((option: string) => (
+                          <MenuItemOption
+                            key={option}
+                            onClick={() => updateFilter(key, option)}
+                            textTransform="capitalize"
+                            value={option}
+                          >
+                            {option}
+                          </MenuItemOption>
+                        ))}
                       </MenuOptionGroup>
                     </>
                   );
