@@ -115,15 +115,13 @@ const SearchResultsPage = () => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
     } else {
-      console.log(location.state);
+      //console.log(location.state);
       updateFilter("q", location.state?.query || "");
     }
   }, [location.state]);
 
   useEffect(() => {
     handleSearch();
-    console.log(results);
-    console.log(filters);
   }, [filters]);
 
   return (
@@ -166,16 +164,25 @@ const SearchResultsPage = () => {
                 </MenuOptionGroup>
 
                 {Object.keys(filterList).map((key: string) => {
-                  const filteredOptions = filterList[key].filter(
-                    (optionArray: string[]) => {
-                      //console.log("optionArray:", optionArray);
-                      return optionArray[0] !== null;
-                    }
-                  );
+                  // removes null values and converts true/false into strings for display
+                  const filteredOptions = filterList[key]
+                    .filter((optionArray: (string | boolean | null)[]) => {
+                      const data = optionArray[0];
+                      return data !== null;
+                    })
+                    .map((optionArray: (string | boolean)[]) => {
+                      const data = optionArray[0];
+                      if (data === true) {
+                        optionArray[0] = "true";
+                      } else if (data === false) {
+                        optionArray[0] = "false";
+                      }
+                      return optionArray as string[];
+                    });
+
                   if (filteredOptions.length === 0) {
                     return null; // Skip rendering if no options
                   }
-                  //console.log("filteredOptions: ", filteredOptions);
                   return (
                     <>
                       <MenuDivider></MenuDivider>
