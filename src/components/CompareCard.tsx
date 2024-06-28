@@ -107,8 +107,14 @@ export default function CompareCard({ product }: Dictionary) {
           <SimpleGrid
             columns={{ base: 1, md: 2 }}
             spacing={5}
-            overflow="auto"
             height="300"
+            overflowY="auto"
+            // hide the scroll bar
+            css={{
+              "&::-webkit-scrollbar": { display: "none" },
+              msOverflowStyle: "none", // IE and Edge
+              "scrollbar-width": "none", // Firefox
+            }}
           >
             <List spacing={2}>
               {product.pros.slice(0, 5).map((pros: string, index: number) => {

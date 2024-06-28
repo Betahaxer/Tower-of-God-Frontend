@@ -61,14 +61,9 @@ export default function ComparePage() {
   useEffect(() => {
     if (isInitialRender.current && product) {
       setSelectedCategory(product.category);
+      setSelectedProduct(product);
       isInitialRender.current = false;
     }
-    if (product) {
-      setSelectedProduct(product);
-    }
-    console.log(selectedCategory);
-    console.log(selectedProduct);
-    console.log(selectedProduct2);
   }, [selectedCategory, selectedProduct, selectedProduct2]);
 
   return (
@@ -148,7 +143,7 @@ export default function ComparePage() {
                           h="100px"
                           borderRadius={10}
                           _hover={{
-                            background: "yellow.200",
+                            background: "green.200",
                           }}
                           textAlign={"left"}
                           px="5"
@@ -178,7 +173,7 @@ export default function ComparePage() {
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
-                h="500"
+                h="50vh"
               >
                 <Text px="10" fontSize="50" color="gray.500">
                   Product 1
@@ -244,7 +239,7 @@ export default function ComparePage() {
                           h="100px"
                           borderRadius={10}
                           _hover={{
-                            background: "yellow.200",
+                            background: "green.200",
                           }}
                           textAlign={"left"}
                           px="5"
@@ -274,7 +269,7 @@ export default function ComparePage() {
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
-                h="500"
+                h="50vh"
               >
                 <Text px="10" fontSize="50" color="gray.500">
                   Product 2
