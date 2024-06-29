@@ -10,17 +10,10 @@ const RegisterPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [alertVisible, setAlertVisible] = useState(false);
+  const [alertText, setAlertText] = useState("");
   const [registerSuccess, setRegisterSuccess] = useState(false);
   const [cookies, setCookie] = useCookies(["token"]);
   const handleRegistration = async () => {
-    // setAlertVisible(true);
-    // if (username && password) {
-    //   setRegisterSuccess(true);
-    // } else {
-    //   setRegisterSuccess(false);
-    // }
-    // setUsername("");
-    // setPassword("");
     try {
       const response = await axios.post("/api/register/", {
         username: username,
@@ -35,6 +28,7 @@ const RegisterPage = () => {
       // Handle error (e.g., display error message)
       console.error("Error:", error);
       setRegisterSuccess(false);
+      //setAlertText(error.response.data.error);
       setAlertVisible(true);
       // setUsername("");
       // setPassword("");
@@ -54,6 +48,7 @@ const RegisterPage = () => {
         <AlertCustom
           isSuccessful={registerSuccess}
           onClick={() => setAlertVisible(false)}
+          alertText={alertText}
         />
       )}
       <Box mb={4}>

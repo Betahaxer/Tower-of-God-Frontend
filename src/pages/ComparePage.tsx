@@ -28,8 +28,8 @@ export default function ComparePage() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [data, setData] = useState({ value1: [], value2: [] });
 
-  const [selectedProduct, setSelectedProduct] = useState({});
-  const [selectedProduct2, setSelectedProduct2] = useState({});
+  const [selectedProduct, setSelectedProduct] = useState<Dictionary>({});
+  const [selectedProduct2, setSelectedProduct2] = useState<Dictionary>({});
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [showSearchBox2, setShowSearchBox2] = useState(false);
 
@@ -61,14 +61,9 @@ export default function ComparePage() {
   useEffect(() => {
     if (isInitialRender.current && product) {
       setSelectedCategory(product.category);
+      setSelectedProduct(product);
       isInitialRender.current = false;
     }
-    if (product) {
-      setSelectedProduct(product);
-    }
-    console.log(selectedCategory);
-    console.log(selectedProduct);
-    console.log(selectedProduct2);
   }, [selectedCategory, selectedProduct, selectedProduct2]);
 
   return (
@@ -148,7 +143,7 @@ export default function ComparePage() {
                           h="100px"
                           borderRadius={10}
                           _hover={{
-                            background: "yellow.200",
+                            background: "green.200",
                           }}
                           textAlign={"left"}
                           px="5"
@@ -178,7 +173,7 @@ export default function ComparePage() {
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
-                h="500"
+                h="50vh"
               >
                 <Text px="10" fontSize="50" color="gray.500">
                   Product 1
@@ -193,7 +188,7 @@ export default function ComparePage() {
                 pb={100}
                 onClick={() => {
                   console.log(selectedProduct);
-                  navigate(`/products/${selectedProduct.name}`, {
+                  navigate(`/products/${selectedProduct.name || ""}`, {
                     state: { selectedProduct },
                   });
                 }}
@@ -244,7 +239,7 @@ export default function ComparePage() {
                           h="100px"
                           borderRadius={10}
                           _hover={{
-                            background: "yellow.200",
+                            background: "green.200",
                           }}
                           textAlign={"left"}
                           px="5"
@@ -274,7 +269,7 @@ export default function ComparePage() {
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
-                h="500"
+                h="50vh"
               >
                 <Text px="10" fontSize="50" color="gray.500">
                   Product 2
@@ -288,7 +283,7 @@ export default function ComparePage() {
                 zIndex={1}
                 onClick={() => {
                   console.log(selectedProduct2);
-                  navigate(`/products/${selectedProduct2.name}`, {
+                  navigate(`/products/${selectedProduct2.name || ""}`, {
                     state: { selectedProduct2 },
                   });
                 }}

@@ -39,7 +39,7 @@ const Login = ({
             value={password}
             onChange={onPasswordChange}
           />
-          <Button colorScheme="teal" size="lg" onClick={handleLogin}>
+          <Button colorScheme="green" size="lg" onClick={handleLogin}>
             {action}
           </Button>
         </VStack>

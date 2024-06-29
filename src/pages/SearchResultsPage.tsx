@@ -15,13 +15,12 @@ import {
 } from "@chakra-ui/react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Product from "../components/Product";
-import FilterBox from "../components/FIlterBox";
 import axios from "axios";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 const SearchResultsPage = () => {
   interface FilterList {
-    [key: string]: string[][]; // Each key maps to a list of lists of strings
+    [key: string]: (string | boolean | null)[]; // Each key maps to a list of lists of strings
   }
   const location = useLocation();
   const navigate = useNavigate();
@@ -33,7 +32,7 @@ const SearchResultsPage = () => {
     [key: string]: any;
   }
   const categoryList = [
-    "earphone",
+    "earbuds",
     "keyboard",
     "laptop",
     "mouse",
@@ -115,15 +114,13 @@ const SearchResultsPage = () => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
     } else {
-      console.log(location.state);
+      //console.log(location.state);
       updateFilter("q", location.state?.query || "");
     }
   }, [location.state]);
 
   useEffect(() => {
     handleSearch();
-    console.log(results);
-    console.log(filters);
   }, [filters]);
 
   return (
@@ -152,7 +149,7 @@ const SearchResultsPage = () => {
                   "scrollbar-width": "none", // Firefox
                 }}
               >
-                <MenuOptionGroup title="Category" type="radio">
+                <MenuOptionGroup title="Category" type="radio" key="Category">
                   {categoryList.map((category) => (
                     <MenuItemOption
                       key={category}
@@ -166,16 +163,25 @@ const SearchResultsPage = () => {
                 </MenuOptionGroup>
 
                 {Object.keys(filterList).map((key: string) => {
-                  const filteredOptions = filterList[key].filter(
-                    (optionArray: string[]) => {
-                      //console.log("optionArray:", optionArray);
-                      return optionArray[0] !== null;
-                    }
-                  );
+                  // removes null values and converts true/false into strings for display
+                  const filteredOptions = filterList[key]
+                    .filter(
+                      (
+                        option: string | boolean | null
+                      ): option is string | boolean => option !== null
+                    )
+                    .map((option: string | boolean) => {
+                      if (option === true) {
+                        option = "true";
+                      } else if (option === false) {
+                        option = "false";
+                      }
+                      return option as string;
+                    });
+
                   if (filteredOptions.length === 0) {
                     return null; // Skip rendering if no options
                   }
-                  //console.log("filteredOptions: ", filteredOptions);
                   return (
                     <>
                       <MenuDivider></MenuDivider>
@@ -184,18 +190,16 @@ const SearchResultsPage = () => {
                         title={key.charAt(0).toUpperCase() + key.slice(1)} //capitalize
                         type="radio"
                       >
-                        {filteredOptions
-                          .slice(0, 5)
-                          .map((optionArray: string[]) => (
-                            <MenuItemOption
-                              key={optionArray[0]}
-                              onClick={() => updateFilter(key, optionArray[0])}
-                              textTransform="capitalize"
-                              value={optionArray[0]}
-                            >
-                              {optionArray[0]}
-                            </MenuItemOption>
-                          ))}
+                        {filteredOptions.slice(0, 5).map((option: string) => (
+                          <MenuItemOption
+                            key={option}
+                            onClick={() => updateFilter(key, option)}
+                            textTransform="capitalize"
+                            value={option}
+                          >
+                            {option}
+                          </MenuItemOption>
+                        ))}
                       </MenuOptionGroup>
                     </>
                   );

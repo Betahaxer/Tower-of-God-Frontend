@@ -11,6 +11,7 @@ import axios from "axios";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ComparePage from "./pages/ComparePage";
+import { Box } from "@chakra-ui/react";
 
 //axios.defaults.baseURL = "http://127.0.0.1:8000";
 axios.defaults.baseURL = "https://tower-of-god.onrender.com";
@@ -24,7 +25,9 @@ interface Post {
 function App() {
   return (
     <AuthProvider>
-      <NavBar />
+      <Box position="sticky" top="0px" zIndex={9999}>
+        <NavBar />
+      </Box>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
