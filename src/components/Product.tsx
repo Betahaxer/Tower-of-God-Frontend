@@ -31,7 +31,7 @@ const Product = ({ data }: Product) => {
       css={{
         "&::-webkit-scrollbar": { display: "none" },
         msOverflowStyle: "none", // IE and Edge
-        "scrollbar-width": "none", // Firefox
+        scrollbarWidth: "none", // Firefox
       }}
     >
       <CardBody pb={30}>

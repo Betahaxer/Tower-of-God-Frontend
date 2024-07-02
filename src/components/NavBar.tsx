@@ -203,7 +203,7 @@ const DesktopNav = () => {
                   css={{
                     "&::-webkit-scrollbar": { display: "none" },
                     msOverflowStyle: "none", // IE and Edge
-                    "scrollbar-width": "none", // Firefox
+                    scrollbarWidth: "none", // Firefox
                   }}
                 >
                   {navItem.children.map((child) => (
