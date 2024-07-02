@@ -1,10 +1,7 @@
-import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
   Box,
   Text,
-  VStack,
   Stack,
-  Container,
   StackDivider,
   useColorModeValue,
   Flex,
@@ -13,13 +10,10 @@ import {
   SimpleGrid,
   List,
   ListItem,
-  Divider,
-  Button,
-  Link,
   ListIcon,
   Card,
 } from "@chakra-ui/react";
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 import { FaPlusCircle, FaMinusCircle } from "react-icons/fa";
 import SpecsMouse from "./SpecsMouse";
 
@@ -113,7 +107,7 @@ export default function CompareCard({ product }: Dictionary) {
             css={{
               "&::-webkit-scrollbar": { display: "none" },
               msOverflowStyle: "none", // IE and Edge
-              "scrollbar-width": "none", // Firefox
+              scrollbarWidth: "none", // Firefox
             }}
           >
             <List spacing={2}>

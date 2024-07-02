@@ -146,7 +146,7 @@ const SearchResultsPage = () => {
                 css={{
                   "&::-webkit-scrollbar": { display: "none" },
                   msOverflowStyle: "none", // IE and Edge
-                  "scrollbar-width": "none", // Firefox
+                  scrollbarWidth: "none", // Firefox
                 }}
               >
                 <MenuOptionGroup title="Category" type="radio" key="Category">

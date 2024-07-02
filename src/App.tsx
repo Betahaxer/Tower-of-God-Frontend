@@ -13,8 +13,8 @@ import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ComparePage from "./pages/ComparePage";
 import { Box } from "@chakra-ui/react";
 
-//axios.defaults.baseURL = "http://127.0.0.1:8000";
-axios.defaults.baseURL = "https://tower-of-god.onrender.com";
+axios.defaults.baseURL = "http://127.0.0.1:8000";
+//axios.defaults.baseURL = "https://tower-of-god.onrender.com";
 axios.defaults.withCredentials = true;
 
 interface Post {

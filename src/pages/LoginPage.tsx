@@ -33,7 +33,7 @@ const LoginPage = () => {
         }
       );
       console.log(response.data);
-      setAlertText("Testing!");
+      //setAlertText("Testing!");
       const { access, refresh } = response.data;
       login(access, refresh);
       setLoginSuccess(true);
