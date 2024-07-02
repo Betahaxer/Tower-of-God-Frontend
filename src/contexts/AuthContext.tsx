@@ -19,12 +19,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // useEffect(() => {
-  //   const { accessToken, refreshToken } = getTokens();
-  //   if (accessToken && refreshToken) {
-  //     setIsLoggedIn(true);
-  //   }
-  // }, []);
+  useEffect(() => {
+    const { accessToken, refreshToken } = getTokens();
+    if (accessToken && refreshToken) {
+      setIsLoggedIn(true);
+    }
+  }, []);
   const login = (accessToken: string, refreshToken: string) => {
     setTokens(accessToken, refreshToken);
     setIsLoggedIn(true);
