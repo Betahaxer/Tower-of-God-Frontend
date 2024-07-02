@@ -17,6 +17,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Product from "../components/Product";
 import axios from "axios";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+import React from "react";
 
 const SearchResultsPage = () => {
   interface FilterList {
@@ -145,8 +146,8 @@ const SearchResultsPage = () => {
                     return null; // Skip rendering if no options
                   }
                   return (
-                    <>
-                      <MenuDivider></MenuDivider>
+                    <React.Fragment key={key}>
+                      <MenuDivider key={`${key}-divider`}></MenuDivider>
                       <MenuOptionGroup
                         key={key}
                         title={key.charAt(0).toUpperCase() + key.slice(1)} //capitalize
@@ -163,7 +164,7 @@ const SearchResultsPage = () => {
                           </MenuItemOption>
                         ))}
                       </MenuOptionGroup>
-                    </>
+                    </React.Fragment>
                   );
                 })}
               </MenuList>
