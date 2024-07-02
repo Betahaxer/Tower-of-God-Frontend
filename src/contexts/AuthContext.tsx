@@ -6,7 +6,9 @@ import React, {
   ReactNode,
   FC,
 } from "react";
-import { getTokens, setTokens } from "../utils/storage";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { clearTokens, getTokens, setTokens } from "../utils/storage";
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -22,15 +24,50 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     const { accessToken, refreshToken } = getTokens();
     if (accessToken && refreshToken) {
-      setIsLoggedIn(true);
+      try {
+        const accessDecoded: any = jwtDecode(accessToken);
+        const currentTime = Date.now() / 1000;
+        if (accessDecoded.exp < currentTime) {
+          refreshTokenRequest(refreshToken);
+        } else {
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        console.error("Error decoding access token", error);
+        setIsLoggedIn(false);
+      }
     }
   }, []);
+
+  const refreshTokenRequest = async (refreshToken: string) => {
+    console.log(refreshToken);
+    const refreshDecoded: any = jwtDecode(refreshToken);
+    const currentTime = Date.now() / 1000;
+    if (refreshDecoded.exp < currentTime) {
+      setIsLoggedIn(false);
+    } else {
+      try {
+        const response = await axios.post("/api/token/refresh/", {
+          refresh: refreshToken,
+        });
+        const { access, refresh } = response.data;
+        setTokens(access, refresh);
+        setIsLoggedIn(true);
+        console.log("refreshed");
+      } catch (error) {
+        console.error("Failed to refresh token", error);
+        setIsLoggedIn(false);
+      }
+    }
+  };
+
   const login = (accessToken: string, refreshToken: string) => {
     setTokens(accessToken, refreshToken);
     setIsLoggedIn(true);
   };
 
   const logout = () => {
+    clearTokens();
     setIsLoggedIn(false);
   };
 

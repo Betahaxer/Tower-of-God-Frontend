@@ -53,10 +53,10 @@ export default function NavBar() {
           },
         }
       );
-      clearTokens();
       logout();
       console.log("Response:", response);
     } catch (error) {
+      logout();
       console.error("Error:", error);
     }
   };
