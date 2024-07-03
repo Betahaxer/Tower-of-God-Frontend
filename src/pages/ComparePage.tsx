@@ -49,7 +49,7 @@ export default function ComparePage() {
     setData({ ...data, [name]: response.data.results });
   };
   const category = [
-    "earphone",
+    "earphones",
     "keyboard",
     "laptop",
     "mouse",
@@ -107,19 +107,18 @@ export default function ComparePage() {
             direction="column"
             spacing={{ base: 4, md: 6 }}
           >
-            {selectedCategory && (
-              <Input
-                position="relative"
-                name="value1"
-                value={values.value1}
-                onChange={(event) => {
-                  handleChange(event, values.value1);
-                  setShowSearchBox(true);
-                }}
-                placeholder="Search"
-                size="lg"
-              />
-            )}
+            <Input
+              position="relative"
+              name="value1"
+              value={values.value1}
+              onChange={(event) => {
+                handleChange(event, values.value1);
+                setShowSearchBox(true);
+              }}
+              isDisabled={!selectedCategory}
+              placeholder="Search"
+              size="lg"
+            />
             {showSearchBox && (
               <Box
                 position="absolute"
@@ -203,19 +202,18 @@ export default function ComparePage() {
             direction="column"
             spacing={{ base: 4, md: 6 }}
           >
-            {selectedCategory && (
-              <Input
-                position="relative"
-                name="value2"
-                value={values.value2}
-                onChange={(event) => {
-                  handleChange(event, values.value2);
-                  setShowSearchBox2(true);
-                }}
-                placeholder="Search"
-                size="lg"
-              />
-            )}
+            <Input
+              position="relative"
+              name="value2"
+              value={values.value2}
+              onChange={(event) => {
+                handleChange(event, values.value2);
+                setShowSearchBox2(true);
+              }}
+              isDisabled={!selectedCategory}
+              placeholder="Search"
+              size="lg"
+            />
             {showSearchBox2 && (
               <Box
                 position="absolute"

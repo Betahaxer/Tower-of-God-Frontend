@@ -89,6 +89,7 @@ export default function NavBar() {
             my="auto"
             fontWeight={800}
             fontSize="xl"
+            _hover={{ cursor: "pointer" }}
           >
             Choice
           </Text>
@@ -204,6 +205,7 @@ const DesktopNav = () => {
                     "&::-webkit-scrollbar": { display: "none" },
                     msOverflowStyle: "none", // IE and Edge
                     scrollbarWidth: "none", // Firefox
+                    cursor: "pointer",
                   }}
                 >
                   {navItem.children.map((child) => (
@@ -288,7 +290,7 @@ const NAV_ITEMS: Array<NavItem> = [
     label: "Product Categories",
     children: [
       {
-        label: "earphone",
+        label: "earphones",
         subLabel: "Explore more...",
       },
       {
