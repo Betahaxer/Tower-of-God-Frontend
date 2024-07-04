@@ -16,6 +16,8 @@ import {
   useBreakpointValue,
   useDisclosure,
   Center,
+  Image,
+  HStack
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -81,18 +83,22 @@ export default function NavBar() {
           gap="10"
           px="5"
         >
-          <Text
-            textAlign={useBreakpointValue({ base: "center", md: "left" })}
-            fontFamily={"heading"}
-            color={useColorModeValue("green.400", "white")}
+          <HStack
             onClick={() => navigate("/")}
-            my="auto"
-            fontWeight={800}
-            fontSize="xl"
-            _hover={{ cursor: "pointer" }}
-          >
-            Choice
-          </Text>
+            >
+            <Image src={`/wiz1.svg`} alt="Logo" maxH="40px" objectFit="contain"  />
+            <Text
+              textAlign={useBreakpointValue({ base: "center", md: "left" })}
+              fontFamily={"heading"}
+              color={useColorModeValue("green.400", "white")}
+              my="auto"
+              fontWeight={800}
+              fontSize="xl"
+              _hover={{ cursor: "pointer" }}
+            >
+              Choice
+            </Text>
+          </HStack>
 
           <Flex display={{ base: "none", md: "flex" }} ml={0}>
             <DesktopNav />

@@ -12,8 +12,9 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ComparePage from "./pages/ComparePage";
 import { Box } from "@chakra-ui/react";
+import { GoogleLoadingPage } from "./components/GoogleLogin";
 
-//axios.defaults.baseURL = "http://127.0.0.1:8000";
+// axios.defaults.baseURL = "http://127.0.0.1:8000";
 axios.defaults.baseURL = "https://tower-of-god.onrender.com";
 axios.defaults.withCredentials = true;
 
@@ -31,6 +32,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/auth/google" element={<GoogleLoadingPage/>} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/search" element={<SearchResultsPage />} />
         <Route path="/*" element={<NotFoundPage />} />

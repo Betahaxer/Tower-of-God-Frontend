@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, HStack, Heading, Text, VStack } from "@chakra-ui/react";
 import AlertCustom from "../components/AlertCustom";
 import Login from "../components/Login";
 import { getTokens, setTokens } from "../utils/storage";
 import { useAuth } from "../contexts/AuthContext";
+import { GoogleLoginButton } from "../components/GoogleLogin";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -78,6 +79,12 @@ const LoginPage = () => {
             handleLogin={handleLogin}
           ></Login>
         </Box>
+        <VStack>
+          <Heading as='h4' size='md'>Social Login:</Heading>
+          <HStack>
+            <GoogleLoginButton/>
+          </HStack>
+        </VStack>
         <Box mt={4}>
           <Text fontSize="sm">
             First time here?{" "}
