@@ -6,6 +6,7 @@ import { Box, IconButton, Icon, Progress, Heading, Text, VStack, useToast } from
 import { useAuth } from "../contexts/AuthContext";
 
 // Button to click on to go to google login
+// New comment
 export const GoogleLoginButton = () => {
     const handleClick = async () => {
         try {
