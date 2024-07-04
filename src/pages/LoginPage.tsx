@@ -6,7 +6,7 @@ import AlertCustom from "../components/AlertCustom";
 import Login from "../components/Login";
 import { getTokens, setTokens } from "../utils/storage";
 import { useAuth } from "../contexts/AuthContext";
-// import { GoogleLoginButton } from "../components/GoogleLogin";
+import { GoogleLoginButton } from "../components/GoogleLogin";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -82,7 +82,7 @@ const LoginPage = () => {
         <VStack>
           <Heading as='h4' size='md'>Social Login:</Heading>
           <HStack>
-            {/* <GoogleLoginButton/> */}
+            <GoogleLoginButton/>
           </HStack>
         </VStack>
         <Box mt={4}>
