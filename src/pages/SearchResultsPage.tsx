@@ -2,6 +2,7 @@ import { Key, useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
+  filter,
   Input,
   Menu,
   MenuButton,
@@ -19,6 +20,7 @@ import axios from "axios";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import FilterSortMenu from "../components/FilterSortMenu";
 
 const SearchResultsPage = () => {
   interface FilterList {
@@ -72,15 +74,12 @@ const SearchResultsPage = () => {
       setFilterList(response.data.results.filters);
       setNextUrl(response.data.next);
       setHasMore(response.data.next !== null);
-
       console.log(response.data);
-      console.log(filterList);
     } catch (error) {
       console.error("Error fetching filtered products", error);
     }
   };
   const fetchMoreData = async () => {
-    //const queryParams = new URLSearchParams(filters).toString();
     try {
       const url =
         nextUrl || `/api/products?${new URLSearchParams(filters).toString()}`;
@@ -128,7 +127,7 @@ const SearchResultsPage = () => {
         spacing={10}
       >
         <Box>
-          <Stack spacing={4} direction="row">
+          {/* <Stack spacing={4} direction="row">
             <Menu closeOnSelect={false}>
               <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
                 Filter By
@@ -225,7 +224,12 @@ const SearchResultsPage = () => {
                 </MenuItem>
               </MenuList>
             </Menu>
-          </Stack>
+          </Stack> */}
+          <FilterSortMenu
+            categoryList={categoryList}
+            filterList={filterList}
+            updateFilter={updateFilter}
+          ></FilterSortMenu>
         </Box>
         <InfiniteScroll
           dataLength={results.length}
