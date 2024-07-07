@@ -9,14 +9,18 @@ import {
   MenuOptionGroup,
   MenuDivider,
   Button,
+  Box,
+  Flex,
+  Text,
 } from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, CloseIcon } from "@chakra-ui/icons";
+import CloseButton from "./CloseButton";
 
 interface FilterList {
   [key: string]: (string | boolean | null)[]; // Each key maps to a list of lists of strings
 }
 
-interface FilterSortType {
+interface FilterSortProps {
   categoryList: string[];
   filterList: FilterList;
   updateFilter: (key: string, value: any) => void;
@@ -26,7 +30,7 @@ const FilterSortMenu = ({
   categoryList,
   filterList,
   updateFilter,
-}: FilterSortType) => {
+}: FilterSortProps) => {
   return (
     <Stack spacing={4} direction="row">
       <Menu closeOnSelect={false}>
@@ -116,6 +120,7 @@ const FilterSortMenu = ({
           </MenuItem>
         </MenuList>
       </Menu>
+      <CloseButton text="test" onClick={() => {}}></CloseButton>
     </Stack>
   );
 };

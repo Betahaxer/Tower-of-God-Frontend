@@ -26,13 +26,26 @@ const SearchResultsPage = () => {
   interface FilterList {
     [key: string]: (string | boolean | null)[]; // Each key maps to a list of lists of strings
   }
+  interface Filters {
+    q: string;
+    category: string;
+    ordering: string;
+    brand: string;
+    price: string;
+    review_date: string;
+  }
   const location = useLocation();
   const navigate = useNavigate();
-  // list of dictionary of products
+
+  // results store all the product details
   const [results, setResults] = useState<Product[]>([]);
+  // filterList for the list of possible filters
   const [filterList, setFilterList] = useState<FilterList>({});
   const isFirstRender = useRef(true);
 
+  // nextUrl and hasMore for infinite scrolling
+  // nextUrl to get the next page of results
+  // hasMore indicates if there are more results, used to render the loading screen
   const [nextUrl, setNextUrl] = useState();
   const [hasMore, setHasMore] = useState<boolean>(true);
   interface Product {
@@ -48,15 +61,16 @@ const SearchResultsPage = () => {
     "speaker",
     "television",
   ];
-
-  const [filters, setFilters] = useState({
+  // filters contain the current filters applied by user
+  const initialFilters: Filters = {
     q: location.state?.query || "",
     category: "",
     ordering: "",
     brand: "",
     price: "",
     review_date: "",
-  });
+  };
+  const [filters, setFilters] = useState<Filters>(initialFilters);
 
   // Function to update filters
   const updateFilter = (key: string, value: any) => {
@@ -67,7 +81,9 @@ const SearchResultsPage = () => {
   };
 
   const handleSearch = async () => {
-    const queryParams = new URLSearchParams(filters).toString();
+    const queryParams = new URLSearchParams(
+      filters as unknown as Record<string, string>
+    ).toString();
     try {
       const response = await axios.get(`/api/products?${queryParams}`);
       setResults(response.data.results.products);
@@ -82,7 +98,10 @@ const SearchResultsPage = () => {
   const fetchMoreData = async () => {
     try {
       const url =
-        nextUrl || `/api/products?${new URLSearchParams(filters).toString()}`;
+        nextUrl ||
+        `/api/products?${new URLSearchParams(
+          filters as unknown as Record<string, string>
+        ).toString()}`;
       const axiosConfig = nextUrl ? { baseURL: "" } : {};
       const response = await axios.get(url, axiosConfig);
       const newResults: Product[] = response.data.results.products;
@@ -127,104 +146,6 @@ const SearchResultsPage = () => {
         spacing={10}
       >
         <Box>
-          {/* <Stack spacing={4} direction="row">
-            <Menu closeOnSelect={false}>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                Filter By
-              </MenuButton>
-              <MenuList
-                minWidth="240px"
-                maxH="60vh"
-                overflowY="auto"
-                // hide the scroll bar
-                css={{
-                  "&::-webkit-scrollbar": { display: "none" },
-                  msOverflowStyle: "none", // IE and Edge
-                  scrollbarWidth: "none", // Firefox
-                }}
-              >
-                <MenuOptionGroup title="Category" type="radio" key="Category">
-                  {categoryList.map((category) => (
-                    <MenuItemOption
-                      key={category}
-                      onClick={() => updateFilter("category", category)}
-                      textTransform={"capitalize"}
-                      value={category}
-                    >
-                      {category}
-                    </MenuItemOption>
-                  ))}
-                </MenuOptionGroup>
-
-                {Object.keys(filterList).map((key: string) => {
-                  // removes null values and converts true/false into strings for display
-                  const filteredOptions = filterList[key]
-                    .filter(
-                      (
-                        option: string | boolean | null
-                      ): option is string | boolean => option !== null
-                    )
-                    .map((option: string | boolean) => {
-                      if (option === true) {
-                        option = "true";
-                      } else if (option === false) {
-                        option = "false";
-                      }
-                      return option as string;
-                    });
-
-                  if (filteredOptions.length === 0) {
-                    return null; // Skip rendering if no options
-                  }
-                  return (
-                    <React.Fragment key={key}>
-                      <MenuDivider key={`${key}-divider`}></MenuDivider>
-                      <MenuOptionGroup
-                        key={key}
-                        title={key.charAt(0).toUpperCase() + key.slice(1)} //capitalize
-                        type="radio"
-                      >
-                        {filteredOptions.slice(0, 5).map((option: string) => (
-                          <MenuItemOption
-                            key={option}
-                            onClick={() => updateFilter(key, option)}
-                            textTransform="capitalize"
-                            value={option}
-                          >
-                            {option}
-                          </MenuItemOption>
-                        ))}
-                      </MenuOptionGroup>
-                    </React.Fragment>
-                  );
-                })}
-              </MenuList>
-            </Menu>
-
-            <Menu>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                Sort By
-              </MenuButton>
-              <MenuList>
-                <MenuItem onClick={() => updateFilter("ordering", "price")}>
-                  Price
-                </MenuItem>
-                <MenuItem onClick={() => updateFilter("ordering", "-price")}>
-                  Price (descending)
-                </MenuItem>
-                <MenuItem
-                  onClick={() => updateFilter("ordering", "review_date")}
-                >
-                  Review Date
-                </MenuItem>
-                <MenuItem
-                  onClick={() => updateFilter("ordering", "-review_date")}
-                >
-                  Review Date (descending)
-                </MenuItem>
-              </MenuList>
-            </Menu>
-          </Stack> */}
           <FilterSortMenu
             categoryList={categoryList}
             filterList={filterList}
