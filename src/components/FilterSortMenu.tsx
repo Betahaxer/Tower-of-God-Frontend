@@ -19,18 +19,28 @@ import CloseButton from "./CloseButton";
 interface FilterList {
   [key: string]: (string | boolean | null)[]; // Each key maps to a list of lists of strings
 }
-
+interface Filters {
+  q: string;
+  category: string;
+  ordering: string;
+  brand: string;
+  price: string;
+  review_date: string;
+}
 interface FilterSortProps {
   categoryList: string[];
   filterList: FilterList;
   updateFilter: (key: string, value: any) => void;
+  filters: Filters;
 }
 
 const FilterSortMenu = ({
   categoryList,
   filterList,
   updateFilter,
+  filters,
 }: FilterSortProps) => {
+  console.log(filters);
   return (
     <Stack spacing={4} direction="row">
       <Menu closeOnSelect={false}>
@@ -120,7 +130,28 @@ const FilterSortMenu = ({
           </MenuItem>
         </MenuList>
       </Menu>
-      <CloseButton text="test" onClick={() => {}}></CloseButton>
+      <FilterButtons filters={filters}></FilterButtons>
+    </Stack>
+  );
+};
+
+const FilterButtons = ({ filters }: { filters: Filters }) => {
+  // Filter keys and values where values are truthy
+  const filteredEntries = Object.entries(filters)
+    .filter(([key, value]) => Boolean(value)) // Only keep entries where value is truthy
+    .map(([key, value]) => ({ key, value })); // Map to an array of objects containing key-value pairs
+
+  return (
+    <Stack direction="row" spacing="4">
+      {filteredEntries.map(({ key, value }) => (
+        <CloseButton
+          key={key}
+          text={`${key}: ${value}`} // Display key and value as text for the button
+          onClick={() => {
+            // Handle click action if needed
+          }}
+        />
+      ))}
     </Stack>
   );
 };

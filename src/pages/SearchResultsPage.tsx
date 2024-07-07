@@ -133,6 +133,7 @@ const SearchResultsPage = () => {
   }, [location.state.query]);
 
   useEffect(() => {
+    console.log(filters);
     handleSearch();
   }, [filters]);
 
@@ -150,6 +151,7 @@ const SearchResultsPage = () => {
             categoryList={categoryList}
             filterList={filterList}
             updateFilter={updateFilter}
+            filters={filters}
           ></FilterSortMenu>
         </Box>
         <InfiniteScroll
