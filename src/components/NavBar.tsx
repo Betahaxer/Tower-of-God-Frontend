@@ -17,7 +17,7 @@ import {
   useDisclosure,
   Center,
   Image,
-  HStack
+  HStack,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -83,10 +83,13 @@ export default function NavBar() {
           gap="10"
           px="5"
         >
-          <HStack
-            onClick={() => navigate("/")}
-            >
-            <Image src={`/wiz1.svg`} alt="Logo" maxH="40px" objectFit="contain"  />
+          <HStack onClick={() => navigate("/")}>
+            <Image
+              src={`/wiz1.svg`}
+              alt="Logo"
+              maxH="40px"
+              objectFit="contain"
+            />
             <Text
               textAlign={useBreakpointValue({ base: "center", md: "left" })}
               fontFamily={"heading"}
@@ -202,15 +205,12 @@ const DesktopNav = () => {
                 bg={popoverContentBgColor}
                 p={4}
                 rounded={"xl"}
-                minW={"sm"}
+                maxW="70%"
                 maxH="80vh"
               >
                 <Stack
                   overflow="scroll"
                   css={{
-                    "&::-webkit-scrollbar": { display: "none" },
-                    msOverflowStyle: "none", // IE and Edge
-                    scrollbarWidth: "none", // Firefox
                     cursor: "pointer",
                   }}
                 >
@@ -259,6 +259,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
       <Stack direction={"row"} align={"center"}>
         <Box>
           <Text
+            m="2"
             transition={"all .3s ease"}
             _groupHover={{ color: "green.400" }}
             fontWeight={500}
@@ -266,7 +267,6 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
           >
             {label}
           </Text>
-          <Text fontSize={"sm"}>{subLabel}</Text>
         </Box>
         <Flex
           transition={"all .3s ease"}

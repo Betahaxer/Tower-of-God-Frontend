@@ -1,36 +1,44 @@
 import { Key, useEffect, useRef, useState } from "react";
 import {
+  AbsoluteCenter,
   Box,
-  Button,
-  Input,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuItemOption,
-  MenuList,
-  MenuOptionGroup,
+  Center,
+  Divider,
   SimpleGrid,
+  Spinner,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Product from "../components/Product";
 import axios from "axios";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import FilterSortMenu from "../components/FilterSortMenu";
 
 const SearchResultsPage = () => {
   interface FilterList {
     [key: string]: (string | boolean | null)[]; // Each key maps to a list of lists of strings
   }
+  interface Filters {
+    q: string;
+    category: string;
+    ordering: string;
+    brand: string;
+    price: string;
+    review_date: string;
+  }
   const location = useLocation();
   const navigate = useNavigate();
-  // list of dictionary of products
+
+  // results store all the product details
   const [results, setResults] = useState<Product[]>([]);
+  // filterList for the list of possible filters
   const [filterList, setFilterList] = useState<FilterList>({});
   const isFirstRender = useRef(true);
 
+  // nextUrl and hasMore for infinite scrolling
+  // nextUrl to get the next page of results
+  // hasMore indicates if there are more results, used to render the loading screen
   const [nextUrl, setNextUrl] = useState();
   const [hasMore, setHasMore] = useState<boolean>(true);
   interface Product {
@@ -46,18 +54,19 @@ const SearchResultsPage = () => {
     "speaker",
     "television",
   ];
-
-  const [filters, setFilters] = useState({
+  // filters contain the current filters applied by user
+  const initialFilters: Filters = {
     q: location.state?.query || "",
     category: "",
     ordering: "",
     brand: "",
     price: "",
     review_date: "",
-  });
+  };
+  const [filters, setFilters] = useState<Filters>(initialFilters);
 
   // Function to update filters
-  const updateFilter = (key: string, value: any) => {
+  const updateFilter = (key: keyof Filters, value: any) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [key]: value,
@@ -65,25 +74,28 @@ const SearchResultsPage = () => {
   };
 
   const handleSearch = async () => {
-    const queryParams = new URLSearchParams(filters).toString();
+    const queryParams = new URLSearchParams(
+      filters as unknown as Record<string, string>
+    ).toString();
+    console.log(queryParams);
     try {
       const response = await axios.get(`/api/products?${queryParams}`);
       setResults(response.data.results.products);
       setFilterList(response.data.results.filters);
       setNextUrl(response.data.next);
       setHasMore(response.data.next !== null);
-
       console.log(response.data);
-      console.log(filterList);
     } catch (error) {
-      console.error("Error fetching filtered products", error);
+      console.error("Error searching for products", error);
     }
   };
   const fetchMoreData = async () => {
-    //const queryParams = new URLSearchParams(filters).toString();
     try {
       const url =
-        nextUrl || `/api/products?${new URLSearchParams(filters).toString()}`;
+        nextUrl ||
+        `/api/products?${new URLSearchParams(
+          filters as unknown as Record<string, string>
+        ).toString()}`;
       const axiosConfig = nextUrl ? { baseURL: "" } : {};
       const response = await axios.get(url, axiosConfig);
       const newResults: Product[] = response.data.results.products;
@@ -94,7 +106,7 @@ const SearchResultsPage = () => {
       console.log(response.data);
       console.log(response.data.next);
     } catch (error) {
-      console.error("Error fetching products", error);
+      console.error("Error fetching more products", error);
     }
   };
 
@@ -115,6 +127,7 @@ const SearchResultsPage = () => {
   }, [location.state.query]);
 
   useEffect(() => {
+    console.log(filters);
     handleSearch();
   }, [filters]);
 
@@ -127,122 +140,47 @@ const SearchResultsPage = () => {
         alignItems={"left"}
         spacing={10}
       >
-        <Box>
-          <Stack spacing={4} direction="row">
-            <Menu closeOnSelect={false}>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                Filter By
-              </MenuButton>
-              <MenuList
-                minWidth="240px"
-                maxH="60vh"
-                overflowY="auto"
-                // hide the scroll bar
-                css={{
-                  "&::-webkit-scrollbar": { display: "none" },
-                  msOverflowStyle: "none", // IE and Edge
-                  scrollbarWidth: "none", // Firefox
-                }}
-              >
-                <MenuOptionGroup title="Category" type="radio" key="Category">
-                  {categoryList.map((category) => (
-                    <MenuItemOption
-                      key={category}
-                      onClick={() => updateFilter("category", category)}
-                      textTransform={"capitalize"}
-                      value={category}
-                    >
-                      {category}
-                    </MenuItemOption>
-                  ))}
-                </MenuOptionGroup>
-
-                {Object.keys(filterList).map((key: string) => {
-                  // removes null values and converts true/false into strings for display
-                  const filteredOptions = filterList[key]
-                    .filter(
-                      (
-                        option: string | boolean | null
-                      ): option is string | boolean => option !== null
-                    )
-                    .map((option: string | boolean) => {
-                      if (option === true) {
-                        option = "true";
-                      } else if (option === false) {
-                        option = "false";
-                      }
-                      return option as string;
-                    });
-
-                  if (filteredOptions.length === 0) {
-                    return null; // Skip rendering if no options
-                  }
-                  return (
-                    <React.Fragment key={key}>
-                      <MenuDivider key={`${key}-divider`}></MenuDivider>
-                      <MenuOptionGroup
-                        key={key}
-                        title={key.charAt(0).toUpperCase() + key.slice(1)} //capitalize
-                        type="radio"
-                      >
-                        {filteredOptions.slice(0, 5).map((option: string) => (
-                          <MenuItemOption
-                            key={option}
-                            onClick={() => updateFilter(key, option)}
-                            textTransform="capitalize"
-                            value={option}
-                          >
-                            {option}
-                          </MenuItemOption>
-                        ))}
-                      </MenuOptionGroup>
-                    </React.Fragment>
-                  );
-                })}
-              </MenuList>
-            </Menu>
-
-            <Menu>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                Sort By
-              </MenuButton>
-              <MenuList>
-                <MenuItem onClick={() => updateFilter("ordering", "price")}>
-                  Price
-                </MenuItem>
-                <MenuItem onClick={() => updateFilter("ordering", "-price")}>
-                  Price (descending)
-                </MenuItem>
-                <MenuItem
-                  onClick={() => updateFilter("ordering", "review_date")}
-                >
-                  Review Date
-                </MenuItem>
-                <MenuItem
-                  onClick={() => updateFilter("ordering", "-review_date")}
-                >
-                  Review Date (descending)
-                </MenuItem>
-              </MenuList>
-            </Menu>
-          </Stack>
-        </Box>
-        <InfiniteScroll
-          dataLength={results.length}
-          next={fetchMoreData}
-          hasMore={hasMore}
-          loader={<h4>Loading...</h4>}
-          endMessage={<p>No more items to load</p>}
-        >
-          <SimpleGrid
-            spacing={4}
-            columns={{ base: 1, md: 2, lg: 3 }}
-            justifyItems="flex-end"
+        <FilterSortMenu
+          categoryList={categoryList}
+          filterList={filterList}
+          updateFilter={updateFilter}
+          filters={filters}
+        ></FilterSortMenu>
+      </Stack>
+      <Stack direction="column" px={10} alignItems={"center"} spacing={10}>
+        {results.length === 0 && (
+          <Text fontSize="3xl" fontWeight="500" color="gray.500">
+            {" "}
+            No results found
+          </Text>
+        )}
+        {Array.isArray(results) && results.length !== 0 && (
+          <InfiniteScroll
+            dataLength={results.length}
+            next={fetchMoreData}
+            hasMore={hasMore}
+            loader={
+              <Box py={10} display="flex" justifyContent="center">
+                <Spinner size="xl" />
+              </Box>
+            }
+            endMessage={
+              <Box position="relative" padding="10">
+                <Divider />
+                <AbsoluteCenter bg="white" px="4">
+                  End of Page
+                </AbsoluteCenter>
+              </Box>
+            }
           >
-            {/* only works on arrays, so have to check if array is provided */}
-            {Array.isArray(results) &&
-              results.length !== 0 &&
-              results.map((product: Product, index: number) => {
+            <SimpleGrid
+              spacing={4}
+              columns={{ base: 1, md: 2, lg: 3 }}
+              justifyItems="flex-end"
+            >
+              {/* only works on arrays, so have to check if array is provided */}
+
+              {results.map((product: Product, index: number) => {
                 return (
                   <Link
                     key={index}
@@ -255,8 +193,9 @@ const SearchResultsPage = () => {
                   </Link>
                 );
               })}
-          </SimpleGrid>
-        </InfiniteScroll>
+            </SimpleGrid>
+          </InfiniteScroll>
+        )}
       </Stack>
     </>
   );
