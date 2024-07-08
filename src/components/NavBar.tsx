@@ -17,7 +17,7 @@ import {
   useDisclosure,
   Center,
   Image,
-  HStack
+  HStack,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -83,10 +83,13 @@ export default function NavBar() {
           gap="10"
           px="5"
         >
-          <HStack
-            onClick={() => navigate("/")}
-            >
-            <Image src={`/wiz1.svg`} alt="Logo" maxH="40px" objectFit="contain"  />
+          <HStack onClick={() => navigate("/")}>
+            <Image
+              src={`/wiz1.svg`}
+              alt="Logo"
+              maxH="40px"
+              objectFit="contain"
+            />
             <Text
               textAlign={useBreakpointValue({ base: "center", md: "left" })}
               fontFamily={"heading"}
@@ -208,9 +211,9 @@ const DesktopNav = () => {
                 <Stack
                   overflow="scroll"
                   css={{
-                    "&::-webkit-scrollbar": { display: "none" },
-                    msOverflowStyle: "none", // IE and Edge
-                    scrollbarWidth: "none", // Firefox
+                    // "&::-webkit-scrollbar": { display: "none" },
+                    // msOverflowStyle: "none", // IE and Edge
+                    // scrollbarWidth: "none", // Firefox
                     cursor: "pointer",
                   }}
                 >

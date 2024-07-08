@@ -92,7 +92,7 @@ const SearchResultsPage = () => {
       setHasMore(response.data.next !== null);
       console.log(response.data);
     } catch (error) {
-      console.error("Error fetching filtered products", error);
+      console.error("Error searching for products", error);
     }
   };
   const fetchMoreData = async () => {
@@ -112,7 +112,7 @@ const SearchResultsPage = () => {
       console.log(response.data);
       console.log(response.data.next);
     } catch (error) {
-      console.error("Error fetching products", error);
+      console.error("Error fetching more products", error);
     }
   };
 
