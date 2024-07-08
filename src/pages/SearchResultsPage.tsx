@@ -1,5 +1,14 @@
 import { Key, useEffect, useRef, useState } from "react";
-import { Box, SimpleGrid, Stack, Text } from "@chakra-ui/react";
+import {
+  AbsoluteCenter,
+  Box,
+  Center,
+  Divider,
+  SimpleGrid,
+  Spinner,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Product from "../components/Product";
 import axios from "axios";
@@ -144,23 +153,33 @@ const SearchResultsPage = () => {
             No results found
           </Text>
         )}
-        <InfiniteScroll
-          dataLength={results.length}
-          next={fetchMoreData}
-          hasMore={hasMore}
-          loader={<h4>Loading...</h4>}
-          //endMessage={<p>No more items to load</p>}
-        >
-          <SimpleGrid
-            spacing={4}
-            columns={{ base: 1, md: 2, lg: 3 }}
-            justifyItems="flex-end"
+        {Array.isArray(results) && results.length !== 0 && (
+          <InfiniteScroll
+            dataLength={results.length}
+            next={fetchMoreData}
+            hasMore={hasMore}
+            loader={
+              <Box py={10} display="flex" justifyContent="center">
+                <Spinner size="xl" />
+              </Box>
+            }
+            endMessage={
+              <Box position="relative" padding="10">
+                <Divider />
+                <AbsoluteCenter bg="white" px="4">
+                  End of Page
+                </AbsoluteCenter>
+              </Box>
+            }
           >
-            {/* only works on arrays, so have to check if array is provided */}
+            <SimpleGrid
+              spacing={4}
+              columns={{ base: 1, md: 2, lg: 3 }}
+              justifyItems="flex-end"
+            >
+              {/* only works on arrays, so have to check if array is provided */}
 
-            {Array.isArray(results) &&
-              results.length !== 0 &&
-              results.map((product: Product, index: number) => {
+              {results.map((product: Product, index: number) => {
                 return (
                   <Link
                     key={index}
@@ -173,8 +192,9 @@ const SearchResultsPage = () => {
                   </Link>
                 );
               })}
-          </SimpleGrid>
-        </InfiniteScroll>
+            </SimpleGrid>
+          </InfiniteScroll>
+        )}
       </Stack>
     </>
   );
