@@ -1,24 +1,8 @@
 import { Key, useEffect, useRef, useState } from "react";
-import {
-  Box,
-  Button,
-  filter,
-  Input,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuItemOption,
-  MenuList,
-  MenuOptionGroup,
-  SimpleGrid,
-  Stack,
-} from "@chakra-ui/react";
+import { Box, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Product from "../components/Product";
 import axios from "axios";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import React from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import FilterSortMenu from "../components/FilterSortMenu";
 
@@ -146,20 +130,26 @@ const SearchResultsPage = () => {
         alignItems={"left"}
         spacing={10}
       >
-        <Box>
-          <FilterSortMenu
-            categoryList={categoryList}
-            filterList={filterList}
-            updateFilter={updateFilter}
-            filters={filters}
-          ></FilterSortMenu>
-        </Box>
+        <FilterSortMenu
+          categoryList={categoryList}
+          filterList={filterList}
+          updateFilter={updateFilter}
+          filters={filters}
+        ></FilterSortMenu>
+      </Stack>
+      <Stack direction="column" px={10} alignItems={"center"} spacing={10}>
+        {results.length === 0 && (
+          <Text fontSize="3xl" fontWeight="500" color="gray.500">
+            {" "}
+            No results found
+          </Text>
+        )}
         <InfiniteScroll
           dataLength={results.length}
           next={fetchMoreData}
           hasMore={hasMore}
           loader={<h4>Loading...</h4>}
-          endMessage={<p>No more items to load</p>}
+          //endMessage={<p>No more items to load</p>}
         >
           <SimpleGrid
             spacing={4}
@@ -167,6 +157,7 @@ const SearchResultsPage = () => {
             justifyItems="flex-end"
           >
             {/* only works on arrays, so have to check if array is provided */}
+
             {Array.isArray(results) &&
               results.length !== 0 &&
               results.map((product: Product, index: number) => {

@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon, CloseIcon } from "@chakra-ui/icons";
 import CloseButton from "./CloseButton";
-import { CustomScroll } from "react-custom-scroll";
 
 interface FilterList {
   [key: string]: (string | boolean | null)[]; // Each key maps to a list of lists of strings
@@ -171,20 +170,26 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
   const filteredEntries = Object.entries(filters)
     .filter(([key, value]) => Boolean(value)) // Only keep entries where value is truthy
     .map(([key, value]) => ({ key, value })); // Map to an array of objects containing key-value pairs
-
+  const capitalize = (key: string) => {
+    return key.charAt(0).toUpperCase() + key.slice(1);
+  };
   return (
     <>
-      {filteredEntries.map(({ key, value }) => (
-        <Box>
-          <CloseButton
-            key={key}
-            text={`${key}: ${value}`} // Display key and value as text for the button
-            onClick={() => {
-              updateFilter(key as keyof Filters, "");
-            }}
-          />
-        </Box>
-      ))}
+      {filteredEntries.map(({ key, value }) => {
+        let displayKey = key === "q" ? "Query" : capitalize(key);
+        let displayValue = key === "q" ? value : capitalize(value);
+        return (
+          <Box>
+            <CloseButton
+              key={key}
+              text={`${displayKey}: ${displayValue}`} // Display key and value as text for the button
+              onClick={() => {
+                updateFilter(key as keyof Filters, "");
+              }}
+            />
+          </Box>
+        );
+      })}
     </>
   );
 };

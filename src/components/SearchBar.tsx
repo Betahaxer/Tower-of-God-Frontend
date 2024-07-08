@@ -24,14 +24,11 @@ const SearchBar = () => {
   const onSearch = async (query: string) => {
     try {
       let url = `/api/products/`;
-      if (!query) {
-        query = "mouse";
-      }
-      console.log(url);
+      //console.log(url);
       // querying the database based on category and simple filtering with user query
-      const response = await axios.get(url, {
-        params: { q: query },
-      });
+      // const response = await axios.get(url, {
+      //   params: { q: query },
+      // });
 
       //console.log(response.data.results);
 
