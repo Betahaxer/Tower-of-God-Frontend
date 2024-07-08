@@ -26,9 +26,9 @@ const SearchBar = () => {
       let url = `/api/products/`;
       //console.log(url);
       // querying the database based on category and simple filtering with user query
-      // const response = await axios.get(url, {
-      //   params: { q: query },
-      // });
+      const response = await axios.get(url, {
+        params: { q: query },
+      });
 
       //console.log(response.data.results);
 

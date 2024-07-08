@@ -109,18 +109,23 @@ const FilterSortMenu = ({
                       type="radio"
                       value={filters[key as keyof Filters]}
                     >
-                      {filteredOptions.slice(0, 5).map((option) => (
-                        <MenuItemOption
-                          key={option}
-                          onClick={() => {
-                            handleUpdateFilter(key as keyof Filters, option);
-                          }}
-                          textTransform="capitalize"
-                          value={option}
-                        >
-                          {option}
-                        </MenuItemOption>
-                      ))}
+                      {filteredOptions.slice(0, 5).map((option) => {
+                        if (!option) {
+                          return null;
+                        }
+                        return (
+                          <MenuItemOption
+                            key={option}
+                            onClick={() => {
+                              handleUpdateFilter(key as keyof Filters, option);
+                            }}
+                            textTransform="capitalize"
+                            value={option}
+                          >
+                            {option}
+                          </MenuItemOption>
+                        );
+                      })}
                     </MenuOptionGroup>
                   </React.Fragment>
                 );
@@ -179,7 +184,7 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
         let displayKey = key === "q" ? "Query" : capitalize(key);
         let displayValue = key === "q" ? value : capitalize(value);
         return (
-          <Box>
+          <Box key={key}>
             <CloseButton
               key={key}
               text={`${displayKey}: ${displayValue}`} // Display key and value as text for the button

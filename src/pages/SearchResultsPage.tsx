@@ -77,6 +77,7 @@ const SearchResultsPage = () => {
     const queryParams = new URLSearchParams(
       filters as unknown as Record<string, string>
     ).toString();
+    console.log(queryParams);
     try {
       const response = await axios.get(`/api/products?${queryParams}`);
       setResults(response.data.results.products);
