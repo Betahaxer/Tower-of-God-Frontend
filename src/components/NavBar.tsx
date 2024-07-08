@@ -205,15 +205,12 @@ const DesktopNav = () => {
                 bg={popoverContentBgColor}
                 p={4}
                 rounded={"xl"}
-                minW={"sm"}
+                maxW="70%"
                 maxH="80vh"
               >
                 <Stack
                   overflow="scroll"
                   css={{
-                    // "&::-webkit-scrollbar": { display: "none" },
-                    // msOverflowStyle: "none", // IE and Edge
-                    // scrollbarWidth: "none", // Firefox
                     cursor: "pointer",
                   }}
                 >
@@ -262,6 +259,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
       <Stack direction={"row"} align={"center"}>
         <Box>
           <Text
+            m="2"
             transition={"all .3s ease"}
             _groupHover={{ color: "green.400" }}
             fontWeight={500}
@@ -269,7 +267,6 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
           >
             {label}
           </Text>
-          <Text fontSize={"sm"}>{subLabel}</Text>
         </Box>
         <Flex
           transition={"all .3s ease"}
