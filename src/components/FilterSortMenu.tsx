@@ -30,8 +30,12 @@ interface Filters {
 interface FilterSortProps {
   categoryList: string[];
   filterList: FilterList;
-  updateFilter: (key: string, value: any) => void;
+  updateFilter: (key: keyof Filters, value: any) => void;
   filters: Filters;
+}
+interface FilterButtonsProps {
+  filters: Filters;
+  updateFilter: (key: keyof Filters, value: string) => void;
 }
 
 const FilterSortMenu = ({
@@ -40,7 +44,10 @@ const FilterSortMenu = ({
   updateFilter,
   filters,
 }: FilterSortProps) => {
-  console.log(filters);
+  const handleUpdateFilter = (key: keyof Filters, value: string) => {
+    filters[key] === value ? updateFilter(key, "") : updateFilter(key, value);
+  };
+
   return (
     <Stack spacing={4} direction="row">
       <Menu closeOnSelect={false}>
@@ -57,11 +64,16 @@ const FilterSortMenu = ({
             scrollbarWidth: "none", // Firefox
           }}
         >
-          <MenuOptionGroup title="Category" type="radio" key="Category">
+          <MenuOptionGroup
+            title="Category"
+            type="radio"
+            key="Category"
+            value={filters.category}
+          >
             {categoryList.map((category) => (
               <MenuItemOption
                 key={category}
-                onClick={() => updateFilter("category", category)}
+                onClick={() => handleUpdateFilter("category", category)}
                 textTransform={"capitalize"}
                 value={category}
               >
@@ -93,11 +105,14 @@ const FilterSortMenu = ({
                   key={key}
                   title={key.charAt(0).toUpperCase() + key.slice(1)} //capitalize
                   type="radio"
+                  value={filters[key as keyof Filters]}
                 >
                   {filteredOptions.slice(0, 5).map((option) => (
                     <MenuItemOption
                       key={option}
-                      onClick={() => updateFilter(key, option)}
+                      onClick={() => {
+                        handleUpdateFilter(key as keyof Filters, option);
+                      }}
                       textTransform="capitalize"
                       value={option}
                     >
@@ -130,12 +145,18 @@ const FilterSortMenu = ({
           </MenuItem>
         </MenuList>
       </Menu>
-      <FilterButtons filters={filters}></FilterButtons>
+      <FilterButtons
+        filters={filters}
+        updateFilter={updateFilter}
+      ></FilterButtons>
     </Stack>
   );
 };
 
-const FilterButtons = ({ filters }: { filters: Filters }) => {
+const FilterButtons: React.FC<FilterButtonsProps> = ({
+  filters,
+  updateFilter,
+}) => {
   // Filter keys and values where values are truthy
   const filteredEntries = Object.entries(filters)
     .filter(([key, value]) => Boolean(value)) // Only keep entries where value is truthy
@@ -148,7 +169,7 @@ const FilterButtons = ({ filters }: { filters: Filters }) => {
           key={key}
           text={`${key}: ${value}`} // Display key and value as text for the button
           onClick={() => {
-            // Handle click action if needed
+            updateFilter(key as keyof Filters, "");
           }}
         />
       ))}

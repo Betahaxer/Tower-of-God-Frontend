@@ -73,7 +73,7 @@ const SearchResultsPage = () => {
   const [filters, setFilters] = useState<Filters>(initialFilters);
 
   // Function to update filters
-  const updateFilter = (key: string, value: any) => {
+  const updateFilter = (key: keyof Filters, value: any) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [key]: value,
