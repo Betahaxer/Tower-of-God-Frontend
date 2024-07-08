@@ -18,6 +18,7 @@ import Product from "../components/Product";
 import axios from "axios";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import React from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const SearchResultsPage = () => {
   interface FilterList {
@@ -26,9 +27,12 @@ const SearchResultsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   // list of dictionary of products
-  const [results, setResults] = useState<[]>([]);
+  const [results, setResults] = useState<Product[]>([]);
   const [filterList, setFilterList] = useState<FilterList>({});
   const isFirstRender = useRef(true);
+
+  const [nextUrl, setNextUrl] = useState();
+  const [hasMore, setHasMore] = useState<boolean>(true);
   interface Product {
     [key: string]: any;
   }
@@ -66,10 +70,31 @@ const SearchResultsPage = () => {
       const response = await axios.get(`/api/products?${queryParams}`);
       setResults(response.data.results.products);
       setFilterList(response.data.results.filters);
+      setNextUrl(response.data.next);
+      setHasMore(response.data.next !== null);
+
       console.log(response.data);
       console.log(filterList);
     } catch (error) {
       console.error("Error fetching filtered products", error);
+    }
+  };
+  const fetchMoreData = async () => {
+    //const queryParams = new URLSearchParams(filters).toString();
+    try {
+      const url =
+        nextUrl || `/api/products?${new URLSearchParams(filters).toString()}`;
+      const axiosConfig = nextUrl ? { baseURL: "" } : {};
+      const response = await axios.get(url, axiosConfig);
+      const newResults: Product[] = response.data.results.products;
+      setResults((prevResults) => [...prevResults, ...newResults]);
+      setFilterList(response.data.results.filters);
+      setNextUrl(response.data.next);
+      setHasMore(response.data.next !== null);
+      console.log(response.data);
+      console.log(response.data.next);
+    } catch (error) {
+      console.error("Error fetching products", error);
     }
   };
 
@@ -77,10 +102,17 @@ const SearchResultsPage = () => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
     } else {
-      //console.log(location.state);
-      updateFilter("q", location.state?.query || "");
+      //clear filters
+      setFilters({
+        q: location.state?.query || "",
+        category: "",
+        ordering: "",
+        brand: "",
+        price: "",
+        review_date: "",
+      });
     }
-  }, [location.state]);
+  }, [location.state.query]);
 
   useEffect(() => {
     handleSearch();
@@ -195,28 +227,36 @@ const SearchResultsPage = () => {
             </Menu>
           </Stack>
         </Box>
-        <SimpleGrid
-          spacing={4}
-          columns={{ base: 1, md: 2, lg: 3 }}
-          justifyItems="flex-end"
+        <InfiniteScroll
+          dataLength={results.length}
+          next={fetchMoreData}
+          hasMore={hasMore}
+          loader={<h4>Loading...</h4>}
+          endMessage={<p>No more items to load</p>}
         >
-          {/* only works on arrays, so have to check if array is provided */}
-          {Array.isArray(results) &&
-            results.length !== 0 &&
-            results.map((product: Product, index: number) => {
-              return (
-                <Link
-                  key={index}
-                  to={{
-                    pathname: `/products/${product.name}`,
-                  }}
-                  state={{ product }}
-                >
-                  <Product data={product} />
-                </Link>
-              );
-            })}
-        </SimpleGrid>
+          <SimpleGrid
+            spacing={4}
+            columns={{ base: 1, md: 2, lg: 3 }}
+            justifyItems="flex-end"
+          >
+            {/* only works on arrays, so have to check if array is provided */}
+            {Array.isArray(results) &&
+              results.length !== 0 &&
+              results.map((product: Product, index: number) => {
+                return (
+                  <Link
+                    key={index}
+                    to={{
+                      pathname: `/products/${product.name}`,
+                    }}
+                    state={{ product }}
+                  >
+                    <Product data={product} />
+                  </Link>
+                );
+              })}
+          </SimpleGrid>
+        </InfiniteScroll>
       </Stack>
     </>
   );
