@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Box, HStack, Heading, Text, VStack } from "@chakra-ui/react";
-import AlertCustom from "../components/AlertCustom";
+import { Box, HStack, Heading, Text, VStack, useToast } from "@chakra-ui/react";
 import Login from "../components/Login";
-import { getTokens, setTokens } from "../utils/storage";
+import { getTokens } from "../utils/storage";
 import { useAuth } from "../contexts/AuthContext";
 import { GoogleLoginButton } from "../components/GoogleLogin";
 
@@ -12,10 +11,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [loginSuccess, setLoginSuccess] = useState(false);
-  const [alertText, setAlertText] = useState("");
   const { login } = useAuth();
+  const toast = useToast();
   const handleLogin = async () => {
     const { accessToken, refreshToken } = getTokens();
     try {
@@ -37,16 +34,25 @@ const LoginPage = () => {
       //setAlertText("Testing!");
       const { access, refresh } = response.data;
       login(access, refresh);
-      setLoginSuccess(true);
-      setAlertVisible(true);
+      toast({
+        title: "You're logged in!",
+        description: "Welcome back!",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
       setUsername("");
       setPassword("");
       navigate("/");
     } catch (error) {
       console.error("Error:", error);
-      //setAlertText(error.response.data.error);
-      setLoginSuccess(false);
-      setAlertVisible(true);
+      toast({
+        title: "Oops...",
+        description: "Please check that your details are correct.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
       setUsername("");
       setPassword("");
     }
@@ -62,13 +68,6 @@ const LoginPage = () => {
         height="100vh"
         textAlign="center"
       >
-        {alertVisible && (
-          <AlertCustom
-            isSuccessful={loginSuccess}
-            onClick={() => setAlertVisible(false)}
-            alertText={alertText}
-          />
-        )}
         <Box mb={4}>
           <Login
             action="Login"
@@ -80,9 +79,11 @@ const LoginPage = () => {
           ></Login>
         </Box>
         <VStack>
-          <Heading as='h4' size='md'>Social Login:</Heading>
+          <Heading as="h4" size="md">
+            Social Login:
+          </Heading>
           <HStack>
-            <GoogleLoginButton/>
+            <GoogleLoginButton />
           </HStack>
         </VStack>
         <Box mt={4}>

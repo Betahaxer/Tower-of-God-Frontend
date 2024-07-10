@@ -18,6 +18,7 @@ import {
   Center,
   Image,
   HStack,
+  useToast,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -39,6 +40,7 @@ export default function NavBar() {
   // dont show search bar in nav bar in homepage
   const showSearchBar = location.pathname === "/" ? false : true;
   const { isLoggedIn, login, logout } = useAuth();
+  const toast = useToast();
 
   const handleLogout = async () => {
     const { accessToken, refreshToken } = getTokens();
@@ -160,9 +162,15 @@ export default function NavBar() {
               onClick={() => {
                 handleLogout();
                 navigate("/");
+                toast({
+                  title: "Logged out!",
+                  status: "success",
+                  duration: 9000,
+                  isClosable: true,
+                });
               }}
             >
-              Logout
+              Log Out
             </Button>
           )}
         </Stack>
