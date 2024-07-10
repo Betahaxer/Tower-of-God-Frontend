@@ -18,6 +18,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
+import HeartButton from "./HeartButton";
 interface Product {
   [key: string]: any;
 }
@@ -25,8 +26,8 @@ interface Product {
 const Product = ({ data }: Product) => {
   return (
     <Card
-      align="center"
-      height="100vh"
+      position="relative"
+      height="110vh"
       overflow="auto"
       css={{
         "&::-webkit-scrollbar": { display: "none" },
@@ -34,6 +35,9 @@ const Product = ({ data }: Product) => {
         scrollbarWidth: "none", // Firefox
       }}
     >
+      <Box position="absolute" top="5" right="5" zIndex="1">
+        <HeartButton></HeartButton>
+      </Box>
       <CardBody pb={30}>
         <Stack direction="column" spacing={2}>
           <Flex justifyContent="center" m={0}>
