@@ -124,7 +124,7 @@ const SearchResultsPage = () => {
         review_date: "",
       });
     }
-  }, [location.state.query]);
+  }, [location.state?.query]);
 
   useEffect(() => {
     console.log(filters);
@@ -181,7 +181,6 @@ const SearchResultsPage = () => {
               {/* only works on arrays, so have to check if array is provided */}
 
               {results.map((product: Product, index: number) => {
-                console.log("product: ", product);
                 return <Product data={product} />;
               })}
             </SimpleGrid>

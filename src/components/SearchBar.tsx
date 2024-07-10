@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input, InputGroup, InputRightElement, Button } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Fuse from "fuse.js";
 
 interface Props {
@@ -11,6 +11,7 @@ interface Props {
 
 const SearchBar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchResults, setSearchResults] = useState("");
 
   // function to listen for ENTER key and search if pressed
@@ -38,7 +39,11 @@ const SearchBar = () => {
       console.error("Error fetching search results:", error);
     }
   };
-
+  useEffect(() => {
+    if (location.state?.query) {
+      setSearchResults(location.state?.query || "");
+    }
+  }, [location.state?.query]);
   return (
     <InputGroup maxW="45%">
       <Input
