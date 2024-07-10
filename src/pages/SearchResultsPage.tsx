@@ -181,17 +181,8 @@ const SearchResultsPage = () => {
               {/* only works on arrays, so have to check if array is provided */}
 
               {results.map((product: Product, index: number) => {
-                return (
-                  <Link
-                    key={index}
-                    to={{
-                      pathname: `/products/${product.name}`,
-                    }}
-                    state={{ product }}
-                  >
-                    <Product data={product} />
-                  </Link>
-                );
+                console.log("product: ", product);
+                return <Product data={product} />;
               })}
             </SimpleGrid>
           </InfiniteScroll>

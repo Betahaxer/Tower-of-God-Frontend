@@ -188,7 +188,7 @@ export default function ComparePage() {
                 onClick={() => {
                   console.log(selectedProduct);
                   navigate(`/products/${selectedProduct.name || ""}`, {
-                    state: { selectedProduct },
+                    state: selectedProduct,
                   });
                 }}
               >
@@ -282,7 +282,7 @@ export default function ComparePage() {
                 onClick={() => {
                   console.log(selectedProduct2);
                   navigate(`/products/${selectedProduct2.name || ""}`, {
-                    state: { selectedProduct2 },
+                    state: selectedProduct2,
                   });
                 }}
               >

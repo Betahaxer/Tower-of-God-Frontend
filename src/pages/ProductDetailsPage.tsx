@@ -33,29 +33,11 @@ interface Dictionary {
 export default function ProductDetailsPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { state } = location;
-  let product: Dictionary = {};
-  if (state?.selectedProduct2) {
-    product = state.selectedProduct2;
-  } else if (state?.selectedProduct) {
-    product = state.selectedProduct;
-  } else if (state?.product) {
-    product = state.product;
-  }
-
-  //redirects the user if no state available, ie url is keyed in manually
-  useEffect(() => {
-    if (!product) {
-      console.log("no product");
-      navigate("/");
-    }
-  }, [product, navigate]);
-
-  if (!product) {
-    return null; // Prevent rendering if product is not available
+  const product = location.state;
+  if (!product || Object.keys(product).length === 0) {
+    return <h1>No product found</h1>; // Prevent rendering if product is not available
   }
   console.log(product);
-
   interface Product {
     [key: string]: any;
   }
@@ -69,11 +51,13 @@ export default function ProductDetailsPage() {
   const categoryMap: categoryMap = {
     mouse: (props) => <SpecsMouse {...props} />,
   };
+
   const placeholder = () => (
     <List>
       <ListItem>Details not available, sorry!</ListItem>
     </List>
   );
+
   const specComponent = categoryMap[product.category] || placeholder;
 
   return (
