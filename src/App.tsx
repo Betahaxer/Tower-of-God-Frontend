@@ -8,10 +8,10 @@ import {
 } from "./pages";
 import NavBar from "./components/NavBar";
 import axios from "axios";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ComparePage from "./pages/ComparePage";
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { GoogleLoadingPage } from "./components/GoogleLogin";
 import WishlistPage from "./pages/WishlistPage";
 

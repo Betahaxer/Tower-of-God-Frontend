@@ -41,7 +41,6 @@ export default function NavBar() {
   const showSearchBar = location.pathname === "/" ? false : true;
   const { isLoggedIn, login, logout } = useAuth();
   const toast = useToast();
-
   const handleLogout = async () => {
     const { accessToken, refreshToken } = getTokens();
     console.log(accessToken, refreshToken);

@@ -31,7 +31,6 @@ const LoginPage = () => {
         }
       );
       console.log(response.data);
-      //setAlertText("Testing!");
       const { access, refresh } = response.data;
       login(access, refresh);
       toast({
