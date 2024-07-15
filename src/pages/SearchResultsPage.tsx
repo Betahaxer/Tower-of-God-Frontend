@@ -14,6 +14,7 @@ import Product from "../components/Product";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import FilterSortMenu from "../components/FilterSortMenu";
+import { getTokens } from "../utils/storage";
 
 const SearchResultsPage = () => {
   interface FilterList {
@@ -109,7 +110,29 @@ const SearchResultsPage = () => {
       console.error("Error fetching more products", error);
     }
   };
-
+  const addWishlist = async (product: Product) => {
+    console.log(product);
+    console.log(product.category);
+    console.log(product.id);
+    const { accessToken, refreshToken } = getTokens();
+    try {
+      const response = await axios.post(
+        "/api/wishlist/",
+        {
+          product_category: product.category,
+          object_id: product.id,
+        },
+        {
+          headers: {
+            ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+            ...(refreshToken && { "Refresh-Token": refreshToken }),
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Unable to add to wishlist", error);
+    }
+  };
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -181,7 +204,13 @@ const SearchResultsPage = () => {
               {/* only works on arrays, so have to check if array is provided */}
 
               {results.map((product: Product, index: number) => {
-                return <Product data={product} />;
+                return (
+                  <Product
+                    key={index}
+                    data={product}
+                    heartFunction={() => addWishlist(product)}
+                  />
+                );
               })}
             </SimpleGrid>
           </InfiniteScroll>

@@ -21,14 +21,14 @@ const LoginPage = () => {
         {
           username: username,
           password: password,
-        },
-
-        {
-          headers: {
-            ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-            ...(refreshToken && { "Refresh-Token": refreshToken }),
-          },
         }
+        // backend returns given token is not valid if tokens are sent
+        // {
+        //   headers: {
+        //     ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+        //     ...(refreshToken && { "Refresh-Token": refreshToken }),
+        //   },
+        // }
       );
       console.log(response.data);
       const { access, refresh } = response.data;

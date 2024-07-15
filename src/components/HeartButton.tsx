@@ -2,8 +2,10 @@ import { FaHeart, FaRegHeart } from "react-icons/fa6";
 
 import { IconButton } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-
-const HeartButton = () => {
+interface Props {
+  onClick: () => void;
+}
+const HeartButton = ({ onClick }: Props) => {
   const navigate = useNavigate();
   return (
     <IconButton
@@ -11,9 +13,7 @@ const HeartButton = () => {
       aria-label="Heart"
       color="black"
       size="sm"
-      onClick={() => {
-        navigate("/wishlist");
-      }}
+      onClick={onClick}
       icon={
         <svg
           xmlns="http://www.w3.org/2000/svg"

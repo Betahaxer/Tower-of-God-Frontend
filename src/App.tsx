@@ -15,8 +15,8 @@ import { Box, Text } from "@chakra-ui/react";
 import { GoogleLoadingPage } from "./components/GoogleLogin";
 import WishlistPage from "./pages/WishlistPage";
 
-axios.defaults.baseURL = "http://127.0.0.1:8000";
-//axios.defaults.baseURL = "https://tower-of-god.onrender.com";
+//axios.defaults.baseURL = "http://127.0.0.1:8000";
+axios.defaults.baseURL = "https://tower-of-god.onrender.com";
 axios.defaults.withCredentials = true;
 
 interface Post {

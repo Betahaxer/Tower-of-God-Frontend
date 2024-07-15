@@ -17,9 +17,10 @@ import HeartButton from "./HeartButton";
 import { Link } from "react-router-dom";
 interface Product {
   [key: string]: any;
+  heartFunction: () => void;
 }
 
-const Product = ({ data }: Product) => {
+const Product = ({ data, heartFunction }: Product) => {
   return (
     <Card
       position="relative"
@@ -32,7 +33,7 @@ const Product = ({ data }: Product) => {
       }}
     >
       <Box position="absolute" top="5" right="5">
-        <HeartButton></HeartButton>
+        <HeartButton onClick={heartFunction}></HeartButton>
       </Box>
       <Link
         to={{
