@@ -21,11 +21,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getTokens } from "../utils/storage";
-import HeartButton from "../components/HeartButton";
 import SelectButton from "../components/SelectButton";
 import { CiSearch } from "react-icons/ci";
-import { MdDelete } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
+
 import CheckButton from "../components/CheckButton";
 
 interface Product {
@@ -49,7 +47,6 @@ const WishlistPage = () => {
   };
   const toast = useToast();
   const navigate = useNavigate();
-  //console.log(isLoggedIn);
   const getWishlist = async () => {
     try {
       const { accessToken } = getTokens();
@@ -65,6 +62,7 @@ const WishlistPage = () => {
     }
     setFetching(false);
   };
+
   const removeItems = async (ids: number[]) => {
     setFetching(true);
     try {
@@ -74,9 +72,30 @@ const WishlistPage = () => {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
       );
-      const response = await Promise.all(deletePromises);
-      console.log(response);
-      const newWishlist = await getWishlist();
+
+      const responsePromise = Promise.all(deletePromises).then(
+        async (response) => {
+          console.log(response);
+          const newWishlist = await getWishlist();
+          return newWishlist;
+        }
+      );
+
+      toast.promise(responsePromise, {
+        loading: {
+          title: "Deleting items...",
+        },
+        success: {
+          title: "Items deleted",
+          duration: 2000,
+        },
+        error: {
+          title: "Error deleting items",
+          duration: 2000,
+        },
+      });
+
+      await responsePromise;
     } catch (error) {
       console.error("Unable to delete item from wishlist", error);
     }
@@ -100,7 +119,6 @@ const WishlistPage = () => {
   useEffect(() => {
     getWishlist();
   }, []);
-
   if (loading || fetching) {
     return (
       <Box
@@ -153,67 +171,73 @@ const WishlistPage = () => {
               columns={{ base: 1, md: 2, lg: 3 }}
               zIndex={0}
             >
-              {wishlist.map((data: Product, index: number) => {
-                const product = data.content_object;
-                const isSelected = selectedIds.includes(data.id);
-                return (
-                  <Card
-                    key={index}
-                    height="60vh"
-                    justifyContent="center"
-                    alignItems="center"
-                    p="5"
-                    overflow="hidden"
-                    position="relative"
-                    onClick={() => {
-                      toggleSelection(data.id);
-                    }}
-                    _hover={{
-                      "& > .overlay": {
-                        opacity: 1,
-                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                      },
-                    }}
-                  >
-                    <Box
-                      position="absolute"
-                      top="0"
-                      left="0"
-                      width="100%"
-                      height="100%"
-                      bg="rgba(0, 0, 0, 0.2)"
-                      opacity={isSelected ? 1 : 0}
-                      transition="opacity 0.3s, box-shadow 0.3s"
-                      className="overlay"
-                      zIndex="2"
+              {wishlist
+                .filter((data: Product) =>
+                  data.content_object.name
+                    .toLowerCase()
+                    .includes(searchBox.toLowerCase())
+                )
+                .map((data: Product, index: number) => {
+                  const product = data.content_object;
+                  const isSelected = selectedIds.includes(data.id);
+                  return (
+                    <Card
+                      key={index}
+                      height="60vh"
+                      justifyContent="center"
+                      alignItems="center"
+                      p="5"
+                      overflow="hidden"
+                      position="relative"
+                      onClick={() => {
+                        toggleSelection(data.id);
+                      }}
+                      _hover={{
+                        "& > .overlay": {
+                          opacity: 1,
+                          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                        },
+                      }}
                     >
-                      <Box position="absolute" top="5" right="5" zIndex="2">
-                        {!isSelected && <SelectButton onClick={() => {}} />}
-                        {isSelected && <CheckButton onClick={() => {}} />}
-                      </Box>
-                    </Box>
-
-                    <CardBody position="relative" zIndex="1">
-                      <Stack
-                        direction="column"
-                        spacing={2}
-                        justifyContent="center"
-                        alignItems="center"
+                      <Box
+                        position="absolute"
+                        top="0"
+                        left="0"
+                        width="100%"
+                        height="100%"
+                        bg="rgba(0, 0, 0, 0.2)"
+                        opacity={isSelected ? 1 : 0}
+                        transition="opacity 0.3s, box-shadow 0.3s"
+                        className="overlay"
+                        zIndex="2"
                       >
-                        <Flex justifyContent="center">
-                          <Image
-                            rounded={"lg"}
-                            alt={"product image"}
-                            src={product.img}
-                            h="40vh"
-                          />
-                        </Flex>
-                        <Heading fontSize="20px">{product.name}</Heading>
-                      </Stack>
-                    </CardBody>
-                  </Card>
-                );
-              })}
+                        <Box position="absolute" top="5" right="5" zIndex="2">
+                          {!isSelected && <SelectButton onClick={() => {}} />}
+                          {isSelected && <CheckButton onClick={() => {}} />}
+                        </Box>
+                      </Box>
+
+                      <CardBody position="relative" zIndex="1">
+                        <Stack
+                          direction="column"
+                          spacing={2}
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          <Flex justifyContent="center">
+                            <Image
+                              rounded={"lg"}
+                              alt={"product image"}
+                              src={product.img}
+                              h="40vh"
+                            />
+                          </Flex>
+                          <Heading fontSize="20px">{product.name}</Heading>
+                        </Stack>
+                      </CardBody>
+                    </Card>
+                  );
+                })}
             </SimpleGrid>
           </Stack>
           <Stack
