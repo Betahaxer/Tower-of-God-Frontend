@@ -170,7 +170,7 @@ const SearchResultsPage = () => {
           filters={filters}
         ></FilterSortMenu>
       </Stack>
-      <Stack direction="column" px={10} alignItems={"center"} spacing={10}>
+      <Stack direction="column" alignItems={"center"} spacing={10}>
         {results.length === 0 && (
           <Text fontSize="3xl" fontWeight="500" color="gray.500">
             {" "}
@@ -199,7 +199,9 @@ const SearchResultsPage = () => {
             <SimpleGrid
               spacing={4}
               columns={{ base: 1, md: 2, lg: 3 }}
-              justifyItems="flex-end"
+              px="10"
+              py="1"
+              //justifyItems="flex-end"
             >
               {/* only works on arrays, so have to check if array is provided */}
 
