@@ -37,6 +37,16 @@ const WishlistPage = () => {
   const [fetching, setFetching] = useState(true);
   const [wishlist, setWishlist] = useState<[]>([]);
   const [searchBox, setSearchBox] = useState("");
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const toggleSelection = (id: number) => {
+    setSelectedIds((prevIds) => {
+      if (prevIds.includes(id)) {
+        return prevIds.filter((currId) => currId !== id);
+      } else {
+        return [...prevIds, id];
+      }
+    });
+  };
   const toast = useToast();
   const navigate = useNavigate();
   //console.log(isLoggedIn);
@@ -133,10 +143,15 @@ const WishlistPage = () => {
               </InputGroup>
             </Stack>
 
-            <SimpleGrid spacing={5} columns={{ base: 1, md: 2, lg: 3 }}>
+            <SimpleGrid
+              spacing={5}
+              columns={{ base: 1, md: 2, lg: 3 }}
+              zIndex={0}
+            >
               {wishlist.map((data: Product, index: number) => {
                 console.log(data);
                 const product = data.content_object;
+                const isSelected = selectedIds.includes(data.id);
                 return (
                   <Card
                     key={index}
@@ -146,6 +161,9 @@ const WishlistPage = () => {
                     p="5"
                     overflow="hidden"
                     position="relative"
+                    onClick={() => {
+                      toggleSelection(data.id);
+                    }}
                     _hover={{
                       "& > .overlay": {
                         opacity: 1,
@@ -160,24 +178,14 @@ const WishlistPage = () => {
                       width="100%"
                       height="100%"
                       bg="rgba(0, 0, 0, 0.2)"
-                      opacity="0"
+                      opacity={isSelected ? 1 : 0}
                       transition="opacity 0.3s, box-shadow 0.3s"
                       className="overlay"
                       zIndex="2"
                     >
                       <Box position="absolute" top="5" right="5" zIndex="2">
-                        <SelectButton
-                          onClick={() => {
-                            removeItem(data.id);
-                            // this id is the id of the product in the wishlist, not the unique product id itself
-                          }}
-                        />
-                        <CheckButton
-                          onClick={() => {
-                            //removeItem(data.id);
-                            // this id is the id of the product in the wishlist, not the unique product id itself
-                          }}
-                        />
+                        {!isSelected && <SelectButton onClick={() => {}} />}
+                        {isSelected && <CheckButton onClick={() => {}} />}
                       </Box>
                     </Box>
 
