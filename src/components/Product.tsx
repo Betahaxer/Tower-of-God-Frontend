@@ -50,10 +50,11 @@ const Product = ({ data, heartFunction }: Product) => {
             <Flex justifyContent="center" m={0}>
               <Image
                 rounded={"lg"}
-                alt={"product image"}
+                alt={"Image not available"}
                 src={data.img}
                 h="40vh"
                 w="auto"
+                fallbackSrc="wiz1.svg"
               />
             </Flex>
             <Heading size="md" m={0}>
