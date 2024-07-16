@@ -65,12 +65,15 @@ const WishlistPage = () => {
     }
     setFetching(false);
   };
-  const removeItem = async (id: number) => {
+  const removeItems = async (ids: number[]) => {
     try {
       const { accessToken } = getTokens();
-      const response = await axios.delete(`/api/wishlist/${id}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const deletePromises = ids.map((id) =>
+        axios.delete(`/api/wishlist/${id}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+      );
+      const response = await Promise.all(deletePromises);
       console.log(response);
       const newWishlist = await getWishlist();
     } catch (error) {
@@ -149,7 +152,6 @@ const WishlistPage = () => {
               zIndex={0}
             >
               {wishlist.map((data: Product, index: number) => {
-                console.log(data);
                 const product = data.content_object;
                 const isSelected = selectedIds.includes(data.id);
                 return (
