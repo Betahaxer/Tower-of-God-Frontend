@@ -66,6 +66,7 @@ const WishlistPage = () => {
     setFetching(false);
   };
   const removeItems = async (ids: number[]) => {
+    setFetching(true);
     try {
       const { accessToken } = getTokens();
       const deletePromises = ids.map((id) =>
@@ -80,6 +81,7 @@ const WishlistPage = () => {
       console.error("Unable to delete item from wishlist", error);
     }
     setFetching(false);
+    setSelectedIds([]);
   };
 
   useEffect(() => {
@@ -244,10 +246,19 @@ const WishlistPage = () => {
               variant="outline"
               textColor="white"
               _hover={{ background: "none" }}
+              onClick={() => {
+                setSelectedIds([]);
+              }}
             >
               Clear
             </Button>
-            <Button borderRadius={"full"} background="white">
+            <Button
+              borderRadius={"full"}
+              background="white"
+              onClick={() => {
+                removeItems(selectedIds);
+              }}
+            >
               Delete
             </Button>
           </Stack>
