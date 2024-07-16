@@ -81,7 +81,7 @@ const SearchResultsPage = () => {
     try {
       const response = await axios.get(`/api/products?${queryParams}`);
       setResults(response.data.results.products);
-      setFilterList(response.data.results.filters);
+      setFilterList(response.data.results.unique_filters);
       setNextUrl(response.data.next);
       setHasMore(response.data.next !== null);
       console.log(response.data);
