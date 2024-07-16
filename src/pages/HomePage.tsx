@@ -2,11 +2,9 @@ import { Box, Heading, Text, Stack } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import { useState } from "react";
+import LoadingPage from "../components/LoadingPage";
 
 function HomePage() {
-  const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
   return (
     <>
       <Stack

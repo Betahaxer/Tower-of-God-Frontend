@@ -15,6 +15,7 @@ import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import FilterSortMenu from "../components/FilterSortMenu";
 import { getTokens } from "../utils/storage";
+import LoadingPage from "../components/LoadingPage";
 
 const SearchResultsPage = () => {
   interface FilterList {
@@ -28,20 +29,6 @@ const SearchResultsPage = () => {
     price: string;
     review_date: string;
   }
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  // results store all the product details
-  const [results, setResults] = useState<Product[]>([]);
-  // filterList for the list of possible filters
-  const [filterList, setFilterList] = useState<FilterList>({});
-  const isFirstRender = useRef(true);
-
-  // nextUrl and hasMore for infinite scrolling
-  // nextUrl to get the next page of results
-  // hasMore indicates if there are more results, used to render the loading screen
-  const [nextUrl, setNextUrl] = useState();
-  const [hasMore, setHasMore] = useState<boolean>(true);
   interface Product {
     [key: string]: any;
   }
@@ -55,6 +42,9 @@ const SearchResultsPage = () => {
     "speaker",
     "television",
   ];
+
+  const location = useLocation();
+  const navigate = useNavigate();
   // filters contain the current filters applied by user
   const initialFilters: Filters = {
     q: location.state?.query || "",
@@ -64,7 +54,19 @@ const SearchResultsPage = () => {
     price: "",
     review_date: "",
   };
+
+  // results store all the product details
+  const [results, setResults] = useState<Product[]>([]);
+  // filterList for the list of possible filters
+  const [filterList, setFilterList] = useState<FilterList>({});
+  const isFirstRender = useRef(true);
+  // nextUrl and hasMore for infinite scrolling
+  // nextUrl to get the next page of results
+  // hasMore indicates if there are more results, used to render the loading screen
+  const [nextUrl, setNextUrl] = useState();
+  const [hasMore, setHasMore] = useState<boolean>(true);
   const [filters, setFilters] = useState<Filters>(initialFilters);
+  const [loading, setLoading] = useState(true);
 
   // Function to update filters
   const updateFilter = (key: keyof Filters, value: any) => {
@@ -73,8 +75,8 @@ const SearchResultsPage = () => {
       [key]: value,
     }));
   };
-
   const handleSearch = async () => {
+    setLoading(true);
     const queryParams = new URLSearchParams(
       filters as unknown as Record<string, string>
     ).toString();
@@ -89,6 +91,7 @@ const SearchResultsPage = () => {
     } catch (error) {
       console.error("Error searching for products", error);
     }
+    setLoading(false);
   };
   const fetchMoreData = async () => {
     try {
@@ -171,7 +174,8 @@ const SearchResultsPage = () => {
         ></FilterSortMenu>
       </Stack>
       <Stack direction="column" alignItems={"center"} spacing={10}>
-        {results.length === 0 && (
+        {loading && <LoadingPage></LoadingPage>}
+        {!loading && results.length === 0 && (
           <Text fontSize="3xl" fontWeight="500" color="gray.500">
             {" "}
             No results found

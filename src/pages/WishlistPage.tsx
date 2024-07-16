@@ -25,6 +25,7 @@ import SelectButton from "../components/SelectButton";
 import { CiSearch } from "react-icons/ci";
 
 import CheckButton from "../components/CheckButton";
+import LoadingPage from "../components/LoadingPage";
 
 interface Product {
   [key: string]: any;
@@ -127,16 +128,7 @@ const WishlistPage = () => {
     getWishlist();
   }, []);
   if (loading || fetching) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="80vh"
-      >
-        <Spinner width="20vh" height="20vh" />
-      </Box>
-    );
+    return <LoadingPage />;
   }
 
   return (
