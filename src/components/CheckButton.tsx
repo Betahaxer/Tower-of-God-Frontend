@@ -11,10 +11,10 @@ const CheckButton = ({ onClick }: Props) => {
       fontSize="40px"
       onClick={onClick}
       isRound={true}
-      background="blue.400"
-      _hover={{ background: "blue.400" }}
+      background="green.400"
+      _hover={{ background: "green.400" }}
       _active={{
-        background: "blue.400", // Prevents background from showing on click
+        background: "green.400", // Prevents background from showing on click
       }}
       icon={
         <svg

@@ -214,6 +214,43 @@ const WishlistPage = () => {
               })}
             </SimpleGrid>
           </Stack>
+          <Stack
+            spacing="3"
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+            borderRadius={"full"}
+            bg="green.400"
+            position="fixed"
+            bottom={selectedIds.length > 0 ? "30px" : "-100%"}
+            left="50vw" // Positioning the left side of the box at 50% of the viewport width
+            transform="translateX(-50%)" // translating the box left by 50% of its own width
+            w="auto"
+            h="auto"
+            p="3"
+            display="flex"
+            transition="bottom 0.3s"
+          >
+            <Text
+              mb="0"
+              px="2"
+              color="white"
+              fontWeight="500"
+              whiteSpace="nowrap"
+            >{`${selectedIds.length} selected`}</Text>
+            <Button
+              borderRadius={"full"}
+              background="green.400"
+              variant="outline"
+              textColor="white"
+              _hover={{ background: "none" }}
+            >
+              Clear
+            </Button>
+            <Button borderRadius={"full"} background="white">
+              Delete
+            </Button>
+          </Stack>
         </>
       )}
     </>
