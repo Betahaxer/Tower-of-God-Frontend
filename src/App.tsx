@@ -27,10 +27,10 @@ interface Post {
 function App() {
   return (
     <AuthProvider>
-      <Box position="sticky" top="0px" zIndex={1}>
+      <Box position="sticky" top="0px" zIndex="1">
         <NavBar />
       </Box>
-      <Box zIndex={0}>
+      <Box zIndex="0">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
