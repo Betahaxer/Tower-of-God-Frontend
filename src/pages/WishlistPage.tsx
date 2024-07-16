@@ -229,6 +229,7 @@ const WishlistPage = () => {
                               alt={"product image"}
                               src={product.img}
                               h="40vh"
+                              fallbackSrc="wiz1.svg"
                             />
                           </Flex>
                           <Heading fontSize="20px">{product.name}</Heading>
