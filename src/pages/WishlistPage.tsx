@@ -31,6 +31,8 @@ interface Product {
 }
 
 const WishlistPage = () => {
+  // Product id is the id unique to the product, while wishlist id is the id of that item in the wishlist
+  // use wishlist id for deletion, use product id for adding
   const { isLoggedIn, loading } = useAuth();
   const [fetching, setFetching] = useState(true);
   const [wishlist, setWishlist] = useState<[]>([]);
@@ -101,6 +103,11 @@ const WishlistPage = () => {
     }
     setFetching(false);
     setSelectedIds([]);
+  };
+
+  const selectAll = () => {
+    const all = wishlist.map((data: Product) => data.id);
+    setSelectedIds(all);
   };
 
   useEffect(() => {
@@ -255,7 +262,7 @@ const WishlistPage = () => {
             h="auto"
             p="3"
             display="flex"
-            transition="bottom 0.3s"
+            transition="bottom 0.4s"
           >
             <Text
               mb="0"
@@ -269,7 +276,17 @@ const WishlistPage = () => {
               background="green.400"
               variant="outline"
               textColor="white"
-              _hover={{ background: "none" }}
+              _hover={{ background: "green.500" }}
+              onClick={selectAll}
+            >
+              Select All
+            </Button>
+            <Button
+              borderRadius={"full"}
+              background="green.400"
+              variant="outline"
+              textColor="white"
+              _hover={{ background: "green.500" }}
               onClick={() => {
                 setSelectedIds([]);
               }}
@@ -278,7 +295,10 @@ const WishlistPage = () => {
             </Button>
             <Button
               borderRadius={"full"}
-              background="white"
+              background="green.400"
+              variant="outline"
+              textColor="white"
+              _hover={{ background: "green.500" }}
               onClick={() => {
                 removeItems(selectedIds);
               }}
