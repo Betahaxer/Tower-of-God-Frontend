@@ -6,10 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { FaRegCircle } from "react-icons/fa";
 interface Props {
   onClick?: () => void;
+  className?: string;
 }
-const SelectButton = ({ onClick }: Props) => {
+const SelectButton = ({ onClick, className }: Props) => {
   return (
     <IconButton
+      className={className}
       variant="ghost"
       aria-label="select"
       color="white"

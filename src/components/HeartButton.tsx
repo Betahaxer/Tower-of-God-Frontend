@@ -4,22 +4,22 @@ import { IconButton } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 interface Props {
   onClick: () => void;
+  filled: boolean;
 }
-const HeartButton = ({ onClick }: Props) => {
+const HeartButton = ({ onClick, filled }: Props) => {
   const navigate = useNavigate();
   return (
     <IconButton
       variant="ghost"
       aria-label="Heart"
-      color="black"
       size="sm"
       onClick={onClick}
       icon={
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
-          fill="none"
-          stroke="black"
+          fill={filled ? "red" : "none"}
+          stroke={filled ? "red" : "black"}
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"

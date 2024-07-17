@@ -2,10 +2,12 @@ import { IconButton } from "@chakra-ui/react";
 
 interface Props {
   onClick?: () => void;
+  className?: string;
 }
-const CheckButton = ({ onClick }: Props) => {
+const CheckButton = ({ onClick, className }: Props) => {
   return (
     <IconButton
+      className={className}
       variant="ghost"
       aria-label="check"
       fontSize="40px"

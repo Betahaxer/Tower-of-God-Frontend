@@ -67,6 +67,7 @@ const SearchResultsPage = () => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [filters, setFilters] = useState<Filters>(initialFilters);
   const [loading, setLoading] = useState(true);
+  const [wishlist, setWishlist] = useState([]);
 
   // Function to update filters
   const updateFilter = (key: keyof Filters, value: any) => {
@@ -76,7 +77,6 @@ const SearchResultsPage = () => {
     }));
   };
   const handleSearch = async () => {
-    setLoading(true);
     const queryParams = new URLSearchParams(
       filters as unknown as Record<string, string>
     ).toString();
@@ -91,7 +91,6 @@ const SearchResultsPage = () => {
     } catch (error) {
       console.error("Error searching for products", error);
     }
-    setLoading(false);
   };
   const fetchMoreData = async () => {
     try {
@@ -136,6 +135,20 @@ const SearchResultsPage = () => {
       console.error("Unable to add to wishlist", error);
     }
   };
+  const getWishlist = async () => {
+    try {
+      const { accessToken } = getTokens();
+      const response = await axios.get("/api/wishlist/", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(response.data);
+      setWishlist(response.data.results);
+    } catch (error) {
+      console.error("Request for wishlist failed", error);
+    }
+  };
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -152,9 +165,33 @@ const SearchResultsPage = () => {
     }
   }, [location.state?.query]);
 
+  // async functions in useeffect can cause race conditions
+  // however this is to fix the "No results found" showing for a split second
   useEffect(() => {
-    console.log(filters);
-    handleSearch();
+    let isMounted = true;
+
+    const fetchData = async () => {
+      console.log(filters);
+      setLoading(true);
+      try {
+        await handleSearch();
+        await getWishlist();
+      } catch (error) {
+        if (isMounted) {
+          console.error("Error fetching data:", error);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
   }, [filters]);
 
   return (
@@ -215,6 +252,7 @@ const SearchResultsPage = () => {
                     key={index}
                     data={product}
                     heartFunction={() => addWishlist(product)}
+                    filled={true}
                   />
                 );
               })}

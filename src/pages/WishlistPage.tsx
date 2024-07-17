@@ -135,198 +135,202 @@ const WishlistPage = () => {
 
   return (
     <>
-      {true && (
-        <>
-          <Stack spacing="10" p="10" direction="column">
-            <Stack direction="row">
-              <InputGroup>
-                <InputLeftElement
-                  pointerEvents="none"
-                  color="black"
-                  fontSize="1.5rem"
-                  h="100%"
-                  pl="2"
-                >
-                  <CiSearch></CiSearch>
-                </InputLeftElement>
-                <Input
-                  position="relative"
-                  name="searchbox"
-                  value={searchBox}
-                  onChange={(e) => {
-                    setSearchBox(e.target.value);
-                  }}
-                  placeholder="Search Wishlist"
-                  _placeholder={{ color: "gray.600" }}
-                  size="lg"
-                  focusBorderColor="gray.200"
-                  _hover={{ boxShadow: "none" }}
-                  _focus={{ boxShadow: "none" }}
-                />
-              </InputGroup>
-            </Stack>
-
-            <SimpleGrid
-              spacing={5}
-              columns={{ base: 1, md: 2, lg: 3 }}
-              zIndex={0}
+      <Stack spacing="10" p="10" direction="column">
+        <Stack direction="row">
+          <InputGroup>
+            <InputLeftElement
+              pointerEvents="none"
+              color="black"
+              fontSize="1.5rem"
+              h="100%"
+              pl="2"
             >
-              {wishlist
-                .filter((data: Product) =>
-                  data.content_object.name
-                    .toLowerCase()
-                    .includes(searchBox.toLowerCase())
-                )
-                .map((data: Product, index: number) => {
-                  const product = data.content_object;
-                  const isSelected = selectedIds.includes(data.id);
-                  return (
-                    <Card
-                      key={index}
-                      height="60vh"
-                      justifyContent="center"
-                      alignItems="center"
-                      p="5"
-                      overflow="hidden"
-                      position="relative"
-                      onClick={() => {
-                        navigate(`/products/${product.name}`, {
-                          state: product,
-                        });
-                      }}
-                      _hover={{
-                        "& > .overlay": {
-                          opacity: 1,
-                          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                        },
+              <CiSearch></CiSearch>
+            </InputLeftElement>
+            <Input
+              position="relative"
+              name="searchbox"
+              value={searchBox}
+              onChange={(e) => {
+                setSearchBox(e.target.value);
+              }}
+              placeholder="Search Wishlist"
+              _placeholder={{ color: "gray.600" }}
+              size="lg"
+              focusBorderColor="gray.200"
+              _hover={{ boxShadow: "none" }}
+              _focus={{ boxShadow: "none" }}
+            />
+          </InputGroup>
+        </Stack>
+
+        <SimpleGrid spacing={5} columns={{ base: 1, md: 2, lg: 3 }} zIndex={0}>
+          {wishlist
+            .filter((data: Product) =>
+              data.content_object.name
+                .toLowerCase()
+                .includes(searchBox.toLowerCase())
+            )
+            .map((data: Product, index: number) => {
+              const product = data.content_object;
+              const isSelected = selectedIds.includes(data.id);
+              return (
+                <Card
+                  key={index}
+                  height="60vh"
+                  justifyContent="center"
+                  alignItems="center"
+                  p="5"
+                  overflow="hidden"
+                  position="relative"
+                  onClick={() => {
+                    navigate(`/products/${product.name}`, {
+                      state: product,
+                    });
+                  }}
+                  _hover={{
+                    "& > .overlay": {
+                      opacity: 1,
+                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                    },
+                  }}
+                >
+                  <Box
+                    position="absolute"
+                    display="flex"
+                    top="0"
+                    left="0"
+                    width="100%"
+                    height="100%"
+                    bg="rgba(0, 0, 0, 0.2)"
+                    opacity={isSelected ? 1 : 0}
+                    transition="opacity 0.3s, box-shadow 0.3s"
+                    className="overlay"
+                    zIndex="2"
+                    justifyContent="center"
+                    alignItems="center"
+                    _hover={{
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Box
+                      display="flex"
+                      textColor="rgba(255, 255, 255, 0.6)"
+                      fontWeight="1000"
+                      fontSize="3rem"
+                      textAlign="center"
+                    >
+                      More info
+                    </Box>
+                    <Box
+                      as="button"
+                      position="absolute"
+                      top="5"
+                      right="5"
+                      onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                        event.stopPropagation();
+                        toggleSelection(data.id);
                       }}
                     >
-                      <Box
-                        position="absolute"
-                        top="0"
-                        left="0"
-                        width="100%"
-                        height="100%"
-                        bg="rgba(0, 0, 0, 0.2)"
-                        opacity={isSelected ? 1 : 0}
-                        transition="opacity 0.3s, box-shadow 0.3s"
-                        className="overlay"
-                        zIndex="2"
-                      >
-                        <Box
-                          as="button"
-                          position="absolute"
-                          top="5"
-                          right="5"
-                          zIndex="2"
-                          onClick={(
-                            event: React.MouseEvent<HTMLButtonElement>
-                          ) => {
-                            event.stopPropagation();
-                            toggleSelection(data.id);
-                          }}
-                        >
-                          {!isSelected && <SelectButton />}
-                          {isSelected && <CheckButton onClick={() => {}} />}
-                        </Box>
-                      </Box>
+                      {!isSelected && <SelectButton />}
+                      {isSelected && (
+                        <CheckButton
+                          className="CheckButton"
+                          onClick={() => {}}
+                        />
+                      )}
+                    </Box>
+                  </Box>
 
-                      <CardBody position="relative" zIndex="1">
-                        <Stack
-                          direction="column"
-                          spacing={2}
-                          justifyContent="center"
-                          alignItems="center"
-                        >
-                          <Flex justifyContent="center">
-                            <Image
-                              rounded={"lg"}
-                              alt={"product image"}
-                              src={product.img}
-                              h="40vh"
-                              fallbackSrc="wiz1.svg"
-                            />
-                          </Flex>
-                          <Heading fontSize="20px">{product.name}</Heading>
-                        </Stack>
-                      </CardBody>
-                    </Card>
-                  );
-                })}
-            </SimpleGrid>
-            <Box position="relative" padding="10">
-              <Divider />
-              <AbsoluteCenter
-                bg="white"
-                px="4"
-                fontSize="20px"
-                color="gray.500"
-              >
-                {`Displaying ${wishlist.length} products`}
-              </AbsoluteCenter>
-            </Box>
-          </Stack>
-          <Stack
-            spacing="3"
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
-            borderRadius={"full"}
-            bg="green.400"
-            position="fixed"
-            bottom={selectedIds.length > 0 ? "30px" : "-100%"}
-            left="50vw" // Positioning the left side of the box at 50% of the viewport width
-            transform="translateX(-50%)" // translating the box left by 50% of its own width
-            w="auto"
-            h="auto"
-            p="3"
-            display="flex"
-            transition="bottom 0.4s"
-          >
-            <Text
-              mb="0"
-              px="2"
-              color="white"
-              fontWeight="500"
-              whiteSpace="nowrap"
-            >{`${selectedIds.length} selected`}</Text>
-            <Button
-              borderRadius={"full"}
-              background="green.400"
-              variant="outline"
-              textColor="white"
-              _hover={{ background: "green.500" }}
-              onClick={selectAll}
-            >
-              Select All
-            </Button>
-            <Button
-              borderRadius={"full"}
-              background="green.400"
-              variant="outline"
-              textColor="white"
-              _hover={{ background: "green.500" }}
-              onClick={() => {
-                setSelectedIds([]);
-              }}
-            >
-              Clear
-            </Button>
-            <Button
-              borderRadius={"full"}
-              background="green.400"
-              variant="outline"
-              textColor="white"
-              _hover={{ background: "green.500" }}
-              onClick={() => {
-                removeItems(selectedIds);
-              }}
-            >
-              Delete
-            </Button>
-          </Stack>
-        </>
-      )}
+                  <CardBody position="relative" zIndex="1">
+                    <Stack
+                      direction="column"
+                      spacing={2}
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Flex justifyContent="center">
+                        <Image
+                          rounded={"lg"}
+                          alt={"product image"}
+                          src={product.img}
+                          h="40vh"
+                          fallbackSrc="wiz1.svg"
+                        />
+                      </Flex>
+                      <Heading fontSize="20px">{product.name}</Heading>
+                    </Stack>
+                  </CardBody>
+                </Card>
+              );
+            })}
+        </SimpleGrid>
+        <Box position="relative" padding="10">
+          <Divider />
+          <AbsoluteCenter bg="white" px="4" fontSize="20px" color="gray.500">
+            {`Displaying ${wishlist.length} products`}
+          </AbsoluteCenter>
+        </Box>
+      </Stack>
+      <Stack
+        spacing="3"
+        direction="row"
+        alignItems="center"
+        justifyContent="center"
+        borderRadius={"full"}
+        bg="green.400"
+        position="fixed"
+        bottom={selectedIds.length > 0 ? "30px" : "-100%"}
+        left="50vw" // Positioning the left side of the box at 50% of the viewport width
+        transform="translateX(-50%)" // translating the box left by 50% of its own width
+        w="auto"
+        h="auto"
+        p="3"
+        display="flex"
+        transition="bottom 0.4s"
+      >
+        <Text
+          mb="0"
+          px="2"
+          color="white"
+          fontWeight="500"
+          whiteSpace="nowrap"
+        >{`${selectedIds.length} selected`}</Text>
+        <Button
+          borderRadius={"full"}
+          background="green.400"
+          variant="outline"
+          textColor="white"
+          _hover={{ background: "green.500" }}
+          onClick={selectAll}
+        >
+          Select All
+        </Button>
+        <Button
+          borderRadius={"full"}
+          background="green.400"
+          variant="outline"
+          textColor="white"
+          _hover={{ background: "green.500" }}
+          onClick={() => {
+            setSelectedIds([]);
+          }}
+        >
+          Clear
+        </Button>
+        <Button
+          borderRadius={"full"}
+          background="green.400"
+          variant="outline"
+          textColor="white"
+          _hover={{ background: "green.500" }}
+          onClick={() => {
+            removeItems(selectedIds);
+          }}
+        >
+          Delete
+        </Button>
+      </Stack>
     </>
   );
 };
