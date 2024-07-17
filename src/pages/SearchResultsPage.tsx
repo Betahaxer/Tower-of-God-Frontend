@@ -87,7 +87,7 @@ const SearchResultsPage = () => {
       setFilterList(response.data.results.filters);
       setNextUrl(response.data.next);
       setHasMore(response.data.next !== null);
-      console.log(response.data);
+      console.log("results: ", response.data);
     } catch (error) {
       console.error("Error searching for products", error);
     }
@@ -106,16 +106,13 @@ const SearchResultsPage = () => {
       setFilterList(response.data.results.filters);
       setNextUrl(response.data.next);
       setHasMore(response.data.next !== null);
-      console.log(response.data);
-      console.log(response.data.next);
+      //console.log(response.data);
+      //console.log(response.data.next);
     } catch (error) {
       console.error("Error fetching more products", error);
     }
   };
   const addWishlist = async (product: Product) => {
-    console.log(product);
-    console.log(product.category);
-    console.log(product.id);
     const { accessToken, refreshToken } = getTokens();
     try {
       const response = await axios.post(
@@ -135,6 +132,39 @@ const SearchResultsPage = () => {
       console.error("Unable to add to wishlist", error);
     }
   };
+  const toggleWishlistItem = async (product: Product) => {
+    console.log("toggle: ", product);
+    const { accessToken, refreshToken } = getTokens();
+    try {
+      if (inWishlist(product.id)) {
+        // item is in wishlist, delete it
+        console.log("id: ", findIdInWishlist(product.id));
+        const object_id = findIdInWishlist(product.id);
+        await axios.delete(`/api/wishlist/${object_id}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        console.log(`Product with id ${product.id} removed from wishlist.`);
+      } else {
+        // add product to wishlist
+        const response = await axios.post(
+          "/api/wishlist/",
+          {
+            product_category: product.category,
+            object_id: product.id,
+          },
+          {
+            headers: {
+              ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+              ...(refreshToken && { "Refresh-Token": refreshToken }),
+            },
+          }
+        );
+        console.log(`Product with id ${product.id} added to wishlist.`);
+      }
+    } catch (error) {
+      console.error("Error toggling wishlist item:", error);
+    }
+  };
   const getWishlist = async () => {
     try {
       const { accessToken } = getTokens();
@@ -143,13 +173,24 @@ const SearchResultsPage = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(response.data);
+      console.log("wishlist: ", response.data.results);
       setWishlist(response.data.results);
     } catch (error) {
       console.error("Request for wishlist failed", error);
     }
   };
-  const inWishlist = () => {};
+  const inWishlist = (id: number) => {
+    const result = wishlist.some(
+      (product: Product) => product.object_id === id
+    );
+    return result;
+  };
+  const findIdInWishlist = (item_id: number): number | undefined => {
+    const product: Product = wishlist.find(
+      (product: Product) => product.object_id === item_id
+    ) as unknown as Product;
+    return product?.id;
+  };
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -172,7 +213,7 @@ const SearchResultsPage = () => {
     let isMounted = true;
 
     const fetchData = async () => {
-      console.log(filters);
+      //console.log(filters);
       setLoading(true);
       try {
         await handleSearch();
@@ -189,8 +230,6 @@ const SearchResultsPage = () => {
     };
 
     fetchData();
-    console.log(results);
-    console.log(wishlist);
     return () => {
       isMounted = false;
     };
@@ -253,8 +292,11 @@ const SearchResultsPage = () => {
                   <Product
                     key={index}
                     data={product}
-                    heartFunction={() => addWishlist(product)}
-                    filled={false}
+                    heartFunction={async () => {
+                      await toggleWishlistItem(product);
+                      await getWishlist();
+                    }}
+                    filled={inWishlist(product.id)}
                   />
                 );
               })}

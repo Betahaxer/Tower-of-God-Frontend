@@ -164,7 +164,7 @@ export default function NavBar() {
                 toast({
                   title: "Logged out!",
                   status: "success",
-                  duration: 9000,
+                  duration: 2000,
                   isClosable: true,
                 });
               }}

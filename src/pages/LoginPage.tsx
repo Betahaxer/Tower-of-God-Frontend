@@ -37,7 +37,7 @@ const LoginPage = () => {
         title: "You're logged in!",
         description: "Welcome back!",
         status: "success",
-        duration: 5000,
+        duration: 2000,
         isClosable: true,
       });
       setUsername("");
@@ -49,7 +49,7 @@ const LoginPage = () => {
         title: "Oops...",
         description: "Please check that your details are correct.",
         status: "error",
-        duration: 5000,
+        duration: 2000,
         isClosable: true,
       });
       setUsername("");

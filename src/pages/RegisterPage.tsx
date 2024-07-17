@@ -19,7 +19,7 @@ const RegisterPage = () => {
         title: "Account created.",
         description: "We've created your account for you.",
         status: "success",
-        duration: 9000,
+        duration: 2000,
         isClosable: true,
       });
       setUsername("");
@@ -30,7 +30,7 @@ const RegisterPage = () => {
         title: "Oops...",
         description: "Please check that your details are correct.",
         status: "error",
-        duration: 9000,
+        duration: 2000,
         isClosable: true,
       });
       setUsername("");

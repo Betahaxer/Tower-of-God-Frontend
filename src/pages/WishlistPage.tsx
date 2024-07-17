@@ -119,7 +119,7 @@ const WishlistPage = () => {
         title: "Log in required",
         description: "Please log in to access wishlist",
         status: "error",
-        duration: 5000,
+        duration: 2000,
         isClosable: true,
       });
       navigate("/login");
