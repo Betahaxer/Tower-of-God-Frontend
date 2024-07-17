@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input, InputGroup, InputRightElement, Button } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Fuse from "fuse.js";
 
 interface Props {
-  onClick: () => void;
+  loading?: (isLoading: boolean) => void;
 }
 
-const SearchBar = () => {
+const SearchBar = ({ loading }: Props) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchResults, setSearchResults] = useState("");
 
   // function to listen for ENTER key and search if pressed
@@ -22,23 +23,13 @@ const SearchBar = () => {
   };
   // handles the search logic
   const onSearch = async (query: string) => {
-    try {
-      let url = `/api/products/`;
-      //console.log(url);
-      // querying the database based on category and simple filtering with user query
-      const response = await axios.get(url, {
-        params: { q: query },
-      });
-
-      //console.log(response.data.results);
-
-      // passing the data to the search results page
-      navigate("/search", { state: { query } });
-    } catch (error) {
-      console.error("Error fetching search results:", error);
-    }
+    navigate("/search", { state: { query } });
   };
-
+  useEffect(() => {
+    if (location.state?.query) {
+      setSearchResults(location.state?.query || "");
+    }
+  }, [location.state?.query]);
   return (
     <InputGroup maxW="45%">
       <Input

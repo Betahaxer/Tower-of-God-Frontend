@@ -1,0 +1,31 @@
+.slideout-menu-container {
+    position: relative;
+    height: 100%
+}
+  
+.slideout-menu {
+    display: flex;
+    flex: 1 1 auto;
+    flex-flow: column;
+    position: relative;
+    left: -30vw;
+    width: 30vw;
+    height: 100vh;
+    background-color: rgb(161, 195, 12);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s ease;
+}
+
+.slideout-menu.open {
+    left: 0;
+}
+
+.slideout-menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.slideout-menu li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}

@@ -1,18 +1,13 @@
 import { useState } from "react";
-import { Box, Text } from "@chakra-ui/react";
-import { Link, redirect } from "react-router-dom";
-import { useCookies } from "react-cookie";
+import { Box, Text, useToast } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import axios from "axios";
-import AlertCustom from "../components/AlertCustom";
 import Login from "../components/Login";
 
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [alertText, setAlertText] = useState("");
-  const [registerSuccess, setRegisterSuccess] = useState(false);
-  const [cookies, setCookie] = useCookies(["token"]);
+  const toast = useToast();
   const handleRegistration = async () => {
     try {
       const response = await axios.post("/api/register/", {
@@ -20,18 +15,26 @@ const RegisterPage = () => {
         password: password,
       });
       console.log(response);
-      setRegisterSuccess(true);
-      setAlertVisible(true);
-      // setUsername("");
-      // setPassword("");
+      toast({
+        title: "Account created.",
+        description: "We've created your account for you.",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+      setUsername("");
+      setPassword("");
     } catch (error) {
-      // Handle error (e.g., display error message)
-      console.error("Error:", error);
-      setRegisterSuccess(false);
-      //setAlertText(error.response.data.error);
-      setAlertVisible(true);
-      // setUsername("");
-      // setPassword("");
+      console.error(error);
+      toast({
+        title: "Oops...",
+        description: "Please check that your details are correct.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      setUsername("");
+      setPassword("");
     }
   };
 
@@ -44,13 +47,6 @@ const RegisterPage = () => {
       height="100vh"
       textAlign="center"
     >
-      {alertVisible && (
-        <AlertCustom
-          isSuccessful={registerSuccess}
-          onClick={() => setAlertVisible(false)}
-          alertText={alertText}
-        />
-      )}
       <Box mb={4}>
         <Login
           action="Register"

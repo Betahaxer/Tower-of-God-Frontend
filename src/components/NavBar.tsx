@@ -18,6 +18,7 @@ import {
   Center,
   Image,
   HStack,
+  useToast,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -39,7 +40,7 @@ export default function NavBar() {
   // dont show search bar in nav bar in homepage
   const showSearchBar = location.pathname === "/" ? false : true;
   const { isLoggedIn, login, logout } = useAuth();
-
+  const toast = useToast();
   const handleLogout = async () => {
     const { accessToken, refreshToken } = getTokens();
     console.log(accessToken, refreshToken);
@@ -160,9 +161,15 @@ export default function NavBar() {
               onClick={() => {
                 handleLogout();
                 navigate("/");
+                toast({
+                  title: "Logged out!",
+                  status: "success",
+                  duration: 2000,
+                  isClosable: true,
+                });
               }}
             >
-              Logout
+              Log Out
             </Button>
           )}
         </Stack>
@@ -179,7 +186,7 @@ const DesktopNav = () => {
   return (
     <Stack direction={"row"} spacing={4}>
       {NAV_ITEMS.map((navItem) => (
-        <Box key={navItem.label} minW={140}>
+        <Box key={navItem.label}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
               <Box
@@ -293,7 +300,7 @@ interface NavItem {
 
 const NAV_ITEMS: Array<NavItem> = [
   {
-    label: "Product Categories",
+    label: "Categories",
     children: [
       {
         label: "earphones",
@@ -330,7 +337,11 @@ const NAV_ITEMS: Array<NavItem> = [
     ],
   },
   {
-    label: "Compare Products",
+    label: "Compare",
     href: "/compare",
+  },
+  {
+    label: "Wishlist",
+    href: "/wishlist",
   },
 ];
