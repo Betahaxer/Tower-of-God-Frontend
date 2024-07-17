@@ -17,8 +17,10 @@ import {
   InputGroup,
   InputLeftElement,
   IconButton,
+  AbsoluteCenter,
+  Divider,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getTokens } from "../utils/storage";
 import SelectButton from "../components/SelectButton";
@@ -133,8 +135,7 @@ const WishlistPage = () => {
 
   return (
     <>
-      {wishlist.length === 0 && <div>Your wishlist is empty!</div>}
-      {wishlist.length !== 0 && (
+      {true && (
         <>
           <Stack spacing="10" p="10" direction="column">
             <Stack direction="row">
@@ -189,7 +190,9 @@ const WishlistPage = () => {
                       overflow="hidden"
                       position="relative"
                       onClick={() => {
-                        toggleSelection(data.id);
+                        navigate(`/products/${product.name}`, {
+                          state: product,
+                        });
                       }}
                       _hover={{
                         "& > .overlay": {
@@ -210,8 +213,20 @@ const WishlistPage = () => {
                         className="overlay"
                         zIndex="2"
                       >
-                        <Box position="absolute" top="5" right="5" zIndex="2">
-                          {!isSelected && <SelectButton onClick={() => {}} />}
+                        <Box
+                          as="button"
+                          position="absolute"
+                          top="5"
+                          right="5"
+                          zIndex="2"
+                          onClick={(
+                            event: React.MouseEvent<HTMLButtonElement>
+                          ) => {
+                            event.stopPropagation();
+                            toggleSelection(data.id);
+                          }}
+                        >
+                          {!isSelected && <SelectButton />}
                           {isSelected && <CheckButton onClick={() => {}} />}
                         </Box>
                       </Box>
@@ -239,6 +254,17 @@ const WishlistPage = () => {
                   );
                 })}
             </SimpleGrid>
+            <Box position="relative" padding="10">
+              <Divider />
+              <AbsoluteCenter
+                bg="white"
+                px="4"
+                fontSize="20px"
+                color="gray.500"
+              >
+                {`Displaying ${wishlist.length} products`}
+              </AbsoluteCenter>
+            </Box>
           </Stack>
           <Stack
             spacing="3"

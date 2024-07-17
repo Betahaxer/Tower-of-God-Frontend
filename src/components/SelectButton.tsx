@@ -5,7 +5,7 @@ import { IconButton } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { FaRegCircle } from "react-icons/fa";
 interface Props {
-  onClick: () => void;
+  onClick?: () => void;
 }
 const SelectButton = ({ onClick }: Props) => {
   return (

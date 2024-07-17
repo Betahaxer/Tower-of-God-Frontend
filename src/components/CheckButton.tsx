@@ -1,7 +1,7 @@
 import { IconButton } from "@chakra-ui/react";
 
 interface Props {
-  onClick: () => void;
+  onClick?: () => void;
 }
 const CheckButton = ({ onClick }: Props) => {
   return (
