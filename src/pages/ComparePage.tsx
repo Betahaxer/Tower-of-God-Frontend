@@ -73,6 +73,7 @@ export default function ComparePage() {
         spacing={{ base: 4, md: 6 }}
         marginX={100}
         marginY={10}
+        zIndex={0}
       >
         <Select
           position="relative"

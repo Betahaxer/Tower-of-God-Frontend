@@ -18,9 +18,10 @@ import { Link } from "react-router-dom";
 interface Product {
   [key: string]: any;
   heartFunction: () => void;
+  filled: boolean;
 }
 
-const Product = ({ data, heartFunction }: Product) => {
+const Product = ({ data, heartFunction, filled }: Product) => {
   return (
     <Card
       position="relative"
@@ -33,7 +34,7 @@ const Product = ({ data, heartFunction }: Product) => {
       }}
     >
       <Box position="absolute" top="5" right="5">
-        <HeartButton onClick={heartFunction}></HeartButton>
+        <HeartButton filled={filled} onClick={heartFunction}></HeartButton>
       </Box>
       <Link
         to={{

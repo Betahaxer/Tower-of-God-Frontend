@@ -149,6 +149,7 @@ const SearchResultsPage = () => {
       console.error("Request for wishlist failed", error);
     }
   };
+  const inWishlist = () => {};
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -188,7 +189,8 @@ const SearchResultsPage = () => {
     };
 
     fetchData();
-
+    console.log(results);
+    console.log(wishlist);
     return () => {
       isMounted = false;
     };
@@ -252,7 +254,7 @@ const SearchResultsPage = () => {
                     key={index}
                     data={product}
                     heartFunction={() => addWishlist(product)}
-                    filled={true}
+                    filled={false}
                   />
                 );
               })}
