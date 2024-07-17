@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import {
   Box,
@@ -19,6 +19,13 @@ import {
   IconButton,
   AbsoluteCenter,
   Divider,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -41,6 +48,8 @@ const WishlistPage = () => {
   const [wishlist, setWishlist] = useState<[]>([]);
   const [searchBox, setSearchBox] = useState("");
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement>(null);
   const toggleSelection = (id: number) => {
     setSelectedIds((prevIds) => {
       if (prevIds.includes(id)) {
@@ -324,13 +333,46 @@ const WishlistPage = () => {
           variant="outline"
           textColor="white"
           _hover={{ background: "green.500" }}
-          onClick={() => {
-            removeItems(selectedIds);
-          }}
+          onClick={onOpen}
         >
           Delete
         </Button>
       </Stack>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+        isCentered
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Items
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You can't undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  removeItems(selectedIds);
+                  onClose();
+                }}
+                ml={3}
+              >
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   );
 };
