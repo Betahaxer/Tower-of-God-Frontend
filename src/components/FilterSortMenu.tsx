@@ -12,6 +12,7 @@ import {
   Box,
   Flex,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { ChevronDownIcon, CloseIcon } from "@chakra-ui/icons";
 import CloseButton from "./CloseButton";

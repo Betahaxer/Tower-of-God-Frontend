@@ -103,7 +103,6 @@ const SearchResultsPage = () => {
       const response = await axios.get(url, axiosConfig);
       const newResults: Product[] = response.data.results.products;
       setResults((prevResults) => [...prevResults, ...newResults]);
-      setFilterList(response.data.results.filters);
       setNextUrl(response.data.next);
       setHasMore(response.data.next !== null);
       //console.log(response.data);

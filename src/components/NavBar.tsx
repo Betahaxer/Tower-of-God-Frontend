@@ -32,6 +32,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { clearTokens, getTokens } from "../utils/storage";
 import { useAuth } from "../contexts/AuthContext";
+import { DarkModeButton } from "./DarkModeButton";
 
 export default function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
@@ -116,6 +117,7 @@ export default function NavBar() {
           direction={"row"}
           spacing={3}
         >
+          <DarkModeButton/>
           {!isLoggedIn && (
             <>
               <Button

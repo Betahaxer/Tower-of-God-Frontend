@@ -4,6 +4,15 @@ import App from "./App";
 import "bootstrap/dist/css/bootstrap.css";
 import { ChakraProvider, ToastProvider } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
+import { extendTheme } from '@chakra-ui/react'
+
+// Theme settings. Currently only have dark mode settings
+const config = {
+  initialColorMode: 'system',
+  useSystemColorMode: false,
+}
+
+const customTheme = extendTheme({ config })
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -13,6 +22,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           defaultOptions: { position: "top" },
           toastSpacing: "50",
         }}
+        theme={customTheme}
       >
         <App />
       </ChakraProvider>
