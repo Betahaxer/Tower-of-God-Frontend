@@ -1,6 +1,5 @@
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
-
-import { IconButton } from "@chakra-ui/react";
+import { IconButton, useColorModeValue } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 interface Props {
   onClick: () => void;

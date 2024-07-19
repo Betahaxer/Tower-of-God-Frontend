@@ -1,5 +1,5 @@
 import { CloseIcon } from "@chakra-ui/icons";
-import { Button } from "@chakra-ui/react";
+import { Button, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
 
 interface CloseButtonProps {
@@ -15,6 +15,7 @@ const CloseButton: React.FC<CloseButtonProps> = ({ text, onClick }) => {
       _hover={{ background: "gray.200" }}
       rightIcon={<CloseIcon boxSize={2} />}
       onClick={onClick}
+      color={useColorModeValue("gray.900", "gray.600")}
     >
       {text}
     </Button>
