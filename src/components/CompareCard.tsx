@@ -16,6 +16,8 @@ import {
 import { ReactElement } from "react";
 import { FaPlusCircle, FaMinusCircle } from "react-icons/fa";
 import SpecsMouse from "./SpecsMouse";
+import Specs from "./Specs";
+import { Laptop } from "@mui/icons-material";
 
 interface Dictionary {
   [key: string]: any;
@@ -26,22 +28,30 @@ export default function CompareCard({ product }: Dictionary) {
   interface Product {
     [key: string]: any;
   }
-  // categoryMap type is a dictionary which has string as the key and a function which
-  // passes a prop to the component when called
-  interface categoryMap {
-    [category: string]: (props: Product) => ReactElement;
-  }
-  // mapping of the product category to the corresponding component
-  // since each category will have different specifications
-  const categoryMap: categoryMap = {
-    mouse: (props) => <SpecsMouse {...props} />,
+  const keysToRender = {
+    earbuds: ["wireless", "battery_life", "active_noise_cancellation"],
+    keyboard: ["wireless", "size", "key_switches"],
+    laptop: [
+      "battery_life",
+      "screen_resolution",
+      "processor",
+      "os_version",
+      "weight",
+    ],
+    mouse: ["buttons_count", "dpi", "weight", "wireless"],
+    phone: [
+      "battery_life",
+      "screen_resolution",
+      "processor",
+      "os_version",
+      "weight",
+      "size",
+    ],
+    // monitor products have no category key
+    monitor: ["screen_size", "screen_resolution", "refresh_rate", "panel_type"],
+    speaker: ["portable", "bluetooth", "wifi", "speakerphone"],
+    television: ["screen_size", "screen_resolution", "panel_type"],
   };
-  const placeholder = () => (
-    <List>
-      <ListItem>Details not available, sorry!</ListItem>
-    </List>
-  );
-  const specComponent = categoryMap[product.category] || placeholder;
 
   return (
     <>
@@ -51,6 +61,8 @@ export default function CompareCard({ product }: Dictionary) {
           py={{ base: 9, md: 12 }}
           px={{ base: 20, md: 10 }}
           direction={"column"}
+          justifyItems="center"
+          alignItems="center"
           divider={
             <StackDivider
               borderColor={useColorModeValue("gray.200", "gray.600")}
@@ -65,8 +77,9 @@ export default function CompareCard({ product }: Dictionary) {
                 src={product.img}
                 fit={"cover"}
                 align={"center"}
-                w={"100%"}
-                h={"auto"}
+                w="auto"
+                h="35vh"
+                fallbackSrc="wiz1.svg"
               />
             </Flex>
             <Box as={"header"}>
@@ -131,7 +144,7 @@ export default function CompareCard({ product }: Dictionary) {
               })}
             </List>
           </SimpleGrid>
-          <Box overflow="auto" height="300">
+          <Box overflow="auto" height="300" width="100%">
             <Text
               fontSize={{ base: "16px", lg: "18px" }}
               color={useColorModeValue("yellow.500", "yellow.300")}
@@ -141,8 +154,8 @@ export default function CompareCard({ product }: Dictionary) {
             >
               Product Details
             </Text>
-
-            {specComponent(product)}
+            {/*rendering of product details*/}
+            <Specs product={product} keys={keysToRender} />
           </Box>
         </Stack>
       </Card>

@@ -16,6 +16,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import FilterSortMenu from "../components/FilterSortMenu";
 import { getTokens } from "../utils/storage";
 import LoadingPage from "../components/LoadingPage";
+import { useAuth } from "../contexts/AuthContext";
 
 const SearchResultsPage = () => {
   interface FilterList {
@@ -45,6 +46,7 @@ const SearchResultsPage = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const { checkExpiryAndRefresh, isLoggedIn } = useAuth();
   // filters contain the current filters applied by user
   const initialFilters: Filters = {
     q: location.state?.query || "",
@@ -111,33 +113,14 @@ const SearchResultsPage = () => {
       console.error("Error fetching more products", error);
     }
   };
-  const addWishlist = async (product: Product) => {
-    const { accessToken, refreshToken } = getTokens();
-    try {
-      const response = await axios.post(
-        "/api/wishlist/",
-        {
-          product_category: product.category,
-          object_id: product.id,
-        },
-        {
-          headers: {
-            ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-            ...(refreshToken && { "Refresh-Token": refreshToken }),
-          },
-        }
-      );
-    } catch (error) {
-      console.error("Unable to add to wishlist", error);
-    }
-  };
+
   const toggleWishlistItem = async (product: Product) => {
     console.log("toggle: ", product);
-    const { accessToken, refreshToken } = getTokens();
     try {
+      await checkExpiryAndRefresh();
+      const { accessToken, refreshToken } = getTokens();
       if (inWishlist(product.id)) {
         // item is in wishlist, delete it
-        console.log("id: ", findIdInWishlist(product.id));
         const object_id = findIdInWishlist(product.id);
         await axios.delete(`/api/wishlist/${object_id}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
@@ -166,6 +149,7 @@ const SearchResultsPage = () => {
   };
   const getWishlist = async () => {
     try {
+      await checkExpiryAndRefresh();
       const { accessToken } = getTokens();
       const response = await axios.get("/api/wishlist/", {
         headers: {
@@ -258,7 +242,7 @@ const SearchResultsPage = () => {
             No results found
           </Text>
         )}
-        {Array.isArray(results) && results.length !== 0 && (
+        {!loading && Array.isArray(results) && results.length !== 0 && (
           <InfiniteScroll
             dataLength={results.length}
             next={fetchMoreData}

@@ -61,8 +61,10 @@ const WishlistPage = () => {
   };
   const toast = useToast();
   const navigate = useNavigate();
+  const { checkExpiryAndRefresh } = useAuth();
   const getWishlist = async () => {
     try {
+      await checkExpiryAndRefresh();
       const { accessToken } = getTokens();
       const response = await axios.get("/api/wishlist/", {
         headers: {
@@ -80,6 +82,7 @@ const WishlistPage = () => {
   const removeItems = async (ids: number[]) => {
     setFetching(true);
     try {
+      await checkExpiryAndRefresh();
       const { accessToken } = getTokens();
       const deletePromises = ids.map((id) =>
         axios.delete(`/api/wishlist/${id}`, {

@@ -47,14 +47,14 @@ const Product = ({ data, heartFunction, filled }: Product) => {
           color: "inherit",
         }}
       >
-        <CardBody pb={30}>
+        <CardBody>
           <Stack direction="column" spacing={2}>
-            <Flex justifyContent="center" m={0}>
+            <Flex justifyContent="center" py="8" px="8">
               <Image
                 rounded={"lg"}
                 alt={"Image not available"}
                 src={data.img}
-                h="40vh"
+                h="35vh"
                 w="auto"
                 fallbackSrc="wiz1.svg"
               />
@@ -62,7 +62,12 @@ const Product = ({ data, heartFunction, filled }: Product) => {
             <Heading size="md" m={0}>
               {data.name}
             </Heading>
-            <Text color={useColorModeValue("gray.900", "gray.400")} fontWeight={300} fontSize={"xl"} m={0}>
+            <Text
+              color={useColorModeValue("gray.900", "gray.400")}
+              fontWeight={300}
+              fontSize={"xl"}
+              m={0}
+            >
               {data.price ? "$" + data.price : "$-"}
             </Text>
             <Text>{data.description.slice(0, 150) + "..."}</Text>
