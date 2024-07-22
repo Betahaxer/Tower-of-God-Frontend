@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import { ReactElement } from "react";
 import { FaPlusCircle, FaMinusCircle } from "react-icons/fa";
-import SpecsMouse from "./SpecsMouse";
 import Specs from "./Specs";
 import { Laptop } from "@mui/icons-material";
 

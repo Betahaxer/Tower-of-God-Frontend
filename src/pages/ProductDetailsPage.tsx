@@ -23,8 +23,9 @@ import {
 import { Key, ReactElement, useEffect } from "react";
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import SpecsMouse from "../components/SpecsMouse";
+
 import { ArrowForwardIcon } from "@chakra-ui/icons";
+import Specs from "../components/Specs";
 
 interface Dictionary {
   [key: string]: any;
@@ -41,24 +42,31 @@ export default function ProductDetailsPage() {
   interface Product {
     [key: string]: any;
   }
-  // categoryMap type is a dictionary which has string as the key and a function which
-  // passes a prop to the component when called
-  interface categoryMap {
-    [category: string]: (props: Product) => ReactElement;
-  }
-  // mapping of the product category to the corresponding component
-  // since each category will have different specifications
-  const categoryMap: categoryMap = {
-    mouse: (props) => <SpecsMouse {...props} />,
+
+  const keysToRender = {
+    earbuds: ["wireless", "battery_life", "active_noise_cancellation"],
+    keyboard: ["wireless", "size", "key_switches"],
+    laptop: [
+      "battery_life",
+      "screen_resolution",
+      "processor",
+      "os_version",
+      "weight",
+    ],
+    mouse: ["buttons_count", "dpi", "weight", "wireless"],
+    phone: [
+      "battery_life",
+      "screen_resolution",
+      "processor",
+      "os_version",
+      "weight",
+      "size",
+    ],
+    // monitor products have no category key
+    monitor: ["screen_size", "screen_resolution", "refresh_rate", "panel_type"],
+    speaker: ["portable", "bluetooth", "wifi", "speakerphone"],
+    television: ["screen_size", "screen_resolution", "panel_type"],
   };
-
-  const placeholder = () => (
-    <List>
-      <ListItem>Details not available, sorry!</ListItem>
-    </List>
-  );
-
-  const specComponent = categoryMap[product.category] || placeholder;
 
   return (
     <Container maxW={"7xl"}>
@@ -169,7 +177,7 @@ export default function ProductDetailsPage() {
               Product Details
             </Text>
 
-            {specComponent(product)}
+            <Specs product={product} keys={keysToRender} />
           </Box>
           <Link
             to={{

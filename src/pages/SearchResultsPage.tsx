@@ -119,7 +119,7 @@ const SearchResultsPage = () => {
     try {
       await checkExpiryAndRefresh();
       const { accessToken, refreshToken } = getTokens();
-      if (inWishlist(product.id)) {
+      if (inWishlist(product.id, product.category)) {
         // item is in wishlist, delete it
         const object_id = findIdInWishlist(product.id);
         await axios.delete(`/api/wishlist/${object_id}`, {
@@ -162,9 +162,10 @@ const SearchResultsPage = () => {
       console.error("Request for wishlist failed", error);
     }
   };
-  const inWishlist = (id: number) => {
+  const inWishlist = (id: number, category: string) => {
     const result = wishlist.some(
-      (product: Product) => product.object_id === id
+      (product: Product) =>
+        product.object_id === id && product.category === category
     );
     return result;
   };
@@ -279,7 +280,7 @@ const SearchResultsPage = () => {
                       await toggleWishlistItem(product);
                       await getWishlist();
                     }}
-                    filled={inWishlist(product.id)}
+                    filled={inWishlist(product.id, product.category)}
                   />
                 );
               })}
