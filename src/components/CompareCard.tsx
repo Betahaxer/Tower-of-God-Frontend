@@ -144,7 +144,7 @@ export default function CompareCard({ product }: Dictionary) {
               })}
             </List>
           </SimpleGrid>
-          <Box overflow="auto" height="300">
+          <Box overflow="auto" height="300" width="100%">
             <Text
               fontSize={{ base: "16px", lg: "18px" }}
               color={useColorModeValue("yellow.500", "yellow.300")}
