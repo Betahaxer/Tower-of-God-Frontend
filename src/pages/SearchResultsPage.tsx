@@ -163,10 +163,11 @@ const SearchResultsPage = () => {
     }
   };
   const inWishlist = (id: number, category: string) => {
-    const result = wishlist.some(
-      (product: Product) =>
-        product.object_id === id && product.category === category
-    );
+    const result = wishlist.some((product: Product) => {
+      return (
+        product.object_id === id && product.content_object.category === category
+      );
+    });
     return result;
   };
   const findIdInWishlist = (item_id: number): number | undefined => {

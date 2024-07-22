@@ -235,11 +235,10 @@ const WishlistPage = () => {
                       More info
                     </Box>
                     <Box
-                      as="button"
                       position="absolute"
                       top="5"
                       right="5"
-                      onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                      onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                         event.stopPropagation();
                         toggleSelection(data.id);
                       }}
