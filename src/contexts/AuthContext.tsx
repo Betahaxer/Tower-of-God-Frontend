@@ -9,12 +9,14 @@ import React, {
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { clearTokens, getTokens, setTokens } from "../utils/storage";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   isLoggedIn: boolean;
   login: (accessToken: string, refreshToken: string) => void;
   logout: () => void;
   loading: boolean;
+  checkExpiryAndRefresh: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,16 +27,15 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 };
 
 function useProvideAuth() {
-  const checkExpiry = (
-    accessToken: string | null,
-    refreshToken: string | null
-  ) => {
+  const navigate = useNavigate();
+  const checkExpiryAndRefresh = async () => {
+    const { accessToken, refreshToken } = getTokens();
     if (accessToken && refreshToken) {
       try {
         const accessDecoded: any = jwtDecode(accessToken);
         const currentTime = Date.now() / 1000;
         if (accessDecoded.exp < currentTime) {
-          refreshTokenRequest(refreshToken);
+          await refreshTokenRequest(refreshToken);
         } else {
           setIsLoggedIn(true);
           setLoading(false);
@@ -49,13 +50,14 @@ function useProvideAuth() {
       setLoading(false);
     }
   };
-  const { accessToken, refreshToken } = getTokens();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    checkExpiry(accessToken, refreshToken);
+    (async () => {
+      await checkExpiryAndRefresh();
+    })();
     console.log(isLoggedIn);
-  }, [accessToken, refreshToken]);
+  }, []);
 
   const refreshTokenRequest = async (refreshToken: string) => {
     console.log(refreshToken);
@@ -63,7 +65,7 @@ function useProvideAuth() {
     const currentTime = Date.now() / 1000;
     if (refreshDecoded.exp < currentTime) {
       setIsLoggedIn(false);
-      setLoading(false);
+      navigate("/login");
     } else {
       try {
         const response = await axios.post("/api/token/refresh/", {
@@ -72,11 +74,11 @@ function useProvideAuth() {
         const { access, refresh } = response.data;
         setTokens(access, refresh);
         setIsLoggedIn(true);
-        setLoading(false);
         console.log("refreshed");
       } catch (error) {
         console.error("Failed to refresh token", error);
         setIsLoggedIn(false);
+      } finally {
         setLoading(false);
       }
     }
@@ -96,6 +98,7 @@ function useProvideAuth() {
     login,
     logout,
     loading,
+    checkExpiryAndRefresh,
   };
 }
 
