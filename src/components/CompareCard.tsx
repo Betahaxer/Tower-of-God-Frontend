@@ -65,8 +65,8 @@ export default function CompareCard({ product }: Dictionary) {
                 src={product.img}
                 fit={"cover"}
                 align={"center"}
-                w={"auto"}
-                h={"350px"}
+                w={"100%"}
+                h={"auto"}
               />
             </Flex>
             <Box as={"header"}>

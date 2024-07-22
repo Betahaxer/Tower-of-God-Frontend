@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Input, InputGroup, InputRightElement, Button } from "@chakra-ui/react";
+import { Input, InputGroup, InputRightElement, Button, useColorModeValue } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -40,6 +40,7 @@ const SearchBar = ({ loading }: Props) => {
         onChange={(e) => setSearchResults(e.target.value)}
         onKeyDown={(event) => handleKeyDown(event)}
         borderRadius={100}
+        color={useColorModeValue("gray.900", "gray.600")}
       />
       <InputRightElement>
         <Button

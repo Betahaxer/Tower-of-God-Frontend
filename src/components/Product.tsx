@@ -11,6 +11,7 @@ import {
   Flex,
   Image,
   Stack,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
 import HeartButton from "./HeartButton";
@@ -61,7 +62,7 @@ const Product = ({ data, heartFunction, filled }: Product) => {
             <Heading size="md" m={0}>
               {data.name}
             </Heading>
-            <Text color={"gray.900"} fontWeight={300} fontSize={"xl"} m={0}>
+            <Text color={useColorModeValue("gray.900", "gray.400")} fontWeight={300} fontSize={"xl"} m={0}>
               {data.price ? "$" + data.price : "$-"}
             </Text>
             <Text>{data.description.slice(0, 150) + "..."}</Text>

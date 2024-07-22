@@ -11,6 +11,7 @@ import {
   Card,
   Popover,
   Link,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
@@ -109,6 +110,7 @@ export default function ComparePage() {
             spacing={{ base: 4, md: 6 }}
           >
             <Input
+              color={useColorModeValue("gray.900", "gray.300")}
               position="relative"
               name="value1"
               value={values.value1}
@@ -152,6 +154,7 @@ export default function ComparePage() {
                             setSelectedProduct(data);
                             setShowSearchBox(false);
                           }}
+                          color={useColorModeValue("gray.900", "gray.500")}
                         >
                           {data.name}
                         </Box>
@@ -247,6 +250,7 @@ export default function ComparePage() {
                             setSelectedProduct2(data);
                             setShowSearchBox2(false);
                           }}
+                          color={useColorModeValue("gray.900", "gray.500")}
                         >
                           {data.name}
                         </Box>
