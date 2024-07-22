@@ -56,6 +56,7 @@ const Product = ({ data, heartFunction, filled }: Product) => {
                 src={data.img}
                 h="35vh"
                 w="auto"
+                objectFit="contain"
                 fallbackSrc="wiz1.svg"
               />
             </Flex>

@@ -85,7 +85,11 @@ export default function NavBar() {
           gap="10"
           px="5"
         >
-          <HStack onClick={() => navigate("/")}>
+          <HStack
+            onClick={() => navigate("/")}
+            justifyContent="center"
+            alignItems="center"
+          >
             <Image
               src={`/wiz1.svg`}
               alt="Logo"
@@ -96,8 +100,8 @@ export default function NavBar() {
               textAlign={useBreakpointValue({ base: "center", md: "left" })}
               fontFamily={"heading"}
               color={useColorModeValue("green.400", "white")}
-              my="auto"
               fontWeight={800}
+              mb={0}
               fontSize="xl"
               _hover={{ cursor: "pointer" }}
             >
@@ -117,7 +121,7 @@ export default function NavBar() {
           direction={"row"}
           spacing={3}
         >
-          <DarkModeButton/>
+          <DarkModeButton />
           {!isLoggedIn && (
             <>
               <Button
