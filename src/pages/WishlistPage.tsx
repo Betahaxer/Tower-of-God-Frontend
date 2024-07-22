@@ -45,7 +45,7 @@ const WishlistPage = () => {
   // use wishlist id for deletion, use product id for adding
   const { isLoggedIn, loading } = useAuth();
   const [fetching, setFetching] = useState(true);
-  const [wishlist, setWishlist] = useState<[]>([]);
+  const [wishlist, setWishlist] = useState<Product[]>([]);
   const [searchBox, setSearchBox] = useState("");
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -63,16 +63,33 @@ const WishlistPage = () => {
   const navigate = useNavigate();
   const { checkExpiryAndRefresh } = useAuth();
   const getWishlist = async () => {
+    let allItems: Product[] = [];
+    let page = 1;
+    const pageSize = 12;
+    let totalPages = 1;
+    let offset = 0;
     try {
       await checkExpiryAndRefresh();
       const { accessToken } = getTokens();
-      const response = await axios.get("/api/wishlist/", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      console.log(response.data);
-      setWishlist(response.data.results);
+
+      while (page <= totalPages) {
+        const response = await axios.get(`/api/wishlist/`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          params: {
+            offset: offset,
+            page: page,
+            page_size: pageSize,
+          },
+        });
+        console.log("wishlist: ", response.data);
+        allItems = allItems.concat(response.data.results);
+        totalPages = Math.ceil(response.data.count / pageSize);
+        page += 1;
+        offset += pageSize;
+      }
+      setWishlist(allItems);
     } catch (error) {
       console.error("Request for wishlist failed", error);
     }
@@ -92,7 +109,6 @@ const WishlistPage = () => {
 
       const responsePromise = Promise.all(deletePromises).then(
         async (response) => {
-          console.log(response);
           const newWishlist = await getWishlist();
           return newWishlist;
         }
