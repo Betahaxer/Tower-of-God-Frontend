@@ -185,9 +185,10 @@ export default function ProductDetailsPage() {
                 </Box>
               </Stack>
             </Stack>
-            <Stack direction="row">
+            <Stack direction="row" display="flex">
               <Button
                 display="flex"
+                minW="50%"
                 rightIcon={<ArrowForwardIcon />}
                 colorScheme="green"
                 variant="solid"
@@ -200,6 +201,7 @@ export default function ProductDetailsPage() {
               </Button>
               <Button
                 display="flex"
+                minW="50%"
                 rightIcon={<FaBookmark />}
                 colorScheme="green"
                 variant="solid"
@@ -207,8 +209,12 @@ export default function ProductDetailsPage() {
                 onClick={() => {
                   addWishlistItem(product);
                 }}
+                whiteSpace={"wrap"}
+                alignItems="center"
               >
-                Add to Wishlist
+                <Box mb={0} isTruncated>
+                  Add to Wishlist
+                </Box>
               </Button>
             </Stack>
           </Stack>
