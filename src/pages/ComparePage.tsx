@@ -12,6 +12,7 @@ import {
   Popover,
   Link,
   useColorModeValue,
+  Image,
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
@@ -142,7 +143,7 @@ export default function ComparePage() {
                       return (
                         <Box
                           key={index}
-                          h="100px"
+                          h="12vh"
                           borderRadius={10}
                           _hover={{
                             background: "green.200",
@@ -156,7 +157,21 @@ export default function ComparePage() {
                           }}
                           color={useColorModeValue("gray.900", "gray.500")}
                         >
-                          {data.name}
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="left"
+                          >
+                            <Image
+                              rounded={"md"}
+                              alt={"product image"}
+                              src={data.img}
+                              boxSize="8vh"
+                              objectFit="contain"
+                              fallbackSrc="wiz1.svg"
+                            />
+                            <Box>{data.name}</Box>
+                          </Stack>
                         </Box>
                       );
                     })}
@@ -238,7 +253,7 @@ export default function ComparePage() {
                       return (
                         <Box
                           key={index}
-                          h="100px"
+                          h="12vh"
                           borderRadius={10}
                           _hover={{
                             background: "green.200",
@@ -252,7 +267,21 @@ export default function ComparePage() {
                           }}
                           color={useColorModeValue("gray.900", "gray.500")}
                         >
-                          {data.name}
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="left"
+                          >
+                            <Image
+                              rounded={"md"}
+                              alt={"product image"}
+                              src={data.img}
+                              boxSize="8vh"
+                              objectFit="contain"
+                              fallbackSrc="wiz1.svg"
+                            />
+                            <Box>{data.name}</Box>
+                          </Stack>
                         </Box>
                       );
                     })}

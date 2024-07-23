@@ -28,17 +28,19 @@ export default function CompareCard({ product }: Dictionary) {
     [key: string]: any;
   }
   const keysToRender = {
-    earbuds: ["wireless", "battery_life", "active_noise_cancellation"],
-    keyboard: ["wireless", "size", "key_switches"],
+    earbuds: ["brand", "wireless", "battery_life", "active_noise_cancellation"],
+    keyboard: ["brand", "wireless", "size", "key_switches"],
     laptop: [
+      "brand",
       "battery_life",
       "screen_resolution",
       "processor",
       "os_version",
       "weight",
     ],
-    mouse: ["buttons_count", "dpi", "weight", "wireless"],
+    mouse: ["brand", "buttons_count", "dpi", "weight", "wireless"],
     phone: [
+      "brand",
       "battery_life",
       "screen_resolution",
       "processor",
@@ -47,9 +49,15 @@ export default function CompareCard({ product }: Dictionary) {
       "size",
     ],
     // monitor products have no category key
-    monitor: ["screen_size", "screen_resolution", "refresh_rate", "panel_type"],
-    speaker: ["portable", "bluetooth", "wifi", "speakerphone"],
-    television: ["screen_size", "screen_resolution", "panel_type"],
+    monitor: [
+      "brand",
+      "screen_size",
+      "screen_resolution",
+      "refresh_rate",
+      "panel_type",
+    ],
+    speaker: ["brand", "portable", "bluetooth", "wifi", "speakerphone"],
+    television: ["brand", "screen_size", "screen_resolution", "panel_type"],
   };
 
   return (
