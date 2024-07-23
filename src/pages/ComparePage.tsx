@@ -18,6 +18,7 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CompareCard from "../components/CompareCard";
+import useClickOutside from "../utils/useClickOutside";
 
 interface Dictionary {
   [key: string]: any;
@@ -36,20 +37,13 @@ export default function ComparePage() {
   const [showSearchBox2, setShowSearchBox2] = useState(false);
 
   const isInitialRender = useRef(true); //returns an object current which contains the value
-  const handleChange = async (
-    event: { target: { name: string; value: string } },
-    query: string
-  ) => {
-    const { name, value } = event.target;
-    setValues({
-      ...values,
-      [name]: value,
-    });
-    const response = await axios.get("/api/compare/", {
-      params: { q: query, category: selectedCategory },
-    });
-    setData({ ...data, [name]: response.data.results });
-  };
+  const overlayRef = useClickOutside(() => {
+    setShowSearchBox(false);
+  });
+  const overlayRef2 = useClickOutside(() => {
+    setShowSearchBox2(false);
+  });
+
   const category = [
     "earphones",
     "keyboard",
@@ -60,6 +54,24 @@ export default function ComparePage() {
     "speaker",
     "television",
   ];
+  const handleChange = async (
+    event: { target: { name: string; value: string } },
+    query: string
+  ) => {
+    const { name, value } = event.target;
+    setValues({
+      ...values,
+      [name]: value,
+    });
+    try {
+      const response = await axios.get("/api/compare/", {
+        params: { q: query, category: selectedCategory },
+      });
+      setData({ ...data, [name]: response.data.results });
+    } catch (error) {
+      console.error("Error getting products", error);
+    }
+  };
   useEffect(() => {
     if (isInitialRender.current && product) {
       setSelectedCategory(product.category);
@@ -125,16 +137,17 @@ export default function ComparePage() {
             />
             {showSearchBox && (
               <Box
+                ref={overlayRef}
                 position="absolute"
                 opacity={1}
                 zIndex={2}
                 top="55px"
-                bg="white"
                 w="100%"
                 px="2"
                 py="2"
                 boxShadow="xl"
                 borderRadius={10}
+                bg={useColorModeValue("white", "gray.600")}
               >
                 <Box position="relative">
                   {data.value1
@@ -146,7 +159,10 @@ export default function ComparePage() {
                           h="12vh"
                           borderRadius={10}
                           _hover={{
-                            background: "green.200",
+                            background: useColorModeValue(
+                              "green.200",
+                              "green.600"
+                            ),
                           }}
                           textAlign={"left"}
                           px="5"
@@ -155,7 +171,7 @@ export default function ComparePage() {
                             setSelectedProduct(data);
                             setShowSearchBox(false);
                           }}
-                          color={useColorModeValue("gray.900", "gray.500")}
+                          color={useColorModeValue("gray.900", "gray.200")}
                         >
                           <Stack
                             direction="row"
@@ -168,7 +184,7 @@ export default function ComparePage() {
                               src={data.img}
                               boxSize="8vh"
                               objectFit="contain"
-                              fallbackSrc="wiz1.svg"
+                              fallbackSrc="/wiz1.svg"
                             />
                             <Box>{data.name}</Box>
                           </Stack>
@@ -235,16 +251,17 @@ export default function ComparePage() {
             />
             {showSearchBox2 && (
               <Box
+                ref={overlayRef2}
                 position="absolute"
                 opacity={1}
                 zIndex={2}
                 top="55px"
-                bg="white"
                 w="100%"
                 px="2"
                 py="2"
                 boxShadow="xl"
                 borderRadius={10}
+                bg={useColorModeValue("white", "gray.600")}
               >
                 <Box position="relative">
                   {data.value2
@@ -256,7 +273,10 @@ export default function ComparePage() {
                           h="12vh"
                           borderRadius={10}
                           _hover={{
-                            background: "green.200",
+                            background: useColorModeValue(
+                              "green.200",
+                              "green.600"
+                            ),
                           }}
                           textAlign={"left"}
                           px="5"
@@ -265,7 +285,7 @@ export default function ComparePage() {
                             setSelectedProduct2(data);
                             setShowSearchBox2(false);
                           }}
-                          color={useColorModeValue("gray.900", "gray.500")}
+                          color={useColorModeValue("gray.900", "gray.200")}
                         >
                           <Stack
                             direction="row"
@@ -278,7 +298,7 @@ export default function ComparePage() {
                               src={data.img}
                               boxSize="8vh"
                               objectFit="contain"
-                              fallbackSrc="wiz1.svg"
+                              fallbackSrc="/wiz1.svg"
                             />
                             <Box>{data.name}</Box>
                           </Stack>

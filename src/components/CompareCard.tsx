@@ -48,7 +48,6 @@ export default function CompareCard({ product }: Dictionary) {
       "weight",
       "size",
     ],
-    // monitor products have no category key
     monitor: [
       "brand",
       "screen_size",
@@ -86,7 +85,7 @@ export default function CompareCard({ product }: Dictionary) {
                 align={"center"}
                 w="auto"
                 h="35vh"
-                fallbackSrc="wiz1.svg"
+                fallbackSrc="/wiz1.svg"
               />
             </Flex>
             <Box as={"header"}>

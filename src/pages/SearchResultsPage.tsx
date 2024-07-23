@@ -50,7 +50,7 @@ const SearchResultsPage = () => {
   // filters contain the current filters applied by user
   const initialFilters: Filters = {
     q: location.state?.query || "",
-    category: "",
+    category: location.state?.category || "",
     ordering: "",
     brand: "",
     price: "",
@@ -198,15 +198,8 @@ const SearchResultsPage = () => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
     } else {
-      //clear filters
-      setFilters({
-        q: location.state?.query || "",
-        category: "",
-        ordering: "",
-        brand: "",
-        price: "",
-        review_date: "",
-      });
+      //reset to initial filters
+      setFilters(initialFilters);
     }
   }, [location.state?.query]);
 
@@ -294,7 +287,7 @@ const SearchResultsPage = () => {
                 return (
                   <Product
                     key={index}
-                    data={product}
+                    productData={product}
                     heartFunction={async () => {
                       await toggleWishlistItem(product);
                       await getWishlist();

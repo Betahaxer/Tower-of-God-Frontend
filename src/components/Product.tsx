@@ -18,14 +18,45 @@ import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
 import HeartButton from "./HeartButton";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
+import axios from "axios";
+import { useAuth } from "../contexts/AuthContext";
+import { getTokens } from "../utils/storage";
+
 interface Product {
   [key: string]: any;
+}
+
+interface Props {
+  productData: Product;
   heartFunction: () => void;
   filled: boolean;
 }
 
-const Product = ({ data, heartFunction, filled }: Product) => {
+const Product = ({ productData, heartFunction, filled }: Props) => {
   const navigate = useNavigate();
+  const { checkExpiryAndRefresh } = useAuth();
+  const addSearchHistory = async (product: Product) => {
+    try {
+      await checkExpiryAndRefresh();
+      const { accessToken, refreshToken } = getTokens();
+      const response = await axios.post(
+        "/api/search_history/",
+        {
+          product_category: product.category,
+          object_id: product.id,
+        },
+        {
+          headers: {
+            ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+            ...(refreshToken && { "Refresh-Token": refreshToken }),
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error("Unable to add to search history", error);
+    }
+  };
   return (
     <Card
       position="relative"
@@ -42,7 +73,8 @@ const Product = ({ data, heartFunction, filled }: Product) => {
       </Box>
       <CardBody
         onClick={() => {
-          navigate(`/products/${data.name}`, { state: data });
+          navigate(`/products/${productData.name}`, { state: productData });
+          addSearchHistory(productData);
         }}
         _hover={{ cursor: "pointer" }}
       >
@@ -51,18 +83,18 @@ const Product = ({ data, heartFunction, filled }: Product) => {
             <Image
               rounded={"lg"}
               alt={"Image not available"}
-              src={data.img}
+              src={productData.img}
               h="35vh"
               w="auto"
               objectFit="contain"
-              fallbackSrc="wiz1.svg"
+              fallbackSrc="/wiz1.svg"
             />
           </Flex>
           <Stack spacing="4">
             <Stack direction="row" justifyContent="space-between">
               <Stack direction="column" spacing="0" minH="4rem">
                 <Heading size="md" fontSize="1.3rem" p="0" m="0" noOfLines={2}>
-                  {data.name}
+                  {productData.name}
                 </Heading>
                 <Text
                   color={useColorModeValue("gray.900", "gray.400")}
@@ -71,7 +103,7 @@ const Product = ({ data, heartFunction, filled }: Product) => {
                   m={0}
                   p="0"
                 >
-                  {data.price ? "$" + data.price : "$-"}
+                  {productData.price ? "$" + productData.price : "$-"}
                 </Text>
               </Stack>
               <Box
@@ -87,7 +119,7 @@ const Product = ({ data, heartFunction, filled }: Product) => {
                 fontSize="1.5rem"
                 ml="5"
               >
-                {data.score}
+                {productData.score}
               </Box>
             </Stack>
             <Button
@@ -98,25 +130,29 @@ const Product = ({ data, heartFunction, filled }: Product) => {
               justifyContent="space-between"
               onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                 event.stopPropagation();
-                navigate("/compare", { state: data });
+                navigate("/compare", { state: productData });
               }}
             >
               Compare
             </Button>
             <Stack direction="column">
               <List spacing={1} p={0} m={0}>
-                {data.pros.slice(0, 2).map((pro: string, index: number) => (
-                  <ListItem key={index} fontSize={15} fontWeight="500">
-                    <ListIcon as={FaPlusCircle} color="green.500" />
-                    {pro}
-                  </ListItem>
-                ))}
-                {data.cons.slice(0, 1).map((con: string, index: number) => (
-                  <ListItem key={index} fontSize={15} fontWeight="500">
-                    <ListIcon as={FaMinusCircle} color="red.500" />
-                    {con}
-                  </ListItem>
-                ))}
+                {productData.pros
+                  .slice(0, 2)
+                  .map((pro: string, index: number) => (
+                    <ListItem key={index} fontSize={15} fontWeight="500">
+                      <ListIcon as={FaPlusCircle} color="green.500" />
+                      {pro}
+                    </ListItem>
+                  ))}
+                {productData.cons
+                  .slice(0, 1)
+                  .map((con: string, index: number) => (
+                    <ListItem key={index} fontSize={15} fontWeight="500">
+                      <ListIcon as={FaMinusCircle} color="red.500" />
+                      {con}
+                    </ListItem>
+                  ))}
               </List>
             </Stack>
           </Stack>

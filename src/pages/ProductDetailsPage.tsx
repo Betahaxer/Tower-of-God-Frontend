@@ -76,7 +76,6 @@ export default function ProductDetailsPage() {
       "weight",
       "size",
     ],
-    // monitor products have no category key
     monitor: [
       "brand",
       "screen_size",
