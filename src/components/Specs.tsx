@@ -57,7 +57,7 @@ const Specs: React.FC<ProductProps> = ({ product, keys }) => {
         }
         if (
           (product.category === "phone" && key === "size") ||
-          (product.category === "television" && key === "screen_size")
+          key === "screen_size"
         ) {
           return (
             <ListItem key={index}>
@@ -76,6 +76,26 @@ const Specs: React.FC<ProductProps> = ({ product, keys }) => {
                 {formatText(key) + ":"}
               </Text>{" "}
               {result ? result : "-"}
+            </ListItem>
+          );
+        }
+        if (key === "refresh_rate") {
+          return (
+            <ListItem key={index}>
+              <Text as={"span"} fontWeight={"bold"}>
+                {formatText(key) + ":"}
+              </Text>{" "}
+              {product[key] ? product[key] + " Hz" : "-"}
+            </ListItem>
+          );
+        }
+        if (key === "screen_resolution") {
+          return (
+            <ListItem key={index}>
+              <Text as={"span"} fontWeight={"bold"}>
+                {formatText(key) + ":"}
+              </Text>{" "}
+              {product[key] ? product[key] + " pixels" : "-"}
             </ListItem>
           );
         }
