@@ -60,17 +60,35 @@ const Product = ({ data, heartFunction, filled }: Product) => {
                 fallbackSrc="wiz1.svg"
               />
             </Flex>
-            <Heading size="md" m={0}>
-              {data.name}
-            </Heading>
-            <Text
-              color={useColorModeValue("gray.900", "gray.400")}
-              fontWeight={300}
-              fontSize={"xl"}
-              m={0}
-            >
-              {data.price ? "$" + data.price : "$-"}
-            </Text>
+            <Stack direction="row" justifyContent="space-between">
+              <Stack direction="column">
+                <Heading size="md" m={0}>
+                  {data.name}
+                </Heading>
+                <Text
+                  color={useColorModeValue("gray.900", "gray.400")}
+                  fontWeight={300}
+                  fontSize={"xl"}
+                  m={0}
+                >
+                  {data.price ? "$" + data.price : "$-"}
+                </Text>
+              </Stack>
+              <Box
+                display="flex"
+                borderWidth="1px"
+                borderColor="black"
+                borderRadius="5"
+                h="50px"
+                w="50px"
+                justifyContent="center"
+                alignItems="center"
+                fontWeight="500"
+                fontSize="1.5rem"
+              >
+                {data.score}
+              </Box>
+            </Stack>
             <Text>{data.description.slice(0, 150) + "..."}</Text>
 
             <List spacing={1} p={0} m={0}>
