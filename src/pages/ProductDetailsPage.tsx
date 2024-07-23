@@ -35,9 +35,9 @@ export default function ProductDetailsPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const product = location.state;
-  if (!product || Object.keys(product).length === 0) {
-    return <h1>No product found</h1>; // Prevent rendering if product is not available
-  }
+  // if (!product || Object.keys(product).length === 0) {
+  //   return <h1>No product found</h1>; // Prevent rendering if product is not available
+  // }
   console.log(product);
   interface Product {
     [key: string]: any;
@@ -183,7 +183,7 @@ export default function ProductDetailsPage() {
             to={{
               pathname: `/compare`,
             }}
-            state={{ product }}
+            state={product}
           >
             <Button
               rightIcon={<ArrowForwardIcon />}
