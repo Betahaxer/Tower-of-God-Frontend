@@ -29,7 +29,7 @@ const Product = ({ data, heartFunction, filled }: Product) => {
   return (
     <Card
       position="relative"
-      height="95vh"
+      height="105vh"
       overflow="auto"
       css={{
         "&::-webkit-scrollbar": { display: "none" },
