@@ -20,9 +20,15 @@ import {
   ListIcon,
   Divider,
   useToast,
+  Tooltip,
 } from "@chakra-ui/react";
 import { Key, ReactElement, useEffect } from "react";
-import { FaBookmark, FaMinusCircle, FaPlusCircle } from "react-icons/fa";
+import {
+  FaBookmark,
+  FaMinusCircle,
+  FaPlusCircle,
+  FaRegQuestionCircle,
+} from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { ArrowForwardIcon } from "@chakra-ui/icons";
@@ -116,7 +122,15 @@ export default function ProductDetailsPage() {
     }
   };
   return (
-    <Stack spacing={2} py={12} px="5rem" direction={"column"}>
+    <Stack
+      spacing={8}
+      py={12}
+      px="5rem"
+      direction={"column"}
+      divider={
+        <Divider borderColor={useColorModeValue("gray.200", "gray.600")} />
+      }
+    >
       <>
         <Flex justifyContent={"center"}>
           <Image
@@ -178,7 +192,19 @@ export default function ProductDetailsPage() {
                 {product.score}
               </Box>
               <Stack display="flex" direction="column" spacing={0}>
-                <Box fontWeight="600">Overall Score</Box>
+                <Stack direction="row" alignItems="center">
+                  <Box fontWeight="600">Overall Score</Box>
+                  <Tooltip
+                    label={product.justification || ""}
+                    placement="bottom"
+                  >
+                    <span>
+                      <FaRegQuestionCircle
+                        style={{ color: "cornflowerblue" }}
+                      />
+                    </span>
+                  </Tooltip>
+                </Stack>
                 <Box color="gray.500" maxW="30vw">
                   Based on the sentiment of the reviews and more, the product is
                   assigned a grade {"(out of 10)"}.
@@ -220,9 +246,8 @@ export default function ProductDetailsPage() {
           </Stack>
         </Stack>
       </>
-      <Divider borderColor={useColorModeValue("gray.200", "gray.600")} />
 
-      <Stack spacing={2}>
+      <Box>
         <Text
           fontSize={"lg"}
           style={{ whiteSpace: "pre-line", wordWrap: "break-word" }}
@@ -252,24 +277,21 @@ export default function ProductDetailsPage() {
             })}
           </List>
         </SimpleGrid>
+      </Box>
 
-        <Divider borderColor={useColorModeValue("gray.200", "gray.600")} />
+      <Box>
+        <Text
+          fontSize={{ base: "16px", lg: "18px" }}
+          color={useColorModeValue("yellow.500", "yellow.300")}
+          fontWeight={"500"}
+          textTransform={"uppercase"}
+          mb={"4"}
+        >
+          Specifications
+        </Text>
 
-        <Box>
-          <Text
-            fontSize={{ base: "16px", lg: "18px" }}
-            color={useColorModeValue("yellow.500", "yellow.300")}
-            fontWeight={"500"}
-            textTransform={"uppercase"}
-            mb={"4"}
-          >
-            Specifications
-          </Text>
-
-          <Specs product={product} keys={keysToRender} />
-        </Box>
-      </Stack>
+        <Specs product={product} keys={keysToRender} />
+      </Box>
     </Stack>
-    // </Container>
   );
 }
