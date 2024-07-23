@@ -24,7 +24,7 @@ interface Dictionary {
 export default function ComparePage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const product = location.state?.product;
+  const product = location?.state;
   const [values, setValues] = useState({ value1: "", value2: "" });
   const [selectedCategory, setSelectedCategory] = useState("");
   const [data, setData] = useState({ value1: [], value2: [] });
