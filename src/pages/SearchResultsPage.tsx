@@ -8,6 +8,7 @@ import {
   Spinner,
   Stack,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Product from "../components/Product";
@@ -70,6 +71,7 @@ const SearchResultsPage = () => {
   const [filters, setFilters] = useState<Filters>(initialFilters);
   const [loading, setLoading] = useState(true);
   const [wishlist, setWishlist] = useState<Product[]>([]);
+  const toast = useToast();
 
   // Function to update filters
   const updateFilter = (key: keyof Filters, value: any) => {
@@ -149,6 +151,12 @@ const SearchResultsPage = () => {
       }
     } catch (error) {
       console.error("Error toggling wishlist item:", error);
+      toast({
+        title: "Log in to add to wishlist",
+        status: "error",
+        duration: 2000,
+      });
+      navigate("/login");
     }
   };
   // queries the entire wishlist from backend
