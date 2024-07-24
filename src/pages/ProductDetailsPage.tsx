@@ -33,12 +33,18 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import Specs from "../components/Specs";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import { getTokens } from "../utils/storage";
 
 interface Dictionary {
   [key: string]: any;
+}
+interface ErrorResponse {
+  status: number;
+  data: {
+    message: string;
+  };
 }
 
 export default function ProductDetailsPage() {
@@ -112,12 +118,31 @@ export default function ProductDetailsPage() {
         duration: 2000,
       });
     } catch (error) {
-      console.error("Error adding wishlist item:", error);
-      toast({
-        title: "Item is already in wishlist",
-        status: "error",
-        duration: 2000,
-      });
+      const axiosError = error as AxiosError<ErrorResponse>;
+      console.error("Error adding wishlist item:", axiosError);
+      if (axiosError.response) {
+        if (axiosError.response.status === 409) {
+          toast({
+            title: "Item is already in wishlist",
+            status: "error",
+            duration: 2000,
+          });
+        } else if (axiosError.response.status === 401) {
+          toast({
+            title: "Log in to add to wishlist",
+            status: "error",
+            duration: 2000,
+          });
+          navigate("/login");
+        }
+      } else {
+        // Handle other error scenarios (e.g., network errors)
+        toast({
+          title: "An error occurred",
+          status: "error",
+          duration: 2000,
+        });
+      }
     }
   };
   return (
