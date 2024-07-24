@@ -31,6 +31,7 @@ const Login = ({
             size="lg"
             value={username}
             onChange={onUsernameChange}
+            autoComplete="off"
           />
           <Input
             placeholder="Create a password"
@@ -38,6 +39,7 @@ const Login = ({
             size="lg"
             value={password}
             onChange={onPasswordChange}
+            autoComplete="off"
           />
           <Button colorScheme="green" size="lg" onClick={handleLogin}>
             {action}

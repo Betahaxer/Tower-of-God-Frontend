@@ -160,6 +160,7 @@ export default function ComparePage() {
               isDisabled={!selectedCategory}
               placeholder="Search"
               size="lg"
+              autoComplete="off"
             />
             {showSearchBox && (
               <Box
@@ -267,11 +268,11 @@ export default function ComparePage() {
               color={useColorModeValue("gray.900", "gray.300")}
               position="relative"
               name="value2"
-              //value={values.value2}
               onChange={debouncedSearchRight}
               isDisabled={!selectedCategory}
               placeholder="Search"
               size="lg"
+              autoComplete="off"
             />
             {showSearchBox2 && (
               <Box

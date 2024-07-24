@@ -128,6 +128,7 @@ const SearchBar = ({ loading }: Props) => {
         onKeyDown={(event) => handleKeyDown(event)}
         borderRadius={100}
         bg={useColorModeValue("white", "gray.600")}
+        autoComplete="off"
       />
       <InputRightElement>
         <Button
