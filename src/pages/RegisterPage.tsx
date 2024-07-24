@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Box, Text, useToast } from "@chakra-ui/react";
+import { Box, Heading, HStack, Text, useToast, VStack } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Login from "../components/Login";
+import { GoogleLoginButton } from "../components/GoogleLogin";
 
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
@@ -57,6 +58,14 @@ const RegisterPage = () => {
           handleLogin={handleRegistration}
         ></Login>
       </Box>
+      <VStack>
+          <Heading as="h4" size="md">
+            Social Login:
+          </Heading>
+          <HStack>
+            <GoogleLoginButton />
+          </HStack>
+      </VStack>
       <Box mt={4}>
         <Text fontSize="sm">
           Already registered?{" "}
