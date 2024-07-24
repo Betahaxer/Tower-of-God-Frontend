@@ -15,10 +15,11 @@ import {
   Image,
 } from "@chakra-ui/react";
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CompareCard from "../components/CompareCard";
 import useClickOutside from "../utils/useClickOutside";
+import debounce from "lodash.debounce";
 
 interface Dictionary {
   [key: string]: any;
@@ -43,7 +44,6 @@ export default function ComparePage() {
   const overlayRef2 = useClickOutside(() => {
     setShowSearchBox2(false);
   });
-
   const category = [
     "earphones",
     "keyboard",
@@ -54,7 +54,7 @@ export default function ComparePage() {
     "speaker",
     "television",
   ];
-  const handleChange = async (
+  const getProducts = async (
     event: { target: { name: string; value: string } },
     query: string
   ) => {
@@ -72,6 +72,20 @@ export default function ComparePage() {
       console.error("Error getting products", error);
     }
   };
+  const handleChangeLeft = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    await getProducts(event, event.target.value);
+    setShowSearchBox(true);
+  };
+  const debouncedSearchLeft = useMemo(() => {
+    return debounce(handleChangeLeft, 200);
+  }, []);
+  useEffect(() => {
+    return () => {
+      debouncedSearchLeft.cancel();
+    };
+  });
   useEffect(() => {
     if (isInitialRender.current && product) {
       setSelectedCategory(product.category);
@@ -126,11 +140,8 @@ export default function ComparePage() {
               color={useColorModeValue("gray.900", "gray.300")}
               position="relative"
               name="value1"
-              value={values.value1}
-              onChange={(event) => {
-                handleChange(event, values.value1);
-                setShowSearchBox(true);
-              }}
+              //value={values.value1}
+              onChange={debouncedSearchLeft}
               isDisabled={!selectedCategory}
               placeholder="Search"
               size="lg"
@@ -242,7 +253,7 @@ export default function ComparePage() {
               name="value2"
               value={values.value2}
               onChange={(event) => {
-                handleChange(event, values.value2);
+                getProducts(event, values.value2);
                 setShowSearchBox2(true);
               }}
               isDisabled={!selectedCategory}
