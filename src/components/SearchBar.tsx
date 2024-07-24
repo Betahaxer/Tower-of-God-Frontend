@@ -18,6 +18,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { getTokens } from "../utils/storage";
 import useClickOutside from "../utils/useClickOutside";
 import { FaTrashAlt } from "react-icons/fa";
+import { IoMdTime } from "react-icons/io";
 
 interface Props {
   loading?: (isLoading: boolean) => void;
@@ -84,7 +85,7 @@ const SearchBar = ({ loading }: Props) => {
   }, [location.state?.query]);
 
   return (
-    <InputGroup maxW="45%">
+    <InputGroup minW="400px" maxW="45%">
       <Input
         placeholder="Search..."
         _placeholder={{ color: useColorModeValue("gray.500", "gray.200") }}
@@ -107,10 +108,13 @@ const SearchBar = ({ loading }: Props) => {
           }}
           borderRadius={"full"}
           size="lg"
+          _active={{ color: "none" }}
+          _hover={{ color: "none" }}
         >
           <SearchIcon color={useColorModeValue("black", "white")} />
         </Button>
       </InputRightElement>
+      {/* overlay search results */}
       {showSearchBox && searchHistory.length !== 0 && (
         <Box
           ref={overlayRef}
@@ -119,8 +123,8 @@ const SearchBar = ({ loading }: Props) => {
           zIndex={2}
           top="110%"
           w="100%"
-          px="2"
-          py="2"
+          px="1"
+          py="1"
           boxShadow="xl"
           borderRadius={10}
           bg={useColorModeValue("white", "gray.600")}
@@ -139,8 +143,8 @@ const SearchBar = ({ loading }: Props) => {
                     background: useColorModeValue("green.200", "green.600"),
                   }}
                   textAlign={"left"}
-                  px="5"
-                  py="2"
+                  px="2"
+                  py="1"
                   onClick={() => {
                     onSearch(
                       searchHistoryResult.name,
@@ -153,21 +157,25 @@ const SearchBar = ({ loading }: Props) => {
                   alignItems="center"
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
+                  overflowX="hidden"
                 >
                   <Stack
                     direction="row"
                     alignItems="center"
                     justifyContent="left"
                   >
+                    <IoMdTime size="1.2rem" />
                     <Image
                       rounded={"md"}
                       alt={"product image"}
                       src={searchHistoryResult.img}
-                      boxSize="8vh"
+                      boxSize="2rem"
                       objectFit="contain"
                       fallbackSrc="/wiz1.svg"
                     />
-                    <Box>{searchHistoryResult.name}</Box>
+                    <Box isTruncated fontSize="1rem" lineHeight="1.2">
+                      {searchHistoryResult.name}
+                    </Box>
                   </Stack>
                   <Box>
                     <IconButton
@@ -175,6 +183,8 @@ const SearchBar = ({ loading }: Props) => {
                       icon={<FaTrashAlt />}
                       size="sm"
                       position="relative"
+                      bg="none"
+                      _hover={{ color: "none" }}
                       onClick={(e) => {
                         e.stopPropagation();
                         onDelete(searchHistoryItem.id);
