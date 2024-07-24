@@ -64,6 +64,7 @@ export default function ComparePage() {
       [name]: value,
     });
     try {
+      console.log("category: " + selectedCategory);
       const response = await axios.get("/api/compare/", {
         params: { q: query, category: selectedCategory },
       });
@@ -78,12 +79,26 @@ export default function ComparePage() {
     await getProducts(event, event.target.value);
     setShowSearchBox(true);
   };
+  const handleChangeRight = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    await getProducts(event, event.target.value);
+    setShowSearchBox2(true);
+  };
   const debouncedSearchLeft = useMemo(() => {
     return debounce(handleChangeLeft, 200);
-  }, []);
+  }, [selectedCategory]);
+  const debouncedSearchRight = useMemo(() => {
+    return debounce(handleChangeRight, 200);
+  }, [selectedCategory]);
   useEffect(() => {
     return () => {
       debouncedSearchLeft.cancel();
+    };
+  });
+  useEffect(() => {
+    return () => {
+      debouncedSearchRight.cancel();
     };
   });
   useEffect(() => {
@@ -249,13 +264,11 @@ export default function ComparePage() {
             spacing={{ base: 4, md: 6 }}
           >
             <Input
+              color={useColorModeValue("gray.900", "gray.300")}
               position="relative"
               name="value2"
-              value={values.value2}
-              onChange={(event) => {
-                getProducts(event, values.value2);
-                setShowSearchBox2(true);
-              }}
+              //value={values.value2}
+              onChange={debouncedSearchRight}
               isDisabled={!selectedCategory}
               placeholder="Search"
               size="lg"
