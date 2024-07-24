@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Input,
   InputGroup,
@@ -19,6 +19,7 @@ import { getTokens } from "../utils/storage";
 import useClickOutside from "../utils/useClickOutside";
 import { FaTrashAlt } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
+import debounce from "lodash.debounce";
 
 interface Props {
   loading?: (isLoading: boolean) => void;
@@ -99,6 +100,19 @@ const SearchBar = ({ loading }: Props) => {
       await getSearchHistory();
     }
   };
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchResults(e.target.value);
+    await getSearchHistory();
+    setShowSearchBox(true);
+  };
+  const debouncedSearch = useMemo(() => {
+    return debounce(handleChange, 300);
+  }, []);
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+    };
+  });
   useEffect(() => {
     if (location.state?.query) {
       setSearchResults(location.state?.query || "");
@@ -110,12 +124,7 @@ const SearchBar = ({ loading }: Props) => {
       <Input
         placeholder="Search..."
         _placeholder={{ color: useColorModeValue("gray.500", "gray.200") }}
-        value={searchResults}
-        onChange={async (e) => {
-          setSearchResults(e.target.value);
-          await getSearchHistory();
-          setShowSearchBox(true);
-        }}
+        onChange={debouncedSearch}
         onKeyDown={(event) => handleKeyDown(event)}
         borderRadius={100}
         bg={useColorModeValue("white", "gray.600")}
