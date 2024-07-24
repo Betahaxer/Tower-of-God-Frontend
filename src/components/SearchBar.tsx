@@ -71,8 +71,7 @@ const SearchBar = ({ loading }: Props) => {
     <InputGroup maxW="45%">
       <Input
         placeholder="Search..."
-        bg="white"
-        _placeholder={{ color: "gray.500" }}
+        _placeholder={{ color: useColorModeValue("gray.500", "gray.200") }}
         value={searchResults}
         onChange={async (e) => {
           setSearchResults(e.target.value);
@@ -81,12 +80,11 @@ const SearchBar = ({ loading }: Props) => {
         }}
         onKeyDown={(event) => handleKeyDown(event)}
         borderRadius={100}
-        color={useColorModeValue("gray.900", "gray.600")}
+        bg={useColorModeValue("white", "gray.600")}
       />
       <InputRightElement>
         <Button
-          bg="white.500"
-          _hover={{}}
+          bg="none"
           onClick={() => {
             onSearch(searchResults);
             setShowSearchBox(false);
@@ -94,7 +92,7 @@ const SearchBar = ({ loading }: Props) => {
           borderRadius={"full"}
           size="lg"
         >
-          <SearchIcon color="black" />
+          <SearchIcon color={useColorModeValue("black", "white")} />
         </Button>
       </InputRightElement>
       {showSearchBox && (
