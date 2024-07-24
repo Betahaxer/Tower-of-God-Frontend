@@ -16,20 +16,10 @@ const LoginPage = () => {
   const handleLogin = async () => {
     const { accessToken, refreshToken } = getTokens();
     try {
-      const response = await axios.post(
-        "/api/login/",
-        {
-          username: username,
-          password: password,
-        }
-        // backend returns given token is not valid if tokens are sent
-        // {
-        //   headers: {
-        //     ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        //     ...(refreshToken && { "Refresh-Token": refreshToken }),
-        //   },
-        // }
-      );
+      const response = await axios.post("/api/login/", {
+        username: username,
+        password: password,
+      });
       console.log(response.data);
       const { access, refresh } = response.data;
       login(access, refresh);

@@ -19,12 +19,23 @@ import {
   ListItem,
   ListIcon,
   Divider,
+  useToast,
+  Tooltip,
 } from "@chakra-ui/react";
 import { Key, ReactElement, useEffect } from "react";
-import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
+import {
+  FaBookmark,
+  FaMinusCircle,
+  FaPlusCircle,
+  FaRegQuestionCircle,
+} from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import SpecsMouse from "../components/SpecsMouse";
+
 import { ArrowForwardIcon } from "@chakra-ui/icons";
+import Specs from "../components/Specs";
+import axios from "axios";
+import { useAuth } from "../contexts/AuthContext";
+import { getTokens } from "../utils/storage";
 
 interface Dictionary {
   [key: string]: any;
@@ -34,6 +45,8 @@ export default function ProductDetailsPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const product = location.state;
+  const { checkExpiryAndRefresh } = useAuth();
+  const toast = useToast();
   if (!product || Object.keys(product).length === 0) {
     return <h1>No product found</h1>; // Prevent rendering if product is not available
   }
@@ -41,154 +54,243 @@ export default function ProductDetailsPage() {
   interface Product {
     [key: string]: any;
   }
-  // categoryMap type is a dictionary which has string as the key and a function which
-  // passes a prop to the component when called
-  interface categoryMap {
-    [category: string]: (props: Product) => ReactElement;
-  }
-  // mapping of the product category to the corresponding component
-  // since each category will have different specifications
-  const categoryMap: categoryMap = {
-    mouse: (props) => <SpecsMouse {...props} />,
+
+  const keysToRender = {
+    earbuds: ["brand", "wireless", "battery_life", "active_noise_cancellation"],
+    keyboard: ["brand", "wireless", "size", "key_switches"],
+    laptop: [
+      "brand",
+      "battery_life",
+      "screen_resolution",
+      "processor",
+      "os_version",
+      "weight",
+    ],
+    mouse: ["brand", "buttons_count", "dpi", "weight", "wireless"],
+    phone: [
+      "brand",
+      "battery_life",
+      "screen_resolution",
+      "processor",
+      "os_version",
+      "weight",
+      "size",
+    ],
+    monitor: [
+      "brand",
+      "screen_size",
+      "screen_resolution",
+      "refresh_rate",
+      "panel_type",
+    ],
+    speaker: ["brand", "portable", "bluetooth", "wifi", "speakerphone"],
+    television: ["brand", "screen_size", "screen_resolution", "panel_type"],
   };
-
-  const placeholder = () => (
-    <List>
-      <ListItem>Details not available, sorry!</ListItem>
-    </List>
-  );
-
-  const specComponent = categoryMap[product.category] || placeholder;
-
-  return (
-    <Container maxW={"7xl"}>
-      <Stack
-        spacing={{ base: 8, md: 10 }}
-        py={{ base: 18, md: 24 }}
-        px={{ base: 200, md: 100 }}
-        direction={"column"}
-        divider={
-          <StackDivider
-            borderColor={useColorModeValue("gray.200", "gray.600")}
-          />
+  const addWishlistItem = async (product: Product): Promise<void> => {
+    console.log("add: ", product);
+    try {
+      // add product to wishlist
+      await checkExpiryAndRefresh();
+      const { accessToken, refreshToken } = getTokens();
+      const response = await axios.post(
+        "/api/wishlist/",
+        {
+          product_category: product.category,
+          object_id: product.id,
+        },
+        {
+          headers: {
+            ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+            ...(refreshToken && { "Refresh-Token": refreshToken }),
+          },
         }
-      >
-        <>
-          <Flex justifyContent={"center"}>
-            <Image
-              rounded={"md"}
-              alt={"product image"}
-              src={product.img}
-              //fit={"cover"}
-              align={"center"}
-              //boxSize={"500px"}
-              w="auto"
-              h="500px"
-            />
-          </Flex>
-          <Box as={"header"}>
-            <Text
-              color={useColorModeValue("gray.900", "gray.400")}
-              fontWeight={300}
+      );
+      console.log(`Product with id ${product.id} added to wishlist.`);
+      toast({
+        title: "Added to Wishlist",
+        status: "success",
+        duration: 2000,
+      });
+    } catch (error) {
+      console.error("Error adding wishlist item:", error);
+      toast({
+        title: "Item is already in wishlist",
+        status: "error",
+        duration: 2000,
+      });
+    }
+  };
+  return (
+    <Stack
+      spacing={8}
+      py={12}
+      px="5rem"
+      direction={"column"}
+      divider={
+        <Divider borderColor={useColorModeValue("gray.200", "gray.600")} />
+      }
+    >
+      <>
+        <Flex justifyContent={"center"}>
+          <Image
+            fallbackSrc="/wiz1.svg"
+            rounded={"md"}
+            alt={"product image"}
+            src={product.img}
+            align={"center"}
+            w="auto"
+            h="50vh"
+          />
+        </Flex>
+        <Stack direction="row" spacing="5" justifyContent="space-between">
+          <Stack spacing="0">
+            <Box
+              color={useColorModeValue("gray.500", "gray.600")}
+              fontWeight={400}
               fontSize={"1xl"}
-              mb={0}
+              m={0}
+              p={0}
               textTransform={"capitalize"}
             >
               {product.category}
-            </Text>
-            <Heading
+            </Box>
+            <Box
+              m={0}
+              p={0}
               lineHeight={1.1}
               fontWeight={600}
               fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}
             >
               {product.name}
-            </Heading>
-            <Text
-              color={useColorModeValue("gray.900", "gray.400")}
-              fontWeight={300}
+            </Box>
+            <Box
+              m={0}
+              p={0}
+              color={useColorModeValue("gray.500", "gray.600")}
+              fontWeight={400}
               fontSize={"2xl"}
               mb={0}
             >
               {product.price ? "$" + product.price : "$-"}
-            </Text>
-          </Box>
-        </>
-        <Stack spacing={{ base: 4, md: 6 }}>
-          <VStack spacing={{ base: 4, sm: 6 }}>
-            {/* <Text
-                color={useColorModeValue("gray.500", "gray.400")}
-                fontSize={"2xl"}
-                fontWeight={"300"}
+            </Box>
+          </Stack>
+          <Stack direction="column" spacing="4">
+            <Stack direction="row" spacing={4} alignItems="center">
+              <Box
+                display="flex"
+                borderWidth="1px"
+                borderColor="black"
+                borderRadius="5"
+                h="50px"
+                minW="50px"
+                justifyContent="center"
+                alignItems="center"
+                fontWeight="500"
+                fontSize="1.5rem"
               >
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                diam nonumy eirmod tempor invidunt ut labore
-              </Text> */}
-            <Text
-              fontSize={"lg"}
-              style={{ whiteSpace: "pre-line", wordWrap: "break-word" }}
-            >
-              {product.description
-                ? product.description.slice(0, 1000) + "..."
-                : "No description found"}
-            </Text>
-          </VStack>
-
-          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
-            <List spacing={2}>
-              {product.pros.slice(0, 5).map((pros: string, index: number) => {
-                return (
-                  <ListItem key={index} fontSize={15}>
-                    <ListIcon as={FaPlusCircle} color="green.500" />
-                    <b>{pros}</b>
-                  </ListItem>
-                );
-              })}
-            </List>
-            <List spacing={2}>
-              {product.cons.slice(0, 5).map((cons: string, index: number) => {
-                return (
-                  <ListItem key={index} fontSize={15}>
-                    <ListIcon as={FaMinusCircle} color="red.500" />
-                    <b>{cons}</b>
-                  </ListItem>
-                );
-              })}
-            </List>
-          </SimpleGrid>
-
-          <Divider borderColor={useColorModeValue("gray.200", "gray.600")} />
-
-          <Box>
-            <Text
-              fontSize={{ base: "16px", lg: "18px" }}
-              color={useColorModeValue("yellow.500", "yellow.300")}
-              fontWeight={"500"}
-              textTransform={"uppercase"}
-              mb={"4"}
-            >
-              Product Details
-            </Text>
-
-            {specComponent(product)}
-          </Box>
-          <Link
-            to={{
-              pathname: `/compare`,
-            }}
-            state={{ product }}
-          >
-            <Button
-              rightIcon={<ArrowForwardIcon />}
-              colorScheme="green"
-              variant="outline"
-              w="50%"
-              maxW="180"
-            >
-              Compare with...
-            </Button>
-          </Link>
+                {product.score}
+              </Box>
+              <Stack display="flex" direction="column" spacing={0}>
+                <Stack direction="row" alignItems="center">
+                  <Box fontWeight="600">Overall Score</Box>
+                  <Tooltip
+                    label={product.justification || ""}
+                    placement="bottom"
+                  >
+                    <span>
+                      <FaRegQuestionCircle
+                        style={{ color: "cornflowerblue" }}
+                      />
+                    </span>
+                  </Tooltip>
+                </Stack>
+                <Box color="gray.500" maxW="30vw">
+                  Based on the sentiment of the reviews and more, the product is
+                  assigned a grade {"(out of 10)"}.
+                </Box>
+              </Stack>
+            </Stack>
+            <Stack direction="row" display="flex">
+              <Button
+                display="flex"
+                minW="50%"
+                rightIcon={<ArrowForwardIcon />}
+                colorScheme="green"
+                variant="solid"
+                justifyContent="space-between"
+                onClick={() => {
+                  navigate("/compare", { state: product });
+                }}
+              >
+                Compare
+              </Button>
+              <Button
+                display="flex"
+                minW="50%"
+                rightIcon={<FaBookmark />}
+                colorScheme="green"
+                variant="solid"
+                justifyContent="space-between"
+                onClick={() => {
+                  addWishlistItem(product);
+                }}
+                whiteSpace={"wrap"}
+                alignItems="center"
+              >
+                <Box mb={0} isTruncated>
+                  Add to Wishlist
+                </Box>
+              </Button>
+            </Stack>
+          </Stack>
         </Stack>
-      </Stack>
-    </Container>
+      </>
+
+      <Box>
+        <Text
+          fontSize={"lg"}
+          style={{ whiteSpace: "pre-line", wordWrap: "break-word" }}
+        >
+          {product.summary ? product.summary : "No description found"}
+        </Text>
+
+        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
+          <List spacing={2}>
+            {product.pros.slice(0, 5).map((pros: string, index: number) => {
+              return (
+                <ListItem key={index} fontSize={15}>
+                  <ListIcon as={FaPlusCircle} color="green.500" />
+                  <b>{pros}</b>
+                </ListItem>
+              );
+            })}
+          </List>
+          <List spacing={2}>
+            {product.cons.slice(0, 5).map((cons: string, index: number) => {
+              return (
+                <ListItem key={index} fontSize={15}>
+                  <ListIcon as={FaMinusCircle} color="red.500" />
+                  <b>{cons}</b>
+                </ListItem>
+              );
+            })}
+          </List>
+        </SimpleGrid>
+      </Box>
+
+      <Box>
+        <Text
+          fontSize={{ base: "16px", lg: "18px" }}
+          color={useColorModeValue("yellow.500", "yellow.300")}
+          fontWeight={"500"}
+          textTransform={"uppercase"}
+          mb={"4"}
+        >
+          Specifications
+        </Text>
+
+        <Specs product={product} keys={keysToRender} />
+      </Box>
+    </Stack>
   );
 }

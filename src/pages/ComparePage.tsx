@@ -12,11 +12,14 @@ import {
   Popover,
   Link,
   useColorModeValue,
+  Image,
 } from "@chakra-ui/react";
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CompareCard from "../components/CompareCard";
+import useClickOutside from "../utils/useClickOutside";
+import debounce from "lodash.debounce";
 
 interface Dictionary {
   [key: string]: any;
@@ -24,7 +27,7 @@ interface Dictionary {
 export default function ComparePage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const product = location.state?.product;
+  const product = location?.state;
   const [values, setValues] = useState({ value1: "", value2: "" });
   const [selectedCategory, setSelectedCategory] = useState("");
   const [data, setData] = useState({ value1: [], value2: [] });
@@ -35,20 +38,12 @@ export default function ComparePage() {
   const [showSearchBox2, setShowSearchBox2] = useState(false);
 
   const isInitialRender = useRef(true); //returns an object current which contains the value
-  const handleChange = async (
-    event: { target: { name: string; value: string } },
-    query: string
-  ) => {
-    const { name, value } = event.target;
-    setValues({
-      ...values,
-      [name]: value,
-    });
-    const response = await axios.get("/api/compare/", {
-      params: { q: query, category: selectedCategory },
-    });
-    setData({ ...data, [name]: response.data.results });
-  };
+  const overlayRef = useClickOutside(() => {
+    setShowSearchBox(false);
+  });
+  const overlayRef2 = useClickOutside(() => {
+    setShowSearchBox2(false);
+  });
   const category = [
     "earphones",
     "keyboard",
@@ -59,6 +54,53 @@ export default function ComparePage() {
     "speaker",
     "television",
   ];
+  const getProducts = async (
+    event: { target: { name: string; value: string } },
+    query: string
+  ) => {
+    const { name, value } = event.target;
+    setValues({
+      ...values,
+      [name]: value,
+    });
+    try {
+      console.log("category: " + selectedCategory);
+      const response = await axios.get("/api/compare/", {
+        params: { q: query, category: selectedCategory },
+      });
+      setData({ ...data, [name]: response.data.results });
+    } catch (error) {
+      console.error("Error getting products", error);
+    }
+  };
+  const handleChangeLeft = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    await getProducts(event, event.target.value);
+    setShowSearchBox(true);
+  };
+  const handleChangeRight = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    await getProducts(event, event.target.value);
+    setShowSearchBox2(true);
+  };
+  const debouncedSearchLeft = useMemo(() => {
+    return debounce(handleChangeLeft, 200);
+  }, [selectedCategory]);
+  const debouncedSearchRight = useMemo(() => {
+    return debounce(handleChangeRight, 200);
+  }, [selectedCategory]);
+  useEffect(() => {
+    return () => {
+      debouncedSearchLeft.cancel();
+    };
+  });
+  useEffect(() => {
+    return () => {
+      debouncedSearchRight.cancel();
+    };
+  });
   useEffect(() => {
     if (isInitialRender.current && product) {
       setSelectedCategory(product.category);
@@ -113,54 +155,69 @@ export default function ComparePage() {
               color={useColorModeValue("gray.900", "gray.300")}
               position="relative"
               name="value1"
-              value={values.value1}
-              onChange={(event) => {
-                handleChange(event, values.value1);
-                setShowSearchBox(true);
-              }}
+              //value={values.value1}
+              onChange={debouncedSearchLeft}
               isDisabled={!selectedCategory}
               placeholder="Search"
               size="lg"
             />
             {showSearchBox && (
               <Box
+                ref={overlayRef}
                 position="absolute"
                 opacity={1}
                 zIndex={2}
                 top="55px"
-                bg="white"
                 w="100%"
                 px="2"
                 py="2"
                 boxShadow="xl"
                 borderRadius={10}
+                bg={useColorModeValue("white", "gray.600")}
               >
-                <Box position="relative">
-                  {data.value1
-                    .slice(0, 5)
-                    .map((data: Dictionary, index: number) => {
-                      return (
-                        <Box
-                          key={index}
-                          h="100px"
-                          borderRadius={10}
-                          _hover={{
-                            background: "green.200",
-                          }}
-                          textAlign={"left"}
-                          px="5"
-                          py="2"
-                          onClick={() => {
-                            setSelectedProduct(data);
-                            setShowSearchBox(false);
-                          }}
-                          color={useColorModeValue("gray.900", "gray.500")}
+                {data.value1
+                  .slice(0, 5)
+                  .map((data: Dictionary, index: number) => {
+                    return (
+                      <Box
+                        key={index}
+                        h="10vh"
+                        borderRadius={10}
+                        _hover={{
+                          background: useColorModeValue(
+                            "green.200",
+                            "green.600"
+                          ),
+                        }}
+                        // textAlign={"left"}
+                        px="5"
+                        py="2"
+                        onClick={() => {
+                          setSelectedProduct(data);
+                          setShowSearchBox(false);
+                        }}
+                        color={useColorModeValue("gray.900", "gray.200")}
+                      >
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="left"
+                          w="100%"
+                          h="100%"
                         >
-                          {data.name}
-                        </Box>
-                      );
-                    })}
-                </Box>
+                          <Image
+                            rounded={"md"}
+                            alt={"product image"}
+                            src={data.img}
+                            boxSize="8vh"
+                            objectFit="contain"
+                            fallbackSrc="/wiz1.svg"
+                          />
+                          <Box isTruncated>{data.name}</Box>
+                        </Stack>
+                      </Box>
+                    );
+                  })}
               </Box>
             )}
             {Object.keys(selectedProduct).length === 0 && (
@@ -207,29 +264,28 @@ export default function ComparePage() {
             spacing={{ base: 4, md: 6 }}
           >
             <Input
+              color={useColorModeValue("gray.900", "gray.300")}
               position="relative"
               name="value2"
-              value={values.value2}
-              onChange={(event) => {
-                handleChange(event, values.value2);
-                setShowSearchBox2(true);
-              }}
+              //value={values.value2}
+              onChange={debouncedSearchRight}
               isDisabled={!selectedCategory}
               placeholder="Search"
               size="lg"
             />
             {showSearchBox2 && (
               <Box
+                ref={overlayRef2}
                 position="absolute"
                 opacity={1}
                 zIndex={2}
                 top="55px"
-                bg="white"
                 w="100%"
                 px="2"
                 py="2"
                 boxShadow="xl"
                 borderRadius={10}
+                bg={useColorModeValue("white", "gray.600")}
               >
                 <Box position="relative">
                   {data.value2
@@ -238,21 +294,40 @@ export default function ComparePage() {
                       return (
                         <Box
                           key={index}
-                          h="100px"
+                          h="10vh"
                           borderRadius={10}
                           _hover={{
-                            background: "green.200",
+                            background: useColorModeValue(
+                              "green.200",
+                              "green.600"
+                            ),
                           }}
-                          textAlign={"left"}
+                          //textAlign={"left"}
                           px="5"
-                          py="2"
+                          py="1"
                           onClick={() => {
                             setSelectedProduct2(data);
                             setShowSearchBox2(false);
                           }}
-                          color={useColorModeValue("gray.900", "gray.500")}
+                          color={useColorModeValue("gray.900", "gray.200")}
                         >
-                          {data.name}
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="left"
+                            w="100%"
+                            h="100%"
+                          >
+                            <Image
+                              rounded={"md"}
+                              alt={"product image"}
+                              src={data.img}
+                              boxSize="8vh"
+                              objectFit="contain"
+                              fallbackSrc="/wiz1.svg"
+                            />
+                            <Box isTruncated>{data.name}</Box>
+                          </Stack>
                         </Box>
                       );
                     })}

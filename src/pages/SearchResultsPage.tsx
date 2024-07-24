@@ -16,6 +16,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import FilterSortMenu from "../components/FilterSortMenu";
 import { getTokens } from "../utils/storage";
 import LoadingPage from "../components/LoadingPage";
+import { useAuth } from "../contexts/AuthContext";
 
 const SearchResultsPage = () => {
   interface FilterList {
@@ -45,10 +46,11 @@ const SearchResultsPage = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const { checkExpiryAndRefresh, isLoggedIn } = useAuth();
   // filters contain the current filters applied by user
   const initialFilters: Filters = {
     q: location.state?.query || "",
-    category: "",
+    category: location.state?.category || "",
     ordering: "",
     brand: "",
     price: "",
@@ -67,7 +69,7 @@ const SearchResultsPage = () => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [filters, setFilters] = useState<Filters>(initialFilters);
   const [loading, setLoading] = useState(true);
-  const [wishlist, setWishlist] = useState([]);
+  const [wishlist, setWishlist] = useState<Product[]>([]);
 
   // Function to update filters
   const updateFilter = (key: keyof Filters, value: any) => {
@@ -111,40 +113,25 @@ const SearchResultsPage = () => {
       console.error("Error fetching more products", error);
     }
   };
-  const addWishlist = async (product: Product) => {
-    const { accessToken, refreshToken } = getTokens();
-    try {
-      const response = await axios.post(
-        "/api/wishlist/",
-        {
-          product_category: product.category,
-          object_id: product.id,
-        },
-        {
-          headers: {
-            ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-            ...(refreshToken && { "Refresh-Token": refreshToken }),
-          },
-        }
-      );
-    } catch (error) {
-      console.error("Unable to add to wishlist", error);
-    }
-  };
+
   const toggleWishlistItem = async (product: Product) => {
+    // we only have itemID here, and we want to find the wishlistID of the item
     console.log("toggle: ", product);
-    const { accessToken, refreshToken } = getTokens();
     try {
-      if (inWishlist(product.id)) {
+      await checkExpiryAndRefresh();
+      const { accessToken, refreshToken } = getTokens();
+      if (inWishlist(product.id, product.category)) {
         // item is in wishlist, delete it
-        console.log("id: ", findIdInWishlist(product.id));
-        const object_id = findIdInWishlist(product.id);
-        await axios.delete(`/api/wishlist/${object_id}`, {
+        const wishlistID = findIdInWishlist(product.id);
+        await axios.delete(`/api/wishlist/${wishlistID}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
-        console.log(`Product with id ${product.id} removed from wishlist.`);
+        console.log(
+          `Product with item id ${product.id} removed from wishlist.`
+        );
       } else {
         // add product to wishlist
+        // adding only needs the itemID aka object_id
         const response = await axios.post(
           "/api/wishlist/",
           {
@@ -158,51 +145,69 @@ const SearchResultsPage = () => {
             },
           }
         );
-        console.log(`Product with id ${product.id} added to wishlist.`);
+        console.log(`Product with item id ${product.id} added to wishlist.`);
       }
     } catch (error) {
       console.error("Error toggling wishlist item:", error);
     }
   };
+  // queries the entire wishlist from backend
   const getWishlist = async () => {
+    let allItems: Product[] = [];
+    let page = 1;
+    const pageSize = 12;
+    let totalPages = 1;
+    let offset = 0;
     try {
+      await checkExpiryAndRefresh();
       const { accessToken } = getTokens();
-      const response = await axios.get("/api/wishlist/", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      console.log("wishlist: ", response.data.results);
-      setWishlist(response.data.results);
+
+      while (page <= totalPages) {
+        const response = await axios.get(`/api/wishlist/`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          params: {
+            offset: offset,
+            page: page,
+            page_size: pageSize,
+          },
+        });
+        console.log("wishlist: ", response.data);
+        allItems = allItems.concat(response.data.results);
+        totalPages = Math.ceil(response.data.count / pageSize);
+        page += 1;
+        offset += pageSize;
+      }
+      setWishlist(allItems);
     } catch (error) {
       console.error("Request for wishlist failed", error);
     }
+    setLoading(false);
   };
-  const inWishlist = (id: number) => {
-    const result = wishlist.some(
-      (product: Product) => product.object_id === id
-    );
+  // checks if the item with the id and category is in wishlist
+  const inWishlist = (id: number, category: string) => {
+    const result = wishlist.some((product: Product) => {
+      return (
+        product.object_id === id && product.content_object.category === category
+      );
+    });
     return result;
   };
+  // finds the wishlistID from objectID in wishlist
   const findIdInWishlist = (item_id: number): number | undefined => {
     const product: Product = wishlist.find(
       (product: Product) => product.object_id === item_id
     ) as unknown as Product;
     return product?.id;
   };
+  // reset filters if query changes
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
     } else {
-      //clear filters
-      setFilters({
-        q: location.state?.query || "",
-        category: "",
-        ordering: "",
-        brand: "",
-        price: "",
-        review_date: "",
-      });
+      //reset to initial filters
+      setFilters(initialFilters);
     }
   }, [location.state?.query]);
 
@@ -212,7 +217,6 @@ const SearchResultsPage = () => {
     let isMounted = true;
 
     const fetchData = async () => {
-      //console.log(filters);
       setLoading(true);
       try {
         await handleSearch();
@@ -258,7 +262,7 @@ const SearchResultsPage = () => {
             No results found
           </Text>
         )}
-        {Array.isArray(results) && results.length !== 0 && (
+        {!loading && Array.isArray(results) && results.length !== 0 && (
           <InfiniteScroll
             dataLength={results.length}
             next={fetchMoreData}
@@ -290,12 +294,12 @@ const SearchResultsPage = () => {
                 return (
                   <Product
                     key={index}
-                    data={product}
+                    productData={product}
                     heartFunction={async () => {
                       await toggleWishlistItem(product);
                       await getWishlist();
                     }}
-                    filled={inWishlist(product.id)}
+                    filled={inWishlist(product.id, product.category)}
                   />
                 );
               })}

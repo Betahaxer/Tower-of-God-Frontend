@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import {
   Box,
@@ -19,6 +19,13 @@ import {
   IconButton,
   AbsoluteCenter,
   Divider,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -38,9 +45,11 @@ const WishlistPage = () => {
   // use wishlist id for deletion, use product id for adding
   const { isLoggedIn, loading } = useAuth();
   const [fetching, setFetching] = useState(true);
-  const [wishlist, setWishlist] = useState<[]>([]);
+  const [wishlist, setWishlist] = useState<Product[]>([]);
   const [searchBox, setSearchBox] = useState("");
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement>(null);
   const toggleSelection = (id: number) => {
     setSelectedIds((prevIds) => {
       if (prevIds.includes(id)) {
@@ -52,16 +61,35 @@ const WishlistPage = () => {
   };
   const toast = useToast();
   const navigate = useNavigate();
+  const { checkExpiryAndRefresh } = useAuth();
   const getWishlist = async () => {
+    let allItems: Product[] = [];
+    let page = 1;
+    const pageSize = 12;
+    let totalPages = 1;
+    let offset = 0;
     try {
+      await checkExpiryAndRefresh();
       const { accessToken } = getTokens();
-      const response = await axios.get("/api/wishlist/", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      console.log(response.data);
-      setWishlist(response.data.results);
+
+      while (page <= totalPages) {
+        const response = await axios.get(`/api/wishlist/`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          params: {
+            offset: offset,
+            page: page,
+            page_size: pageSize,
+          },
+        });
+        console.log("wishlist: ", response.data);
+        allItems = allItems.concat(response.data.results);
+        totalPages = Math.ceil(response.data.count / pageSize);
+        page += 1;
+        offset += pageSize;
+      }
+      setWishlist(allItems);
     } catch (error) {
       console.error("Request for wishlist failed", error);
     }
@@ -71,6 +99,7 @@ const WishlistPage = () => {
   const removeItems = async (ids: number[]) => {
     setFetching(true);
     try {
+      await checkExpiryAndRefresh();
       const { accessToken } = getTokens();
       const deletePromises = ids.map((id) =>
         axios.delete(`/api/wishlist/${id}`, {
@@ -223,11 +252,10 @@ const WishlistPage = () => {
                       More info
                     </Box>
                     <Box
-                      as="button"
                       position="absolute"
                       top="5"
                       right="5"
-                      onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                      onClick={(event: React.MouseEvent<HTMLDivElement>) => {
                         event.stopPropagation();
                         toggleSelection(data.id);
                       }}
@@ -255,7 +283,7 @@ const WishlistPage = () => {
                           alt={"product image"}
                           src={product.img}
                           h="40vh"
-                          fallbackSrc="wiz1.svg"
+                          fallbackSrc="/wiz1.svg"
                         />
                       </Flex>
                       <Heading fontSize="20px">{product.name}</Heading>
@@ -324,13 +352,46 @@ const WishlistPage = () => {
           variant="outline"
           textColor="white"
           _hover={{ background: "green.500" }}
-          onClick={() => {
-            removeItems(selectedIds);
-          }}
+          onClick={onOpen}
         >
           Delete
         </Button>
       </Stack>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+        isCentered
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Items
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You can't undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  removeItems(selectedIds);
+                  onClose();
+                }}
+                ml={3}
+              >
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   );
 };
