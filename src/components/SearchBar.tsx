@@ -89,11 +89,9 @@ const SearchBar = ({ loading }: Props) => {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
       });
-      const responsePromise = await Promise.all(deletePromises).then(
-        async (response) => {
-          console.log(response);
-        }
-      );
+      await Promise.all(deletePromises).then(async (response) => {
+        console.log(response);
+      });
     } catch (error) {
       console.error("Error clearing all search history", error);
     } finally {

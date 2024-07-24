@@ -35,7 +35,7 @@ function App() {
       <Box zIndex="0">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage/>} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/auth/google" element={<GoogleLoadingPage />} />
           <Route path="/register" element={<RegisterPage />} />

@@ -17,20 +17,12 @@ function HomePage() {
         <Heading
           fontWeight={1000}
           fontSize={{ base: "2xl", sm: "4xl", md: "6xl" }}
-          lineHeight={"110%"}
         >
-          Be an <br />
           <Text as={"span"} color={"green.400"}>
-            informed consumer
-          </Text>
+            Find the best
+          </Text>{" "}
         </Heading>
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="start"
-          mt="30px"
-          height="100vh"
-        >
+        <Box display="flex" justifyContent="center" height="100vh">
           <SearchBar />
         </Box>
       </Stack>
