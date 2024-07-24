@@ -84,7 +84,7 @@ function FeatureCard({ title, description, image }: Props) {
                             </Text>
                         </CardHeader>
                         <CardBody>
-                            <Image h='35vh' w='100%' src={image} alt={title + '-image'} overflow={'hidden'}/>
+                            <Image h='35vh' w='100%' src={image} alt={title + '-image'} overflow={'hidden'} borderRadius='lg'/>
                         </CardBody>
                         </>
                     ) : <></> // Empty card when flipping
