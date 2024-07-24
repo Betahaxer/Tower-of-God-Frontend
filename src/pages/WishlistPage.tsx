@@ -109,6 +109,7 @@ const WishlistPage = () => {
 
       const responsePromise = Promise.all(deletePromises).then(
         async (response) => {
+          console.log(response);
           const newWishlist = await getWishlist();
           return newWishlist;
         }

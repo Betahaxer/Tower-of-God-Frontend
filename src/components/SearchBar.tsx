@@ -78,6 +78,27 @@ const SearchBar = ({ loading }: Props) => {
       console.error("Error deleting search history", error);
     }
   };
+  const onDeleteAll = async (searchHistoryData: Product) => {
+    try {
+      await checkExpiryAndRefresh();
+      const { accessToken } = getTokens();
+      const deletePromises = searchHistoryData.map((item: Product) => {
+        const wishlistID = item.id;
+        return axios.delete(`/api/search_history/${wishlistID}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+      });
+      const responsePromise = await Promise.all(deletePromises).then(
+        async (response) => {
+          console.log(response);
+        }
+      );
+    } catch (error) {
+      console.error("Error clearing all search history", error);
+    } finally {
+      await getSearchHistory();
+    }
+  };
   useEffect(() => {
     if (location.state?.query) {
       setSearchResults(location.state?.query || "");
@@ -129,6 +150,36 @@ const SearchBar = ({ loading }: Props) => {
           borderRadius={10}
           bg={useColorModeValue("white", "gray.600")}
         >
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="flex-end"
+          >
+            <Box
+              px="1"
+              fontWeight="400"
+              fontSize="0.9rem"
+              color={useColorModeValue("gray.500", "gray.200")}
+            >
+              Recent Searches
+            </Box>
+            <Box
+              px="1"
+              fontWeight="400"
+              fontSize="0.7rem"
+              color={useColorModeValue("gray.500", "gray.200")}
+              _hover={{
+                color: useColorModeValue("blue", "blue.400"),
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+              onClick={async () => {
+                await onDeleteAll(searchHistory);
+              }}
+            >
+              Clear All
+            </Box>
+          </Stack>
           {searchHistory
             .slice(0, 5)
             .map((searchHistoryItem: Product, index: number) => {
