@@ -15,6 +15,7 @@ import { Box, Text } from "@chakra-ui/react";
 import { GoogleLoadingPage } from "./components/GoogleLogin";
 import WishlistPage from "./pages/WishlistPage";
 import SmoothScrolling from "./utils/SmoothScrolling";
+import { AboutPage } from "./pages/AboutPage";
 
 //axios.defaults.baseURL = "http://127.0.0.1:8000";
 axios.defaults.baseURL = "https://tower-of-god.onrender.com";
@@ -34,6 +35,7 @@ function App() {
       <Box zIndex="0">
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage/>} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/auth/google" element={<GoogleLoadingPage />} />
           <Route path="/register" element={<RegisterPage />} />
