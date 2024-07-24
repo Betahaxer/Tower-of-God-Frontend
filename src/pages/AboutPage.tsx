@@ -6,6 +6,8 @@ import {
     Box,
     Image,
     Divider,
+    HStack,
+    Tooltip,
 } from "@chakra-ui/react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
@@ -13,6 +15,7 @@ import FeatureCard from "../components/FeatureCard";
 import HorizontalScrollBox from "../components/HorizontalScrollBox";
 import Timeline from "../components/Timeline";
 import ExplanationDiv from "../components/ExplanationDiv";
+import { FaRegQuestionCircle } from "react-icons/fa";
 
 // Data for explanations
 const explanations = [
@@ -63,7 +66,7 @@ const features = [
     { 
         title: 'Search history', 
         description: 'Save users\' search queries for easy reference and to remind them of previously viewed products. Future feature will allow users to scroll through previous search results.', 
-        image: '' 
+        image: 'search_history.png' 
     },
 ];
 
@@ -135,7 +138,7 @@ export function AboutPage(){
     const techInView = useInView(techStackRef, { once: false, amount: 0.5 })
 
     return (
-        <VStack overflow="hidden">
+        <VStack overflow="hidden" scrollBehavior='smooth'>
             <Box position="relative" h="91.5vh" w="100%" overflow="hidden">
                 <Box
                     as="video"
@@ -190,7 +193,8 @@ export function AboutPage(){
                 zIndex="0"
             >
                 <VStack
-                    spacing={'5vh'}
+                    padding={'3vh'}
+                    spacing={'9vh'}
                 >
                     <Text 
                         fontSize="5xl"
@@ -210,9 +214,21 @@ export function AboutPage(){
                     spacing='5vh'
                 >
                     <Box w='85%'>
+                        <HStack>
                         <Text fontSize='5xl'>
                             Features Overview
                         </Text>
+                        <Tooltip
+                            label="Click on the cards below to learn more"
+                            placement="bottom"
+                        >
+                            <span>
+                            <FaRegQuestionCircle
+                                style={{ color: "cornflowerblue" }}
+                            />
+                            </span>
+                        </Tooltip>
+                        </HStack>
                         <Divider borderWidth={'1px'} borderColor={useColorModeValue('grey.300', 'grey.200')}/>
                     </Box>
                     <HorizontalScrollBox components={featureCards}/>
