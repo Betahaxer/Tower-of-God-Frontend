@@ -206,16 +206,28 @@ export default function ProductDetailsPage() {
                 >
                   {product.name}
                 </Box>
-                <Box
-                  m={0}
-                  p={0}
-                  color={useColorModeValue("gray.500", "gray.600")}
-                  fontWeight={400}
-                  fontSize={"2xl"}
-                  mb={0}
-                >
-                  {product.price ? "$" + product.price : "$-"}
-                </Box>
+                <Stack direction="row" alignItems="center" spacing="2">
+                  <Box
+                    m={0}
+                    p={0}
+                    color={useColorModeValue("gray.500", "gray.600")}
+                    fontWeight={400}
+                    fontSize={"2xl"}
+                    mb={0}
+                  >
+                    {product.price ? "$" + product.price : "$-"}
+                  </Box>
+                  <Tooltip
+                    label="Price displayed might not be accurate"
+                    placement="bottom"
+                  >
+                    <span>
+                      <FaRegQuestionCircle
+                        style={{ color: "cornflowerblue" }}
+                      />
+                    </span>
+                  </Tooltip>
+                </Stack>
               </Stack>
               <Stack direction="column" spacing="4">
                 <Stack direction="row" spacing={4} alignItems="center">

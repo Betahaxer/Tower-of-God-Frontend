@@ -13,8 +13,13 @@ import {
   Stack,
   useColorModeValue,
   Button,
+  Tooltip,
 } from "@chakra-ui/react";
-import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
+import {
+  FaMinusCircle,
+  FaPlusCircle,
+  FaRegQuestionCircle,
+} from "react-icons/fa";
 import HeartButton from "./HeartButton";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
@@ -96,15 +101,27 @@ const Product = ({ productData, heartFunction, filled }: Props) => {
                 <Heading size="md" fontSize="1.3rem" p="0" m="0" noOfLines={2}>
                   {productData.name}
                 </Heading>
-                <Text
-                  color={useColorModeValue("gray.900", "gray.400")}
-                  fontWeight={300}
-                  fontSize={"xl"}
-                  m={0}
-                  p="0"
-                >
-                  {productData.price ? "$" + productData.price : "$-"}
-                </Text>
+                <Stack direction="row" alignItems="center">
+                  <Text
+                    color={useColorModeValue("gray.900", "gray.400")}
+                    fontWeight={300}
+                    fontSize={"xl"}
+                    m={0}
+                    p="0"
+                  >
+                    {productData.price ? "$" + productData.price : "$-"}
+                  </Text>
+                  <Tooltip
+                    label="Price displayed might not be accurate"
+                    placement="bottom"
+                  >
+                    <span>
+                      <FaRegQuestionCircle
+                        style={{ color: "cornflowerblue" }}
+                      />
+                    </span>
+                  </Tooltip>
+                </Stack>
               </Stack>
               <Box
                 display="flex"
