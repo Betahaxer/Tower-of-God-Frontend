@@ -189,6 +189,7 @@ const WishlistPage = () => {
               focusBorderColor="gray.200"
               _hover={{ boxShadow: "none" }}
               _focus={{ boxShadow: "none" }}
+              autoComplete="off"
             />
           </InputGroup>
         </Stack>
