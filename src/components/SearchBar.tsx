@@ -35,12 +35,12 @@ const SearchBar = ({ loading }: Props) => {
       <Input
         placeholder="Search..."
         bg="white"
-        _placeholder={{ color: "gray.500" }}
+        _placeholder={{ color: "gray.600" }}
         value={searchResults}
         onChange={(e) => setSearchResults(e.target.value)}
         onKeyDown={(event) => handleKeyDown(event)}
         borderRadius={100}
-        color={useColorModeValue("gray.900", "gray.600")}
+        color={useColorModeValue("gray.9000", "gray.600")}
       />
       <InputRightElement>
         <Button

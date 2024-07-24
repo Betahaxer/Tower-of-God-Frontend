@@ -18,7 +18,7 @@ const HeartButton = ({ onClick, filled }: Props) => {
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
-            fill={filled ? "red" : "none"}
+            fill={filled ? "red" : "white"}
             stroke={filled ? "red" : "black"}
             strokeWidth="1.5"
             strokeLinecap="round"

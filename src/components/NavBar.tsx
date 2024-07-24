@@ -346,4 +346,8 @@ const NAV_ITEMS: Array<NavItem> = [
     label: "Wishlist",
     href: "/wishlist",
   },
+  {
+    label: "About",
+    href: "/about",
+  },
 ];
