@@ -115,19 +115,23 @@ const SearchResultsPage = () => {
   };
 
   const toggleWishlistItem = async (product: Product) => {
+    // we only have itemID here, and we want to find the wishlistID of the item
     console.log("toggle: ", product);
     try {
       await checkExpiryAndRefresh();
       const { accessToken, refreshToken } = getTokens();
       if (inWishlist(product.id, product.category)) {
         // item is in wishlist, delete it
-        const object_id = findIdInWishlist(product.id);
-        await axios.delete(`/api/wishlist/${object_id}`, {
+        const wishlistID = findIdInWishlist(product.id);
+        await axios.delete(`/api/wishlist/${wishlistID}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
-        console.log(`Product with id ${product.id} removed from wishlist.`);
+        console.log(
+          `Product with item id ${product.id} removed from wishlist.`
+        );
       } else {
         // add product to wishlist
+        // adding only needs the itemID aka object_id
         const response = await axios.post(
           "/api/wishlist/",
           {
@@ -141,12 +145,13 @@ const SearchResultsPage = () => {
             },
           }
         );
-        console.log(`Product with id ${product.id} added to wishlist.`);
+        console.log(`Product with item id ${product.id} added to wishlist.`);
       }
     } catch (error) {
       console.error("Error toggling wishlist item:", error);
     }
   };
+  // queries the entire wishlist from backend
   const getWishlist = async () => {
     let allItems: Product[] = [];
     let page = 1;
@@ -180,6 +185,7 @@ const SearchResultsPage = () => {
     }
     setLoading(false);
   };
+  // checks if the item with the id and category is in wishlist
   const inWishlist = (id: number, category: string) => {
     const result = wishlist.some((product: Product) => {
       return (
@@ -188,12 +194,14 @@ const SearchResultsPage = () => {
     });
     return result;
   };
+  // finds the wishlistID from objectID in wishlist
   const findIdInWishlist = (item_id: number): number | undefined => {
     const product: Product = wishlist.find(
       (product: Product) => product.object_id === item_id
     ) as unknown as Product;
     return product?.id;
   };
+  // reset filters if query changes
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -209,7 +217,6 @@ const SearchResultsPage = () => {
     let isMounted = true;
 
     const fetchData = async () => {
-      //console.log(filters);
       setLoading(true);
       try {
         await handleSearch();
