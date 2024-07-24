@@ -175,49 +175,49 @@ export default function ComparePage() {
                 borderRadius={10}
                 bg={useColorModeValue("white", "gray.600")}
               >
-                <Box position="relative">
-                  {data.value1
-                    .slice(0, 5)
-                    .map((data: Dictionary, index: number) => {
-                      return (
-                        <Box
-                          key={index}
-                          h="12vh"
-                          borderRadius={10}
-                          _hover={{
-                            background: useColorModeValue(
-                              "green.200",
-                              "green.600"
-                            ),
-                          }}
-                          textAlign={"left"}
-                          px="5"
-                          py="2"
-                          onClick={() => {
-                            setSelectedProduct(data);
-                            setShowSearchBox(false);
-                          }}
-                          color={useColorModeValue("gray.900", "gray.200")}
+                {data.value1
+                  .slice(0, 5)
+                  .map((data: Dictionary, index: number) => {
+                    return (
+                      <Box
+                        key={index}
+                        h="10vh"
+                        borderRadius={10}
+                        _hover={{
+                          background: useColorModeValue(
+                            "green.200",
+                            "green.600"
+                          ),
+                        }}
+                        // textAlign={"left"}
+                        px="5"
+                        py="2"
+                        onClick={() => {
+                          setSelectedProduct(data);
+                          setShowSearchBox(false);
+                        }}
+                        color={useColorModeValue("gray.900", "gray.200")}
+                      >
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="left"
+                          w="100%"
+                          h="100%"
                         >
-                          <Stack
-                            direction="row"
-                            alignItems="center"
-                            justifyContent="left"
-                          >
-                            <Image
-                              rounded={"md"}
-                              alt={"product image"}
-                              src={data.img}
-                              boxSize="8vh"
-                              objectFit="contain"
-                              fallbackSrc="/wiz1.svg"
-                            />
-                            <Box>{data.name}</Box>
-                          </Stack>
-                        </Box>
-                      );
-                    })}
-                </Box>
+                          <Image
+                            rounded={"md"}
+                            alt={"product image"}
+                            src={data.img}
+                            boxSize="8vh"
+                            objectFit="contain"
+                            fallbackSrc="/wiz1.svg"
+                          />
+                          <Box isTruncated>{data.name}</Box>
+                        </Stack>
+                      </Box>
+                    );
+                  })}
               </Box>
             )}
             {Object.keys(selectedProduct).length === 0 && (
@@ -294,7 +294,7 @@ export default function ComparePage() {
                       return (
                         <Box
                           key={index}
-                          h="12vh"
+                          h="10vh"
                           borderRadius={10}
                           _hover={{
                             background: useColorModeValue(
@@ -302,9 +302,9 @@ export default function ComparePage() {
                               "green.600"
                             ),
                           }}
-                          textAlign={"left"}
+                          //textAlign={"left"}
                           px="5"
-                          py="2"
+                          py="1"
                           onClick={() => {
                             setSelectedProduct2(data);
                             setShowSearchBox2(false);
@@ -315,6 +315,8 @@ export default function ComparePage() {
                             direction="row"
                             alignItems="center"
                             justifyContent="left"
+                            w="100%"
+                            h="100%"
                           >
                             <Image
                               rounded={"md"}
@@ -324,7 +326,7 @@ export default function ComparePage() {
                               objectFit="contain"
                               fallbackSrc="/wiz1.svg"
                             />
-                            <Box>{data.name}</Box>
+                            <Box isTruncated>{data.name}</Box>
                           </Stack>
                         </Box>
                       );
