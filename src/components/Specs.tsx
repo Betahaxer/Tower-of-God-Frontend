@@ -31,85 +31,97 @@ const Specs: React.FC<ProductProps> = ({ product, keys }) => {
 
     return formattedText;
   }
-
-  return (
-    <List spacing={2}>
-      {keysToRender.map((key, index) => {
-        if (typeof product[key] === "boolean") {
+  try {
+    return (
+      <List spacing={2}>
+        {keysToRender.map((key, index) => {
+          if (typeof product[key] === "boolean") {
+            return (
+              <ListItem key={index}>
+                <Text as={"span"} fontWeight={"bold"}>
+                  {formatText(key) + ":"}
+                </Text>{" "}
+                {product[key] ? "Yes" : "No"}
+              </ListItem>
+            );
+          }
+          if (product.category === "keyboard" && key === "size") {
+            return (
+              <ListItem key={index}>
+                <Text as={"span"} fontWeight={"bold"}>
+                  {formatText(key) + ":"}
+                </Text>{" "}
+                {product[key] ? product[key] + "%" : "-"}
+              </ListItem>
+            );
+          }
+          if (
+            (product.category === "phone" && key === "size") ||
+            key === "screen_size"
+          ) {
+            return (
+              <ListItem key={index}>
+                <Text as={"span"} fontWeight={"bold"}>
+                  {formatText(key) + ":"}
+                </Text>{" "}
+                {product[key] ? product[key] + " in" : "-"}
+              </ListItem>
+            );
+          }
+          if (key === "battery_life") {
+            const value = product[key];
+            let result;
+            if (typeof value === "string") {
+              result = value.split("(")[0].trim();
+            } else if (typeof value === "number") {
+              result = value.toString(); // Convert the number to a string
+            } else {
+              result = "-"; // Default value for null, undefined, or other types
+            }
+            return (
+              <ListItem key={index}>
+                <Text as={"span"} fontWeight={"bold"}>
+                  {formatText(key) + ":"}
+                </Text>{" "}
+                {result}
+              </ListItem>
+            );
+          }
+          if (key === "refresh_rate") {
+            return (
+              <ListItem key={index}>
+                <Text as={"span"} fontWeight={"bold"}>
+                  {formatText(key) + ":"}
+                </Text>{" "}
+                {product[key] ? product[key] + " Hz" : "-"}
+              </ListItem>
+            );
+          }
+          if (key === "screen_resolution") {
+            return (
+              <ListItem key={index}>
+                <Text as={"span"} fontWeight={"bold"}>
+                  {formatText(key) + ":"}
+                </Text>{" "}
+                {product[key] ? product[key] + " pixels" : "-"}
+              </ListItem>
+            );
+          }
           return (
             <ListItem key={index}>
               <Text as={"span"} fontWeight={"bold"}>
                 {formatText(key) + ":"}
               </Text>{" "}
-              {product[key] ? "Yes" : "No"}
+              {product[key] ? product[key] : "-"}
             </ListItem>
           );
-        }
-        if (product.category === "keyboard" && key === "size") {
-          return (
-            <ListItem key={index}>
-              <Text as={"span"} fontWeight={"bold"}>
-                {formatText(key) + ":"}
-              </Text>{" "}
-              {product[key] ? product[key] + "%" : "-"}
-            </ListItem>
-          );
-        }
-        if (
-          (product.category === "phone" && key === "size") ||
-          key === "screen_size"
-        ) {
-          return (
-            <ListItem key={index}>
-              <Text as={"span"} fontWeight={"bold"}>
-                {formatText(key) + ":"}
-              </Text>{" "}
-              {product[key] ? product[key] + " in" : "-"}
-            </ListItem>
-          );
-        }
-        if (key === "battery_life") {
-          const result = product[key][0]?.split("(")[0].trim();
-          return (
-            <ListItem key={index}>
-              <Text as={"span"} fontWeight={"bold"}>
-                {formatText(key) + ":"}
-              </Text>{" "}
-              {result ? result : "-"}
-            </ListItem>
-          );
-        }
-        if (key === "refresh_rate") {
-          return (
-            <ListItem key={index}>
-              <Text as={"span"} fontWeight={"bold"}>
-                {formatText(key) + ":"}
-              </Text>{" "}
-              {product[key] ? product[key] + " Hz" : "-"}
-            </ListItem>
-          );
-        }
-        if (key === "screen_resolution") {
-          return (
-            <ListItem key={index}>
-              <Text as={"span"} fontWeight={"bold"}>
-                {formatText(key) + ":"}
-              </Text>{" "}
-              {product[key] ? product[key] + " pixels" : "-"}
-            </ListItem>
-          );
-        }
-        return (
-          <ListItem key={index}>
-            <Text as={"span"} fontWeight={"bold"}>
-              {formatText(key) + ":"}
-            </Text>{" "}
-            {product[key] ? product[key] : "-"}
-          </ListItem>
-        );
-      })}
-    </List>
-  );
+        })}
+      </List>
+    );
+  } catch (error) {
+    console.error("Error loading specs", error);
+    return placeholder();
+  }
 };
 
 export default Specs;
