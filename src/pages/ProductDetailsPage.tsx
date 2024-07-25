@@ -138,7 +138,6 @@ export default function ProductDetailsPage() {
           navigate("/login");
         }
       } else {
-        // Handle other error scenarios (e.g., network errors)
         toast({
           title: "An error occurred",
           status: "error",

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import {
   Box,
@@ -32,7 +32,6 @@ import axios from "axios";
 import { getTokens } from "../utils/storage";
 import SelectButton from "../components/SelectButton";
 import { CiSearch } from "react-icons/ci";
-
 import CheckButton from "../components/CheckButton";
 import LoadingPage from "../components/LoadingPage";
 
@@ -50,6 +49,7 @@ const WishlistPage = () => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>(null);
+
   const toggleSelection = (id: number) => {
     setSelectedIds((prevIds) => {
       if (prevIds.includes(id)) {
