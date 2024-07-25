@@ -98,7 +98,7 @@ const logos = [
   "logos/django.png",
   "logos/react.png",
   "logos/selenium.png",
-  "logos/chakra.jpeg",
+  "logos/chakraui.png",
   "logos/gemini.png",
   "logos/github.png",
   "logos/vercel.png",
