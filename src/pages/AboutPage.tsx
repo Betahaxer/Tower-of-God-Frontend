@@ -36,43 +36,43 @@ const features = [
   {
     title: "Authentication",
     description:
-      "Users can log in with a username/password. Or via a Google account. Authentication is done via JWT tokens",
+      "Create an account with us by providing a username/password, or login via your Google account.",
     image: "login_page.png",
   },
   {
     title: "Searching and filtering",
     description:
-      "Users can search, filter, and sort products by various criteria. The search bar supports fuzzy search for accurate results despite spelling errors. Full-text search and filter options improve search relevance.",
+      "Search, filter, and sort products according to your needs. Use our intelligent search bar to find your desired products. Full-text search and filter options improve search relevance.",
     image: "filter.png",
   },
   {
     title: "Web scraping",
     description:
-      "Web scrapers gather data from trusted review sites, Google images, and Amazon for prices. Scrapers are currently for local use, employing Selenium for precision data extraction.",
+      "We scraped data from trusted review sites, Google images, and Amazon. Scrapers are currently for local use, employing Selenium for precision data extraction.",
     image: "web_scraping.jpeg",
   },
   {
     title: "Recommendation cards",
     description:
-      "Search results show product cards with images, prices, descriptions, and pros/cons. Card also have ratings, pricing and infinite scrolling. Clicking on cards would lead to detailed product pages.",
+      "Our product cards provides a good summary with images, prices, descriptions, and pros/cons. Card also have ratings, pricing and infinite scrolling.",
     image: "product_card.png",
   },
   {
     title: "Compare products",
     description:
-      "Users can compare two products side-by-side by going to the compare page. A beautifully designed page displays the products for easy comparison.",
+      "A beautifully designed page displays the products for easy comparison.",
     image: "compare.png",
   },
   {
     title: "Wishlist",
     description:
-      "Users can save favorite products for future reference. They can add items to wishlist, search through wishlist items and delete wishlist items.",
+      "Save your favourite products for future reference. Manage your wishlist with our beautiful wishlist features.",
     image: "wishlist.png",
   },
   {
     title: "Search history",
     description:
-      "Save users' search queries for easy reference and to remind them of previously viewed products. Future feature will allow users to scroll through previous search results.",
+      "Easily find your previous search queries from the search bar.",
     image: "search_history.png",
   },
 ];

@@ -51,7 +51,7 @@ function FeatureCard({ title, description, image }: Props) {
       onHoverEnd={handleHoverEnd}
       //onClick={handleClick}
       //_hover={{ cursor: "pointer" }}
-      initial={false}
+      //initial={flipped}
       animate={{ rotateY: flipped ? 180 : 360 }}
       onAnimationComplete={() => setIsAnimating(false)}
       style={{
