@@ -130,6 +130,7 @@ const SearchBar = ({ loading }: Props) => {
       />
       <InputRightElement>
         <Button
+          name="search button"
           bg="none"
           onClick={() => {
             onSearch(searchResults);

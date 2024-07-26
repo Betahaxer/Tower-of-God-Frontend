@@ -6,6 +6,6 @@ export default defineConfig({
       // implement node event listeners here
     },
     experimentalStudio: true,
-    baseUrl: 'http://localhost:5173',
+    baseUrl: 'https://tower-of-god-frontend.vercel.app/',
   },
 });
