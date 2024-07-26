@@ -152,7 +152,7 @@ export function AboutPage() {
 
   return (
     <VStack overflow="hidden" scrollBehavior="smooth">
-      <Box position="relative" h="91.5vh" w="100%" overflow="hidden">
+      <Box position="relative" h="93vh" w="100%" overflow="hidden">
         <Box
           as="video"
           autoPlay
@@ -212,7 +212,7 @@ export function AboutPage() {
             <HStack>
               <Text fontSize="5xl">Features Overview</Text>
               <Tooltip
-                label="Hover over the cards below to learn more"
+                label="Click on the cards below to learn more"
                 placement="bottom"
               >
                 <span>
