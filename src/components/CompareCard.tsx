@@ -12,52 +12,52 @@ import {
   ListItem,
   ListIcon,
   Card,
-} from "@chakra-ui/react";
-import { ReactElement } from "react";
-import { FaPlusCircle, FaMinusCircle } from "react-icons/fa";
-import Specs from "./Specs";
-import { Laptop } from "@mui/icons-material";
+} from '@chakra-ui/react'
+import { ReactElement } from 'react'
+import { FaPlusCircle, FaMinusCircle } from 'react-icons/fa'
+import Specs from './Specs'
+import { Laptop } from '@mui/icons-material'
 
 interface Dictionary {
-  [key: string]: any;
+  [key: string]: any
 }
 
 export default function CompareCard({ product }: Dictionary) {
-  console.log(product);
+  console.log(product)
   interface Product {
-    [key: string]: any;
+    [key: string]: any
   }
   const keysToRender = {
-    earbuds: ["brand", "wireless", "battery_life", "active_noise_cancellation"],
-    keyboard: ["brand", "wireless", "size", "key_switches"],
+    earbuds: ['brand', 'wireless', 'battery_life', 'active_noise_cancellation'],
+    keyboard: ['brand', 'wireless', 'size', 'key_switches'],
     laptop: [
-      "brand",
-      "battery_life",
-      "screen_resolution",
-      "processor",
-      "os_version",
-      "weight",
+      'brand',
+      'battery_life',
+      'screen_resolution',
+      'processor',
+      'os_version',
+      'weight',
     ],
-    mouse: ["brand", "buttons_count", "dpi", "weight", "wireless"],
+    mouse: ['brand', 'buttons_count', 'dpi', 'weight', 'wireless'],
     phone: [
-      "brand",
-      "battery_life",
-      "screen_resolution",
-      "processor",
-      "os_version",
-      "weight",
-      "size",
+      'brand',
+      'battery_life',
+      'screen_resolution',
+      'processor',
+      'os_version',
+      'weight',
+      'size',
     ],
     monitor: [
-      "brand",
-      "screen_size",
-      "screen_resolution",
-      "refresh_rate",
-      "panel_type",
+      'brand',
+      'screen_size',
+      'screen_resolution',
+      'refresh_rate',
+      'panel_type',
     ],
-    speaker: ["brand", "portable", "bluetooth", "wifi", "speakerphone"],
-    television: ["brand", "screen_size", "screen_resolution", "panel_type"],
-  };
+    speaker: ['brand', 'portable', 'bluetooth', 'wifi', 'speakerphone'],
+    television: ['brand', 'screen_size', 'screen_resolution', 'panel_type'],
+  }
 
   return (
     <>
@@ -66,54 +66,54 @@ export default function CompareCard({ product }: Dictionary) {
           spacing={{ base: 8, md: 10 }}
           py={{ base: 9, md: 12 }}
           px={{ base: 20, md: 10 }}
-          direction={"column"}
+          direction={'column'}
           justifyItems="center"
           alignItems="center"
           divider={
             <StackDivider
-              borderColor={useColorModeValue("gray.200", "gray.600")}
+              borderColor={useColorModeValue('gray.200', 'gray.600')}
             />
           }
         >
           <>
             <Flex>
               <Image
-                rounded={"md"}
-                alt={"product image"}
+                rounded={'md'}
+                alt={'product image'}
                 src={product.img}
-                fit={"cover"}
-                align={"center"}
+                fit={'cover'}
+                align={'center'}
                 w="auto"
                 h="35vh"
                 fallbackSrc="/wiz1.svg"
               />
             </Flex>
-            <Box as={"header"}>
+            <Box as={'header'}>
               <Text
-                color={useColorModeValue("gray.900", "gray.400")}
+                color={useColorModeValue('gray.900', 'gray.400')}
                 fontWeight={300}
-                fontSize={"1xl"}
+                fontSize={'1xl'}
                 mb={0}
-                textTransform={"capitalize"}
+                textTransform={'capitalize'}
               >
-                {product.category || "\u00A0"}
+                {product.category || '\u00A0'}
               </Text>
               <Heading
                 lineHeight={1.1}
                 fontWeight={600}
-                fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}
+                fontSize={{ base: '2xl', sm: '4xl', lg: '5xl' }}
                 noOfLines={2}
-                height={"2.2em"}
+                height={'2.2em'}
               >
                 {product.name}
               </Heading>
               <Text
-                color={useColorModeValue("gray.900", "gray.400")}
+                color={useColorModeValue('gray.900', 'gray.400')}
                 fontWeight={300}
-                fontSize={"2xl"}
+                fontSize={'2xl'}
                 mb={0}
               >
-                {product.price ? "$" + product.price : "$---"}
+                {product.price ? '$' + product.price : '$---'}
               </Text>
             </Box>
           </>
@@ -124,9 +124,9 @@ export default function CompareCard({ product }: Dictionary) {
             overflowY="auto"
             // hide the scroll bar
             css={{
-              "&::-webkit-scrollbar": { display: "none" },
-              msOverflowStyle: "none", // IE and Edge
-              scrollbarWidth: "none", // Firefox
+              '&::-webkit-scrollbar': { display: 'none' },
+              msOverflowStyle: 'none', // IE and Edge
+              scrollbarWidth: 'none', // Firefox
             }}
           >
             <List spacing={2}>
@@ -136,7 +136,7 @@ export default function CompareCard({ product }: Dictionary) {
                     <ListIcon as={FaPlusCircle} color="green.500" />
                     <b>{pros}</b>
                   </ListItem>
-                );
+                )
               })}
             </List>
             <List spacing={2}>
@@ -146,19 +146,19 @@ export default function CompareCard({ product }: Dictionary) {
                     <ListIcon as={FaMinusCircle} color="red.500" />
                     <b>{cons}</b>
                   </ListItem>
-                );
+                )
               })}
             </List>
           </SimpleGrid>
           <Box overflow="auto" height="300" width="100%">
             <Text
-              fontSize={{ base: "16px", lg: "18px" }}
-              color={useColorModeValue("yellow.500", "yellow.300")}
-              fontWeight={"500"}
-              textTransform={"uppercase"}
-              mb={"4"}
+              fontSize={{ base: '16px', lg: '18px' }}
+              color={useColorModeValue('yellow.500', 'yellow.300')}
+              fontWeight={'500'}
+              textTransform={'uppercase'}
+              mb={'4'}
             >
-              Product Details
+              Specifications
             </Text>
             {/*rendering of product details*/}
             <Specs product={product} keys={keysToRender} />
@@ -166,5 +166,5 @@ export default function CompareCard({ product }: Dictionary) {
         </Stack>
       </Card>
     </>
-  );
+  )
 }
