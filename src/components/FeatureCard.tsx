@@ -24,6 +24,13 @@ function FeatureCard({ title, description, image }: Props) {
   const [flipped, setFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  const handleClick = () => {
+    if (!isAnimating) {
+      setIsAnimating(true)
+      setFlipped(!flipped)
+    }
+  }
+
   const handleHoverStart = () => {
     setIsAnimating(true);
     setFlipped(true);
@@ -47,11 +54,11 @@ function FeatureCard({ title, description, image }: Props) {
   return (
     <Box
       as={motion.div}
-      onHoverStart={handleHoverStart}
-      onHoverEnd={handleHoverEnd}
-      //onClick={handleClick}
-      //_hover={{ cursor: "pointer" }}
-      //initial={flipped}
+      // onHoverStart={handleHoverStart}
+      // onHoverEnd={handleHoverEnd}
+      onClick={handleClick}
+      _hover={{ cursor: "pointer" }}
+      initial={flipped}
       animate={{ rotateY: flipped ? 180 : 360 }}
       onAnimationComplete={() => setIsAnimating(false)}
       style={{
