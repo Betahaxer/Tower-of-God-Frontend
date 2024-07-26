@@ -308,7 +308,11 @@ export default function ProductDetailsPage() {
               {product.summary ? product.summary : "No description found"}
             </Text>
 
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
+            <SimpleGrid
+              columns={{ base: 1, md: 2 }}
+              spacing={10}
+              id="pros-and-cons"
+            >
               <List spacing={2}>
                 {product.pros.slice(0, 5).map((pros: string, index: number) => {
                   return (
