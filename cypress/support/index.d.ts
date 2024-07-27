@@ -4,5 +4,6 @@ declare namespace Cypress {
     login(): Chainable<any>
     emptyWishlist(): Chainable<any>
     addOneItemToWishlist(): Chainable<any>
+    clearWishlist(): Chainable<any>
   }
 }

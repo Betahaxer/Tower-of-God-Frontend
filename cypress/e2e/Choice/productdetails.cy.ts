@@ -66,8 +66,8 @@ describe('Product Details Page test', () => {
   })
 
   it('should have a add to wishlist button which adds product to wishlist if logged in', () => {
-    // should have an empty wishlist first
     cy.login()
+    cy.clearWishlist()
     setupProductDetailsPage()
     cy.contains('button.chakra-button', 'Add to Wishlist', {
       matchCase: false,
@@ -81,8 +81,8 @@ describe('Product Details Page test', () => {
   })
 
   it('should have a add to wishlist button which doesnt allow duplicate wishlist items', () => {
-    // should have an empty wishlist first
     cy.login()
+    cy.clearWishlist()
     setupProductDetailsPage()
     cy.contains('button.chakra-button', 'Add to Wishlist', {
       matchCase: false,

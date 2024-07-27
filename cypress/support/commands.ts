@@ -81,7 +81,6 @@ Cypress.Commands.add('login', () => {
   cy.get('input[placeholder="Enter your email"]').type('3@gmail.com')
   cy.get('input[placeholder="Create a password"]').type('123')
   cy.contains('button', 'Login').click()
-
   // only on successful login will the user be redirected to home
   cy.url().should('eq', 'https://tower-of-god-frontend.vercel.app/')
   cy.contains('.chakra-toast', "You're logged in!")
@@ -128,4 +127,21 @@ Cypress.Commands.add('addOneItemToWishlist', () => {
   cy.get('.chakra-input__right-element > .chakra-button').click()
   cy.get('div.chakra-card').first().find('div.chakra-card__body').click()
   cy.contains('button', 'Add to Wishlist').click()
+})
+
+Cypress.Commands.add('clearWishlist', () => {
+  // assume logged in
+  cy.addOneItemToWishlist()
+  // select all items
+  cy.visit('/wishlist')
+  cy.get('button[aria-label="select"]').first().click()
+  cy.get('button[aria-label="check"]')
+    .first()
+    .should('exist')
+    .and('have.class', 'CheckButton')
+
+  cy.contains('button', 'Select All').click()
+  cy.contains('button', 'Delete').click()
+  cy.get('footer').find('button').contains('Delete').click()
+  cy.get('.chakra-toast').should('contain.text', 'Items deleted')
 })
