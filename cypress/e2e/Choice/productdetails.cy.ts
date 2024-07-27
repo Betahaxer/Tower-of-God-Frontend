@@ -98,10 +98,4 @@ describe('Product Details Page test', () => {
       matchCase: false,
     })
   })
-
-  it.only('should have a add to wishlist button which doesnt allow duplicate wishlist items', () => {
-    // should have an empty wishlist first
-    // in progress
-    cy.emptyWishlist()
-  })
 })

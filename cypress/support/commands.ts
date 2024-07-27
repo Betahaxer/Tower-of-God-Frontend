@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 
+import { head } from 'cypress/types/lodash'
 import { checkProductCategory } from '../utils/checkProductCategory'
 
 // ***********************************************
@@ -87,19 +88,35 @@ Cypress.Commands.add('login', () => {
 })
 
 Cypress.Commands.add('emptyWishlist', () => {
-  cy.login()
-  cy.get('a[href="/wishlist"').click()
-  cy.get('div.chakra-card').then(($cards) => {
-    if ($cards.length > 0) {
-      cy.get('div.chakra-card').first().find('button.chakra-button').click()
-      cy.contains('button.chakra-button', 'Select All', { matchCase: false })
-        .should('be.visible')
-        .click()
-      cy.contains('button.chakra-button', 'Delete', { matchCase: false })
-        .should('be.visible')
-        .click()
-    } else {
-      cy.log('No chakra cards found in the DOM')
-    }
-  })
+  // cy.login()
+  // cy.request({
+  //   method: 'GET',
+  //   url: '/api/wishlist/',
+  //   headers: {
+  //     Authorization: `Bearer ${accessToken}`,
+  //   },
+  //   qs: {
+  //     offset: offset,
+  //     page: page,
+  //     page_size: pageSize,
+  //   },
+  // }).then((response) => {
+  //   // Handle the response here
+  //   expect(response.status).to.eq(200) // Assert that the response status is 200 (OK)
+  //   // Add more assertions as needed
+  // })
+  // cy.get('a[href="/wishlist"').click()
+  // cy.get('div.chakra-card').then(($cards) => {
+  //   if ($cards.length > 0) {
+  //     cy.get('div.chakra-card').first().find('button.chakra-button').click()
+  //     cy.contains('button.chakra-button', 'Select All', { matchCase: false })
+  //       .should('be.visible')
+  //       .click()
+  //     cy.contains('button.chakra-button', 'Delete', { matchCase: false })
+  //       .should('be.visible')
+  //       .click()
+  //   } else {
+  //     cy.log('No chakra cards found in the DOM')
+  //   }
+  // })
 })
