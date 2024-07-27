@@ -54,7 +54,18 @@ describe('Comparison Page Tests', () => {
     cy.get('#overlay1').should('be.visible')
     cy.get('#overlay1').should('have.length.greaterThan', 0)
     cy.get('#overlay1').first().click()
-    cy.get('#product-left').click()
+    cy.get('#product-left').click({ force: true })
+    cy.url().should('contain', '/products')
+  })
+
+  it('should allow users to click the selected product on the right side', () => {
+    cy.get('select.chakra-select').should('be.visible').select('laptop')
+    // select a left product
+    cy.get('input[name="value2"]').type('Dell')
+    cy.get('#overlay2').should('be.visible')
+    cy.get('#overlay2').should('have.length.greaterThan', 0)
+    cy.get('#overlay2').first().click()
+    cy.get('#product-right').click({ force: true })
     cy.url().should('contain', '/products')
   })
 })
