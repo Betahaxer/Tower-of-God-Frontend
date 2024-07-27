@@ -120,3 +120,12 @@ Cypress.Commands.add('emptyWishlist', () => {
   //   }
   // })
 })
+
+Cypress.Commands.add('addOneItemToWishlist', () => {
+  // assume logged in
+  cy.visit('/')
+  cy.get('input[placeholder="Search..."]').type('mouse')
+  cy.get('.chakra-input__right-element > .chakra-button').click()
+  cy.get('div.chakra-card').first().find('div.chakra-card__body').click()
+  cy.contains('button', 'Add to Wishlist').click()
+})

@@ -61,7 +61,7 @@ const SearchBar = ({ loading }: Props) => {
         headers: { Authorization: `Bearer ${accessToken}` },
       })
       console.log(response.data)
-      setSearchHistory(response.data)
+      setSearchHistory(response.data.results)
     } catch (error) {
       console.error('Error getting search history', error)
     }
