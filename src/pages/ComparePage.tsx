@@ -244,6 +244,7 @@ export default function ComparePage() {
             )}
             {Object.keys(selectedProduct).length !== 0 && (
               <Box
+                id="product-left"
                 position="absolute"
                 top="70px"
                 zIndex={1}
@@ -359,6 +360,7 @@ export default function ComparePage() {
             )}
             {Object.keys(selectedProduct2).length !== 0 && (
               <Box
+                id="product-right"
                 position="absolute"
                 top="70px"
                 zIndex={1}
