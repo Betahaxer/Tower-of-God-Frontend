@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Product from '../components/Product'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import FilterSortMenu from '../components/FilterSortMenu'
 import { getTokens } from '../utils/storage'
@@ -33,6 +33,12 @@ const SearchResultsPage = () => {
   }
   interface Product {
     [key: string]: any
+  }
+  interface ErrorResponse {
+    status: number
+    data: {
+      message: string
+    }
   }
   const categoryList = [
     'earbuds',
@@ -149,28 +155,60 @@ const SearchResultsPage = () => {
       }
     } catch (error) {
       console.error('Error toggling wishlist item:', error)
-      toast({
-        title: 'Log in to add to wishlist',
-        status: 'error',
-        duration: 2000,
-      })
-      navigate('/login')
+      const axiosError = error as AxiosError<ErrorResponse>
+      if (axiosError.response) {
+        if (axiosError.response.status === 409) {
+          toast({
+            title: 'Item is already in wishlist',
+            status: 'error',
+            duration: 2000,
+          })
+        } else if (axiosError.response.status === 401) {
+          toast({
+            title: 'Log in to add to wishlist',
+            status: 'error',
+            duration: 2000,
+          })
+          navigate('/login')
+        }
+      } else {
+        toast({
+          title: 'An error occurred',
+          status: 'error',
+          duration: 2000,
+        })
+      }
     }
   }
   // queries the entire wishlist from backend
   const getWishlist = async () => {
+    let allItems: Product[] = []
+    let page = 1
+    const pageSize = 12
+    let totalPages = 1
+    let offset = 0
     try {
       await checkExpiryAndRefresh()
       const { accessToken } = getTokens()
 
-      const response = await axios.get(`/api/wishlist/`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      console.log('wishlist: ', response.data)
-
-      setWishlist(response.data)
+      while (page <= totalPages) {
+        const response = await axios.get(`/api/wishlist/`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          params: {
+            offset: offset,
+            page: page,
+            page_size: pageSize,
+          },
+        })
+        console.log('wishlist: ', response.data)
+        allItems = allItems.concat(response.data.results)
+        totalPages = Math.ceil(response.data.count / pageSize)
+        page += 1
+        offset += pageSize
+      }
+      setWishlist(allItems)
     } catch (error) {
       console.error('Request for wishlist failed', error)
     }
