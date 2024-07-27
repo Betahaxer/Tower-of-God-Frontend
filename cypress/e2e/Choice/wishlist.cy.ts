@@ -12,6 +12,8 @@ describe('Wishlist Page Tests (not logged in)', () => {
 describe('Wishlist Page Tests (logged in)', () => {
   beforeEach(() => {
     cy.login()
+    // setup wishlist with a Razer mouse wishlisted
+    cy.addOneItemToWishlist()
     cy.visit('/wishlist')
   })
 
@@ -77,16 +79,8 @@ describe('Wishlist Page Tests (logged in)', () => {
     cy.contains('button', 'Clear').click()
     cy.get('button[aria-label="check"]').should('not.exist')
   })
-})
 
-describe('Deleting wishlist items', () => {
-  beforeEach(() => {
-    cy.login()
-    cy.addOneItemToWishlist()
-    cy.visit('/wishlist')
-  })
   it('should be able to delete selected wishlist items', () => {
-    // ensure wishlist has items to delete
     cy.get('button[aria-label="select"]').first().click()
     cy.contains('button', 'Select All').click()
     cy.contains('button', 'Delete').click()
