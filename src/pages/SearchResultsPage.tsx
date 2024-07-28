@@ -8,6 +8,7 @@ import {
   Spinner,
   Stack,
   Text,
+  useColorModeValue,
   useToast,
 } from '@chakra-ui/react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
@@ -304,7 +305,7 @@ const SearchResultsPage = () => {
             endMessage={
               <Box position="relative" padding="10">
                 <Divider />
-                <AbsoluteCenter bg="white" px="4">
+                <AbsoluteCenter bg={useColorModeValue('white', 'grey.700')} px="4">
                   End of Page
                 </AbsoluteCenter>
               </Box>
