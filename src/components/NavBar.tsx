@@ -99,7 +99,7 @@ export default function NavBar() {
             <Text
               textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
               fontFamily={'heading'}
-              color={useColorModeValue('green.400', 'white')}
+              color={useColorModeValue('green.400', 'green.400')}
               fontWeight={800}
               mb={0}
               fontSize="xl"
