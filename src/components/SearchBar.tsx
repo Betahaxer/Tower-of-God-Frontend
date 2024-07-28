@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Input,
   InputGroup,
@@ -9,113 +9,113 @@ import {
   Stack,
   Image,
   IconButton,
-} from '@chakra-ui/react'
-import { SearchIcon } from '@chakra-ui/icons'
-import axios from 'axios'
-import { useLocation, useNavigate } from 'react-router-dom'
-import Fuse from 'fuse.js'
-import { useAuth } from '../contexts/AuthContext'
-import { getTokens } from '../utils/storage'
-import useClickOutside from '../utils/useClickOutside'
-import { FaTrashAlt } from 'react-icons/fa'
-import { IoMdTime } from 'react-icons/io'
-import debounce from 'lodash.debounce'
+} from '@chakra-ui/react';
+import { SearchIcon } from '@chakra-ui/icons';
+import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Fuse from 'fuse.js';
+import { useAuth } from '../contexts/AuthContext';
+import { getTokens } from '../utils/storage';
+import useClickOutside from '../utils/useClickOutside';
+import { FaTrashAlt } from 'react-icons/fa';
+import { IoMdTime } from 'react-icons/io';
+import debounce from 'lodash.debounce';
 
 interface Props {
-  loading?: (isLoading: boolean) => void
+  loading?: (isLoading: boolean) => void;
 }
 
 interface Product {
-  [key: string]: any
+  [key: string]: any;
 }
 
 const SearchBar = ({ loading }: Props) => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [searchResults, setSearchResults] = useState('')
-  const [showSearchBox, setShowSearchBox] = useState(false)
-  const [searchHistory, setSearchHistory] = useState<Product[]>([])
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-  const { checkExpiryAndRefresh } = useAuth()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchResults, setSearchResults] = useState('');
+  const [showSearchBox, setShowSearchBox] = useState(false);
+  const [searchHistory, setSearchHistory] = useState<Product[]>([]);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const { checkExpiryAndRefresh } = useAuth();
   // custom hook to close overlay if user clicks outside
   const overlayRef = useClickOutside(() => {
-    setShowSearchBox(false)
-  })
+    setShowSearchBox(false);
+  });
 
   // function to listen for ENTER key and search if pressed
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log(event.key)
+    console.log(event.key);
     if (event.key === 'Enter') {
-      onSearch(searchResults)
+      onSearch(searchResults);
     }
-  }
+  };
   // handles the search logic
   const onSearch = async (query: string, category?: string) => {
-    navigate('/search', { state: { query, category } })
-  }
+    navigate('/search', { state: { query, category } });
+  };
   const getSearchHistory = async () => {
     try {
-      await checkExpiryAndRefresh()
-      const { accessToken } = getTokens()
+      await checkExpiryAndRefresh();
+      const { accessToken } = getTokens();
       const response = await axios.get('/api/search_history/', {
         headers: { Authorization: `Bearer ${accessToken}` },
-      })
-      console.log(response.data)
-      setSearchHistory(response.data.results)
+      });
+      console.log(response.data);
+      setSearchHistory(response.data.results);
     } catch (error) {
-      console.error('Error getting search history', error)
+      console.error('Error getting search history', error);
     }
-  }
+  };
   const onDelete = async (wishlistID: number) => {
     try {
-      await checkExpiryAndRefresh()
-      const { accessToken } = getTokens()
+      await checkExpiryAndRefresh();
+      const { accessToken } = getTokens();
       const response = await axios.delete(`/api/search_history/${wishlistID}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
-      })
-      console.log(response.data)
-      await getSearchHistory()
+      });
+      console.log(response.data);
+      await getSearchHistory();
     } catch (error) {
-      console.error('Error deleting search history', error)
+      console.error('Error deleting search history', error);
     }
-  }
+  };
   const onDeleteAll = async (searchHistoryData: Product) => {
     try {
-      await checkExpiryAndRefresh()
-      const { accessToken } = getTokens()
+      await checkExpiryAndRefresh();
+      const { accessToken } = getTokens();
       const deletePromises = searchHistoryData.map((item: Product) => {
-        const wishlistID = item.id
+        const wishlistID = item.id;
         return axios.delete(`/api/search_history/${wishlistID}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
-        })
-      })
+        });
+      });
       await Promise.all(deletePromises).then(async (response) => {
-        console.log(response)
-      })
+        console.log(response);
+      });
     } catch (error) {
-      console.error('Error clearing all search history', error)
+      console.error('Error clearing all search history', error);
     } finally {
-      await getSearchHistory()
+      await getSearchHistory();
     }
-  }
+  };
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchResults(e.target.value)
-    await getSearchHistory()
-    setShowSearchBox(true)
-  }
+    setSearchResults(e.target.value);
+    await getSearchHistory();
+    setShowSearchBox(true);
+  };
   const debouncedSearch = useMemo(() => {
-    return debounce(handleChange, 300)
-  }, [])
+    return debounce(handleChange, 100);
+  }, []);
   useEffect(() => {
     return () => {
-      debouncedSearch.cancel()
-    }
-  })
+      debouncedSearch.cancel();
+    };
+  });
   useEffect(() => {
     if (location.state?.query) {
-      setSearchResults(location.state?.query || '')
+      setSearchResults(location.state?.query || '');
     }
-  }, [location.state?.query])
+  }, [location.state?.query]);
 
   return (
     <InputGroup minW="400px" maxW="45%">
@@ -133,8 +133,8 @@ const SearchBar = ({ loading }: Props) => {
           name="search button"
           bg="none"
           onClick={() => {
-            onSearch(searchResults)
-            setShowSearchBox(false)
+            onSearch(searchResults);
+            setShowSearchBox(false);
           }}
           borderRadius={'full'}
           size="lg"
@@ -183,7 +183,7 @@ const SearchBar = ({ loading }: Props) => {
                 cursor: 'pointer',
               }}
               onClick={async () => {
-                await onDeleteAll(searchHistory)
+                await onDeleteAll(searchHistory);
               }}
             >
               Clear All
@@ -192,7 +192,7 @@ const SearchBar = ({ loading }: Props) => {
           {searchHistory
             .slice(0, 5)
             .map((searchHistoryItem: Product, index: number) => {
-              const searchHistoryResult = searchHistoryItem.content_object
+              const searchHistoryResult = searchHistoryItem.content_object;
               return (
                 <Stack
                   key={index}
@@ -209,8 +209,8 @@ const SearchBar = ({ loading }: Props) => {
                     onSearch(
                       searchHistoryResult.name,
                       searchHistoryResult.category,
-                    )
-                    setShowSearchBox(false)
+                    );
+                    setShowSearchBox(false);
                   }}
                   color={useColorModeValue('gray.900', 'gray.200')}
                   justifyContent="space-between"
@@ -246,19 +246,19 @@ const SearchBar = ({ loading }: Props) => {
                       bg="none"
                       _hover={{ color: 'none' }}
                       onClick={(e) => {
-                        e.stopPropagation()
-                        onDelete(searchHistoryItem.id)
+                        e.stopPropagation();
+                        onDelete(searchHistoryItem.id);
                       }}
                       visibility={hoveredIndex === index ? 'visible' : 'hidden'}
                     />
                   </Box>
                 </Stack>
-              )
+              );
             })}
         </Box>
       )}
     </InputGroup>
-  )
-}
+  );
+};
 
-export default SearchBar
+export default SearchBar;
