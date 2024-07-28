@@ -243,14 +243,14 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
   const navigate = useNavigate();
   const onSearch = async (query: string) => {
     try {
-      const url = `/api/products/`;
-      // querying the database based on category and simple filtering with user query
-      const response = await axios.get(url, {
-        params: { q: query },
-      });
+      // const url = `/api/products/`;
+      // // querying the database based on category and simple filtering with user query
+      // const response = await axios.get(url, {
+      //   params: { q: query },
+      // });
 
       // passing the data to the search results page
-      navigate('/search', { state: { query } });
+      navigate('/search', { state: { category: query } });
     } catch (error) {
       console.error('Error fetching search results:', error);
     }
