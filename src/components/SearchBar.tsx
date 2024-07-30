@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Input,
   InputGroup,
@@ -13,7 +13,6 @@ import {
 import { SearchIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Fuse from 'fuse.js';
 import { useAuth } from '../contexts/AuthContext';
 import { getTokens } from '../utils/storage';
 import useClickOutside from '../utils/useClickOutside';
@@ -21,15 +20,11 @@ import { FaTrashAlt } from 'react-icons/fa';
 import { IoMdTime } from 'react-icons/io';
 import debounce from 'lodash.debounce';
 
-interface Props {
-  loading?: (isLoading: boolean) => void;
-}
-
 interface Product {
   [key: string]: any;
 }
 
-const SearchBar = ({ loading }: Props) => {
+const SearchBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchResults, setSearchResults] = useState('');
@@ -54,14 +49,33 @@ const SearchBar = ({ loading }: Props) => {
     navigate('/search', { state: { query, category } });
   };
   const getSearchHistory = async () => {
+    let allItems: Product[] = [];
+    let page = 1;
+    const pageSize = 12;
+    let totalPages = 1;
+    let offset = 0;
     try {
       await checkExpiryAndRefresh();
       const { accessToken } = getTokens();
-      const response = await axios.get('/api/search_history/', {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      console.log(response.data);
-      setSearchHistory(response.data.results);
+      while (page <= totalPages) {
+        const response = await axios.get(`/api/search_history/`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          params: {
+            offset: offset,
+            page: page,
+            page_size: pageSize,
+          },
+        });
+        console.log('search_history: ', response.data);
+        allItems = allItems.concat(response.data.results);
+        totalPages = Math.ceil(response.data.count / pageSize);
+        page += 1;
+        offset += pageSize;
+        console.log(response.data);
+      }
+      setSearchHistory(allItems);
     } catch (error) {
       console.error('Error getting search history', error);
     }
