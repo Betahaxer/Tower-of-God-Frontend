@@ -32,4 +32,5 @@ and many more...
 ## Learn more
 - [Detailed README](https://docs.google.com/document/d/10kgy5mT9E-mv82hU6Y3i8lkGFw6Eg2-z/edit?usp=drive_link&ouid=102499220375296338215&rtpof=true&sd=true) (with implementation details, features, tech stack used)
 - [Poster](https://drive.google.com/file/d/1CltWR_JojfN3krzuCdj5rOBSAREMlnjA/view?usp=drive_link) 
-- [Video](https://drive.google.com/file/d/1-muAdtvyngJcPsvlRmjlxnhjVqNZc48N/view?usp=drive_link ) 
+- [Video](https://drive.google.com/file/d/1-muAdtvyngJcPsvlRmjlxnhjVqNZc48N/view?usp=drive_link )
+- [Backend (done by Hanming)](https://github.com/hm-yang1/tower-of-god)
