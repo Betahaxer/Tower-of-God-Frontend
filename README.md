@@ -7,3 +7,5 @@ Choice is a web application powered by AI and designed to simplify finding elect
 Choice provides you an option to log in with a username/password or with your Google Account, using JSON web tokens for secure session management.
 ### Fuzzy Search and Filter
 Search for products with reasonable accuracy, apply filters based on category-specific criteria, and sort products by price and review date.
+### Expansive product data
+More than 1000 products and reviews scraped from trustworthy and popular review sites. Images, prices and Reddit posts are also scraped to give you the best view of the product.
