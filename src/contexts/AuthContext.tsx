@@ -5,11 +5,11 @@ import React, {
   useEffect,
   ReactNode,
   FC,
-} from "react";
-import axios from "axios";
-import { jwtDecode } from "jwt-decode";
-import { clearTokens, getTokens, setTokens } from "../utils/storage";
-import { useNavigate } from "react-router-dom";
+} from 'react';
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import { clearTokens, getTokens, setTokens } from '../utils/storage';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -41,7 +41,7 @@ function useProvideAuth() {
           setLoading(false);
         }
       } catch (error) {
-        console.error("Error decoding access token", error);
+        console.error('Error decoding access token', error);
         setIsLoggedIn(false);
         setLoading(false);
       }
@@ -65,18 +65,18 @@ function useProvideAuth() {
     const currentTime = Date.now() / 1000;
     if (refreshDecoded.exp < currentTime) {
       setIsLoggedIn(false);
-      navigate("/login");
+      //navigate("/login");
     } else {
       try {
-        const response = await axios.post("/api/token/refresh/", {
+        const response = await axios.post('/api/token/refresh/', {
           refresh: refreshToken,
         });
         const { access, refresh } = response.data;
         setTokens(access, refresh);
         setIsLoggedIn(true);
-        console.log("refreshed");
+        console.log('refreshed');
       } catch (error) {
-        console.error("Failed to refresh token", error);
+        console.error('Failed to refresh token', error);
         setIsLoggedIn(false);
       } finally {
         setLoading(false);
@@ -105,7 +105,7 @@ function useProvideAuth() {
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };

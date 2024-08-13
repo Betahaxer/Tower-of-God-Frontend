@@ -239,7 +239,7 @@ const DesktopNav = () => {
   );
 };
 
-const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
+const DesktopSubNav = ({ label, href }: NavItem) => {
   const navigate = useNavigate();
   const onSearch = async (query: string) => {
     try {
@@ -312,10 +312,6 @@ const NAV_ITEMS: Array<NavItem> = [
     label: 'Categories',
     children: [
       {
-        label: 'earphones',
-        subLabel: 'Explore more...',
-      },
-      {
         label: 'keyboard',
         subLabel: 'Explore more',
       },
@@ -342,6 +338,10 @@ const NAV_ITEMS: Array<NavItem> = [
       {
         label: 'television',
         subLabel: 'Explore more',
+      },
+      {
+        label: 'earbuds',
+        subLabel: 'Explore more...',
       },
     ],
   },
