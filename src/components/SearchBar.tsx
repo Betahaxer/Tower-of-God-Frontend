@@ -118,7 +118,7 @@ const SearchBar = () => {
     setShowSearchBox(true);
   };
   const debouncedSearch = useMemo(() => {
-    return debounce(handleChange, 100);
+    return debounce(handleChange, 50);
   }, []);
   useEffect(() => {
     return () => {
