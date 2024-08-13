@@ -215,6 +215,7 @@ const SearchBar = () => {
                   borderRadius={10}
                   _hover={{
                     background: useColorModeValue('green.200', 'green.600'),
+                    cursor: 'pointer',
                   }}
                   textAlign={'left'}
                   px="2"
@@ -258,7 +259,7 @@ const SearchBar = () => {
                       size="sm"
                       position="relative"
                       bg="none"
-                      _hover={{ color: 'none' }}
+                      _hover={{ color: 'red.500' }}
                       onClick={(e) => {
                         e.stopPropagation();
                         onDelete(searchHistoryItem.id);
