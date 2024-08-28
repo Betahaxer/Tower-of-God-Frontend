@@ -79,11 +79,11 @@ const features = [
 
 // Data for timeline
 const timeline = [
-  {
-    title: 'Liftoff',
-    description: '',
-    link: 'https://docs.google.com/document/d/1Hmzac2VjngFy3Iu5UI5G65rnbwkV81lj/edit?usp=sharing&ouid=113688905247978511636&rtpof=true&sd=true',
-  },
+  // {
+  //   title: 'Liftoff',
+  //   description: '',
+  //   link: 'https://docs.google.com/document/d/1Hmzac2VjngFy3Iu5UI5G65rnbwkV81lj/edit?usp=sharing&ouid=113688905247978511636&rtpof=true&sd=true',
+  // },
   {
     title: 'Milestone 1',
     description: '2024-06-03T14:00:00+08:00',
@@ -95,7 +95,7 @@ const timeline = [
     link: 'https://docs.google.com/document/d/1TdVFlSFwOENyJTtDTK4TvGsSBXxZupie/edit?usp=sharing&ouid=113688905247978511636&rtpof=true&sd=true',
   },
   { title: 'Milestone 3', description: '2024-07-29T14:00:00+08:00', link: '' },
-  { title: 'Splashdown', description: '2024-08-28T14:00:00+08:00', link: '' },
+  { title: 'Splashdown', description: '2024-08-28T23:59:00+08:00', link: '' },
 ];
 
 // Data for tech stack logos
