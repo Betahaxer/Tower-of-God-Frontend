@@ -8,102 +8,107 @@ import {
   Divider,
   HStack,
   Tooltip,
-} from "@chakra-ui/react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
-import React, { useEffect, useRef, useState } from "react";
-import FeatureCard from "../components/FeatureCard";
-import HorizontalScrollBox from "../components/HorizontalScrollBox";
-import Timeline from "../components/Timeline";
-import ExplanationDiv from "../components/ExplanationDiv";
-import { FaRegQuestionCircle } from "react-icons/fa";
+} from '@chakra-ui/react';
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import FeatureCard from '../components/FeatureCard';
+import HorizontalScrollBox from '../components/HorizontalScrollBox';
+import Timeline from '../components/Timeline';
+import ExplanationDiv from '../components/ExplanationDiv';
+import { FaRegQuestionCircle } from 'react-icons/fa';
 
 // Data for explanations
 const explanations = [
   {
-    e1: "Choosing the right electronic gadget like a phone, earpiece, or laptop can be overwhelming due to the abundance of online reviews.",
-    e2: "Our project aims to simplify this process, helping users quickly find the best products without the hassle.",
-    img: "gadgets.jpeg",
+    e1: 'Choosing the right electronic gadget like a phone, earpiece, or laptop can be overwhelming due to the abundance of online reviews.',
+    e2: 'Our project aims to simplify this process, helping users quickly find the best products without the hassle.',
+    img: 'gadgets.jpeg',
   },
   {
-    e1: "Choice is an AI-powered web application designed to help users find electronic products that meet their needs.",
-    e2: "By summarizing pros, cons, and key information, Choice enables informed decisions with minimal effort.",
-    img: "product_page.png",
+    e1: 'Choice is an AI-powered web application designed to help users find electronic products that meet their needs.',
+    e2: 'By summarizing pros, cons, and key information, Choice enables informed decisions with minimal effort.',
+    img: 'product_page.png',
   },
 ];
 
 // Data for features
 const features = [
   {
-    title: "Authentication",
+    title: 'Authentication',
     description:
-      "Create an account with us by providing a username/password, or login via your Google account.",
-    image: "login_page.png",
+      'Create an account with us by providing a username/password, or login via your Google account.',
+    image: 'login_page.png',
   },
   {
-    title: "Searching and filtering",
+    title: 'Searching and filtering',
     description:
-      "Search, filter, and sort products according to your needs. Use our intelligent search bar to find your desired products. Full-text search and filter options improve search relevance.",
-    image: "filter.png",
+      'Search, filter, and sort products according to your needs. Use our intelligent search bar to find your desired products. Full-text search and filter options improve search relevance.',
+    image: 'filter.png',
   },
   {
-    title: "Web scraping",
+    title: 'Web scraping',
     description:
-      "We scraped data from trusted review sites, Google images, and Amazon. Scrapers are currently for local use, employing Selenium for precision data extraction.",
-    image: "web_scraping.jpeg",
+      'We scraped data from trusted review sites, Google images, and Amazon. Scrapers are currently for local use, employing Selenium for precision data extraction.',
+    image: 'web_scraping.jpeg',
   },
   {
-    title: "Recommendation cards",
+    title: 'Recommendation cards',
     description:
-      "Our product cards provides a good summary with images, prices, descriptions, and pros/cons. Card also have ratings, pricing and infinite scrolling.",
-    image: "product_card.png",
+      'Our product cards provides a good summary with images, prices, descriptions, and pros/cons. Card also have ratings, pricing and infinite scrolling.',
+    image: 'product_card.png',
   },
   {
-    title: "Compare products",
+    title: 'Compare products',
     description:
-      "A beautifully designed page displays the products for easy comparison.",
-    image: "compare.png",
+      'A beautifully designed page displays the products for easy comparison.',
+    image: 'compare.png',
   },
   {
-    title: "Wishlist",
+    title: 'Wishlist',
     description:
-      "Save your favourite products for future reference. Manage your wishlist with our beautiful wishlist features.",
-    image: "wishlist.png",
+      'Save your favourite products for future reference. Manage your wishlist with our beautiful wishlist features.',
+    image: 'wishlist.png',
   },
   {
-    title: "Search history",
+    title: 'Search history',
     description:
-      "Easily find your previous search queries from the search bar.",
-    image: "search_history.png",
+      'Easily find your previous search queries from the search bar.',
+    image: 'search_history.png',
   },
 ];
 
 // Data for timeline
 const timeline = [
   {
-    title: "Milestone 1",
-    description: "2024-06-03T14:00:00+08:00",
-    link: "https://docs.google.com/document/d/1Hmzac2VjngFy3Iu5UI5G65rnbwkV81lj/edit?usp=sharing&ouid=113688905247978511636&rtpof=true&sd=true",
+    title: 'Liftoff',
+    description: '',
+    link: 'https://docs.google.com/document/d/1Hmzac2VjngFy3Iu5UI5G65rnbwkV81lj/edit?usp=sharing&ouid=113688905247978511636&rtpof=true&sd=true',
   },
   {
-    title: "Milestone 2",
-    description: "2024-07-01T14:00:00+08:00",
-    link: "https://docs.google.com/document/d/1TdVFlSFwOENyJTtDTK4TvGsSBXxZupie/edit?usp=sharing&ouid=113688905247978511636&rtpof=true&sd=true",
+    title: 'Milestone 1',
+    description: '2024-06-03T14:00:00+08:00',
+    link: 'https://docs.google.com/document/d/1Hmzac2VjngFy3Iu5UI5G65rnbwkV81lj/edit?usp=sharing&ouid=113688905247978511636&rtpof=true&sd=true',
   },
-  { title: "Milestone 3", description: "2024-07-29T14:00:00+08:00", link: "" },
-  { title: "Splashdown", description: "2024-08-28T14:00:00+08:00", link: "" },
+  {
+    title: 'Milestone 2',
+    description: '2024-07-01T14:00:00+08:00',
+    link: 'https://docs.google.com/document/d/1TdVFlSFwOENyJTtDTK4TvGsSBXxZupie/edit?usp=sharing&ouid=113688905247978511636&rtpof=true&sd=true',
+  },
+  { title: 'Milestone 3', description: '2024-07-29T14:00:00+08:00', link: '' },
+  { title: 'Splashdown', description: '2024-08-28T14:00:00+08:00', link: '' },
 ];
 
 // Data for tech stack logos
 const logos = [
-  "logos/django.png",
-  "logos/react.png",
-  "logos/selenium.png",
-  "logos/chakraui.png",
-  "logos/gemini.png",
-  "logos/github.png",
-  "logos/vercel.png",
-  "logos/render.jpg",
-  "logos/azure.png",
+  'logos/django.png',
+  'logos/react.png',
+  'logos/selenium.png',
+  'logos/chakraui.png',
+  'logos/gemini.png',
+  'logos/github.png',
+  'logos/vercel.png',
+  'logos/render.jpg',
+  'logos/azure.png',
 ];
 
 // About page
@@ -114,6 +119,7 @@ export function AboutPage() {
       e1={explanation.e1}
       e2={explanation.e2}
       img={explanation.img}
+      key={index}
     />
   ));
 
@@ -122,14 +128,14 @@ export function AboutPage() {
     <FeatureCard
       key={index}
       title={feature.title}
-      description={feature.description}
+      description="empty"
       image={feature.image}
     />
   ));
 
   // Tech stack icons
   const techStackIcons = logos.map((logo, index) => (
-    <Image h="10vh" key={index} src={logo} alt={logo + "-img"} />
+    <Image h="10vh" key={index} src={logo} alt={logo + '-img'} />
   ));
 
   // Animation stuff below
@@ -137,10 +143,10 @@ export function AboutPage() {
 
   // Animation for feature cards
   const featureCardRef = useRef(null);
-  const featureCardInView = useInView(featureCardRef, {
-    once: false,
-    amount: 0.6,
-  });
+  // const featureCardInView = useInView(featureCardRef, {
+  //   once: false,
+  //   amount: 0.6,
+  // });
 
   // Animation for timeline
   const timelineRef = useRef(null);
@@ -191,22 +197,22 @@ export function AboutPage() {
           w="100%"
         >
           <VStack>
-            <Text fontSize="6xl" color={"white"} fontWeight={"semibold"}>
+            <Text fontSize="6xl" color={'white'} fontWeight={'semibold'}>
               Effortless electronics shopping
             </Text>
-            <Text fontSize="4xl" color={"white"}>
+            <Text fontSize="4xl" color={'white'}>
               Discover, compare, choose
             </Text>
           </VStack>
         </Box>
       </Box>
       <Box minH="150vh" maxW="85%" zIndex="0">
-        <VStack padding={"3vh"} spacing={"9vh"}>
+        <VStack padding={'3vh'} spacing={'9vh'}>
           <Text fontSize="5xl">Simplify your search</Text>
           {explanationDivs}
         </VStack>
       </Box>
-      <Box minH="80vh" w="100%" paddingBlock={"10vh"} overflow="hidden">
+      <Box minH="80vh" w="100%" paddingBlock={'10vh'} overflow="hidden">
         <VStack spacing="5vh">
           <Box w="85%">
             <HStack>
@@ -216,13 +222,13 @@ export function AboutPage() {
                 placement="bottom"
               >
                 <span>
-                  <FaRegQuestionCircle style={{ color: "cornflowerblue" }} />
+                  <FaRegQuestionCircle style={{ color: 'cornflowerblue' }} />
                 </span>
               </Tooltip>
             </HStack>
             <Divider
-              borderWidth={"1px"}
-              borderColor={useColorModeValue("grey.300", "grey.200")}
+              borderWidth={'1px'}
+              borderColor={useColorModeValue('grey.300', 'grey.200')}
             />
           </Box>
           <Box w="85%" ref={featureCardRef} as={motion.div}>
@@ -238,7 +244,7 @@ export function AboutPage() {
           opacity: timelineInView ? 1 : 0,
           x: timelineInView ? 0 : 100,
         }}
-        transition={{ type: "spring", stiffness: "25" }}
+        transition={{ type: 'spring', stiffness: '25' }}
         overflow="hidden"
         minH="35vh"
         w="100%"
@@ -252,15 +258,15 @@ export function AboutPage() {
       </Box>
       <VStack minH="65vh" w="90%" spacing="3vh" alignItems="center">
         <Divider
-          borderWidth={"1px"}
-          borderColor={useColorModeValue("grey.300", "grey.200")}
+          borderWidth={'1px'}
+          borderColor={useColorModeValue('grey.300', 'grey.200')}
         />
         <VStack
           ref={techStackRef}
           as={motion.div}
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: techInView ? 1 : 0, y: techInView ? 0 : 100 }}
-          transition={{ type: "inertia", stiffness: "25", duration: "1s" }}
+          transition={{ type: 'inertia', stiffness: '25', duration: '1s' }}
           spacing="4vh"
         >
           <Text fontSize="4xl" paddingBlockEnd="3vh">
