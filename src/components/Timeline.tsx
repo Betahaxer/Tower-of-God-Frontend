@@ -41,18 +41,10 @@ function Timeline({ events }: Props) {
     for (let i = 0; i < events.length; i++) {
         const eventDate = new Date(events[i].description)
         events[i].description = eventDate.toLocaleString("en-US")
-        if (now > eventDate) {
-            nextEventIndex++
+        if (now > eventDate && nextEventIndex < events.length) {
+            nextEventIndex++;
         }
     }
-
-    // Set active step
-    const { activeStep, setActiveStep } = useSteps({
-        index: nextEventIndex,
-        count: events.length,
-    })
-    const nextEventDate = new Date(events[nextEventIndex].description)
-    console.log(nextEventDate)
 
     // Breakpoints to change size of timeline
     const sizes = useBreakpointValue(
@@ -70,7 +62,7 @@ function Timeline({ events }: Props) {
         <Stepper
             w='100%' 
             size={sizes} 
-            index={activeStep}
+            index={nextEventIndex}
         >
             {events.map((step, index) => (
                 <Step key={index}>
@@ -83,7 +75,7 @@ function Timeline({ events }: Props) {
                 </StepIndicator>
 
                 <Box flexShrink='0'>
-                    {activeStep > index ?
+                    {nextEventIndex > index ?
                         <Link href={step.link} color='teal.500'>
                             <StepTitle>{step.title}</StepTitle>
                         </Link>
