@@ -94,8 +94,16 @@ const timeline = [
     description: '2024-07-01T14:00:00+08:00',
     link: 'https://docs.google.com/document/d/1TdVFlSFwOENyJTtDTK4TvGsSBXxZupie/edit?usp=sharing&ouid=113688905247978511636&rtpof=true&sd=true',
   },
-  { title: 'Milestone 3', description: '2024-07-29T14:00:00+08:00', link: '' },
-  { title: 'Splashdown', description: '2024-08-28T23:59:00+08:00', link: '' },
+  { 
+    title: 'Milestone 3', 
+    description: '2024-07-29T14:00:00+08:00', 
+    link: 'https://docs.google.com/document/d/10kgy5mT9E-mv82hU6Y3i8lkGFw6Eg2-z/edit?usp=sharing&ouid=113688905247978511636&rtpof=true&sd=true' 
+  },
+  { 
+    title: 'Splashdown', 
+    description: '2024-08-28T23:59:00+08:00', 
+    link: 'https://drive.google.com/file/d/1HQ-b6NFmbsO2xGgQQ2KlzcmcnSRvk8T-/view?usp=drive_link' 
+  },
 ];
 
 // Data for tech stack logos
@@ -128,7 +136,7 @@ export function AboutPage() {
     <FeatureCard
       key={index}
       title={feature.title}
-      description="empty"
+      description={feature.description}
       image={feature.image}
     />
   ));
